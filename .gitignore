@@ -6,3 +6,6 @@
 /build
 /captures
 .externalNativeBuild
+
+# Ignore gradle.properties because it contains API keys
+/gradle.properties
