@@ -26,7 +26,7 @@ public class NetworkUtils {
      * @return
      * @throws IOException
      */
-    static String fetch(HttpUrl url) throws IOException {
+    public static String fetch(HttpUrl url) throws IOException {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
