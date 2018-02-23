@@ -1,6 +1,10 @@
 package com.bogdanorzea.popularmovies.utils;
 
+import android.content.Context;
+import android.widget.ImageView;
+
 import com.bogdanorzea.popularmovies.BuildConfig;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 
@@ -10,6 +14,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class NetworkUtils {
+    private static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
+    private static final String IMAGE_SIZE = "w500";
     private static final String SORT_BY = "sort_by";
     private static final String LOG_TAG = NetworkUtils.class.getSimpleName();
     private static final String HTTPS = "https";
@@ -71,4 +77,17 @@ public class NetworkUtils {
                 .addQueryParameter(API_KEY, BuildConfig.TheMovieDBApiKey)
                 .build();
     }
+
+    /**
+     * Builds the full path from a relative image and loads it in the ImageView
+     * @param context
+     * @param imageView
+     * @param posterPath
+     */
+    public static void loadImage(Context context, ImageView imageView, String posterPath) {
+        String completeImagePath = IMAGE_BASE_URL + IMAGE_SIZE + posterPath;
+
+        Picasso.with(context).load(completeImagePath).into(imageView);
+    }
+
 }

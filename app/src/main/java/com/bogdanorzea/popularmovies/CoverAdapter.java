@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.model.Movie;
-import com.squareup.picasso.Picasso;
+import com.bogdanorzea.popularmovies.utils.NetworkUtils;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class CoverAdapter extends RecyclerView.Adapter<CoverAdapter.ViewHolder> 
     private List<Movie> movies;
     private LayoutInflater inflater;
 
-    public CoverAdapter(Context context, List<Movie> movies) {
+    CoverAdapter(Context context, List<Movie> movies) {
         this.movies = movies;
         this.context = context;
         this.inflater = LayoutInflater.from(context);
@@ -33,11 +33,10 @@ public class CoverAdapter extends RecyclerView.Adapter<CoverAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        ImageView imageView = holder.coverImage;
-        holder.itemView.setTag(movies.get(position));
+        Movie currentMovie = movies.get(position);
 
-        // TODO remove hardcoded path
-        Picasso.with(context).load("https://image.tmdb.org/t/p/w500" + movies.get(position).posterPath).into(imageView);
+        holder.itemView.setTag(currentMovie);
+        NetworkUtils.loadImage(context, holder.coverImage, currentMovie.posterPath);
     }
 
     @Override
