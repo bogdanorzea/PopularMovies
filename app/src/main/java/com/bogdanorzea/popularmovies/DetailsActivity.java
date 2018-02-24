@@ -29,6 +29,9 @@ import okhttp3.HttpUrl;
 
 public class DetailsActivity extends AppCompatActivity {
 
+    static final String MOVIE_ID_INTENT_KEY = "movie_id";
+    static final String MOVIE_TITLE_INTENT_KEY = "movie_title";
+
     ProgressBar mProgressBar;
     private Movie mCurrentMovie;
     private ConstraintLayout mConstraintLayout;
@@ -47,12 +50,11 @@ public class DetailsActivity extends AppCompatActivity {
         mAppBarLayout = findViewById(R.id.app_bar);
 
         Intent intent = getIntent();
-        // TODO add checks fot intent validity
-        int movieId = intent.getIntExtra("movie_id", -1);
 
-        String movieName = intent.getStringExtra("movie_title");
+        String movieName = intent.getStringExtra(MOVIE_TITLE_INTENT_KEY);
         getSupportActionBar().setTitle(movieName);
 
+        int movieId = intent.getIntExtra(MOVIE_ID_INTENT_KEY, -1);
         if (movieId != -1) {
             new AT().execute(NetworkUtils.buildMovieUrl(movieId));
         }

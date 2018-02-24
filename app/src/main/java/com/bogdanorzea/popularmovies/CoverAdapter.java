@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.model.Movie;
 import com.bogdanorzea.popularmovies.utils.NetworkUtils;
@@ -15,6 +14,7 @@ import com.bogdanorzea.popularmovies.utils.NetworkUtils;
 import java.util.List;
 
 public class CoverAdapter extends RecyclerView.Adapter<CoverAdapter.ViewHolder> {
+
     private final Context context;
     private List<Movie> movies;
     private LayoutInflater inflater;
@@ -63,9 +63,8 @@ public class CoverAdapter extends RecyclerView.Adapter<CoverAdapter.ViewHolder> 
             Movie currentMovie = (Movie) itemView.getTag();
 
             Intent intent = new Intent(context, DetailsActivity.class);
-            // TODO extract hardcoded key
-            intent.putExtra("movie_title", currentMovie.title);
-            intent.putExtra("movie_id", currentMovie.id);
+            intent.putExtra(DetailsActivity.MOVIE_TITLE_INTENT_KEY, currentMovie.title);
+            intent.putExtra(DetailsActivity.MOVIE_ID_INTENT_KEY, currentMovie.id);
             context.startActivity(intent);
         }
     }
