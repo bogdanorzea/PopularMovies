@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.bogdanorzea.popularmovies.model.response.Discover;
 import com.bogdanorzea.popularmovies.utils.NetworkUtils;
@@ -17,6 +19,7 @@ import okhttp3.HttpUrl;
 
 public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
 
     @Override
@@ -24,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mProgressBar = findViewById(R.id.progressBar);
         mRecyclerView = findViewById(R.id.lv);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         mRecyclerView.setAdapter(null);
@@ -32,7 +36,22 @@ public class MainActivity extends AppCompatActivity {
         new AT().execute(url);
     }
 
+    private void showProgress() {
+        mProgressBar.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.INVISIBLE);
+    }
+
+    private void hideProgress() {
+        mProgressBar.setVisibility(View.INVISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
     private class AT extends AsyncTask<HttpUrl, Void, Discover> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgress();
+        }
 
         @Override
         protected Discover doInBackground(HttpUrl... httpUrls) {
@@ -61,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Discover discover) {
             CoverAdapter coverAdapter = new CoverAdapter(MainActivity.this, discover.results);
             mRecyclerView.setAdapter(coverAdapter);
+            hideProgress();
         }
     }
 
