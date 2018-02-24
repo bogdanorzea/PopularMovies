@@ -40,6 +40,28 @@
             tools:text="Fight Club" />
 
         <TextView
+            android:id="@+id/label_score"
+            style="@style/label_style"
+            android:text="User score"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/movie_score" />
+
+        <RatingBar
+            android:id="@+id/movie_score"
+            style="@style/Widget.AppCompat.RatingBar.Indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:isIndicator="true"
+            android:numStars="5"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/movie_title"
+            android:layout_marginLeft="8dp" />
+
+        <TextView
             android:id="@+id/label_tagline"
             style="@style/label_style"
             android:text="Tagline"
@@ -52,7 +74,7 @@
             style="@style/attributes_style"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/movie_title"
+            app:layout_constraintTop_toBottomOf="@+id/movie_score"
             tools:text="Mischief. Mayhem. Soap." />
 
         <TextView
