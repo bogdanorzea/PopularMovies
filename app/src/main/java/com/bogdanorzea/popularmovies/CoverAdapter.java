@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bogdanorzea.popularmovies.model.Movie;
+import com.bogdanorzea.popularmovies.model.objects.Movie;
 import com.bogdanorzea.popularmovies.utils.NetworkUtils;
 
 import java.util.List;

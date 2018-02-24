@@ -24,6 +24,7 @@ public class NetworkUtils {
     private static final String DISCOVER = "discover";
     private static final String MOVIE = "movie";
     private static final String API_KEY = "api_key";
+    public static final String VIDEOS = "videos";
 
     /**
      * Returns the response string from the HttpUrl address
@@ -45,12 +46,12 @@ public class NetworkUtils {
     }
 
     /**
-     * Builds the HttpUrl for the movie with the specified movieId
+     * Builds the HttpUrl for the movie details
      *
      * @param movieId Movie ID
      * @return
      */
-    public static HttpUrl buildMovieUrl(int movieId) {
+    public static HttpUrl movieDetailsUrl(int movieId) {
         return new HttpUrl.Builder()
                 .scheme(HTTPS)
                 .host(HOST)
@@ -62,11 +63,11 @@ public class NetworkUtils {
     }
 
     /**
-     * Builds the HttpUrl for the most popular movies
+     * Builds the HttpUrl for the most popular movies list
      *
      * @return
      */
-    public static HttpUrl buildDiscoverUrl() {
+    public static HttpUrl movieDiscoverUrl() {
         return new HttpUrl.Builder()
                 .scheme(HTTPS)
                 .host(HOST)
@@ -74,6 +75,23 @@ public class NetworkUtils {
                 .addPathSegment(DISCOVER)
                 .addPathSegment(MOVIE)
                 .addQueryParameter(SORT_BY, "popularity.desc")
+                .addQueryParameter(API_KEY, BuildConfig.TheMovieDBApiKey)
+                .build();
+    }
+
+    /**
+     * Builds the HttpUrl for the movie videos
+     * @param movieId
+     * @return
+     */
+    public static HttpUrl movieVideosUrl(int movieId) {
+        return new HttpUrl.Builder()
+                .scheme(HTTPS)
+                .host(HOST)
+                .addPathSegment(API_VERSION)
+                .addPathSegment(MOVIE)
+                .addPathSegment(String.valueOf(movieId))
+                .addPathSegment(VIDEOS)
                 .addQueryParameter(API_KEY, BuildConfig.TheMovieDBApiKey)
                 .build();
     }

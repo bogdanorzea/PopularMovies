@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.bogdanorzea.popularmovies.model.Popular;
+import com.bogdanorzea.popularmovies.model.response.Discover;
 import com.bogdanorzea.popularmovies.utils.NetworkUtils;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -28,14 +28,14 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         mRecyclerView.setAdapter(null);
 
-        HttpUrl url = NetworkUtils.buildDiscoverUrl();
+        HttpUrl url = NetworkUtils.movieDiscoverUrl();
         new AT().execute(url);
     }
 
-    private class AT extends AsyncTask<HttpUrl, Void, Popular> {
+    private class AT extends AsyncTask<HttpUrl, Void, Discover> {
 
         @Override
-        protected Popular doInBackground(HttpUrl... httpUrls) {
+        protected Discover doInBackground(HttpUrl... httpUrls) {
             String response = "";
             try {
                 response = NetworkUtils.fetch(httpUrls[0]);
@@ -44,22 +44,22 @@ public class MainActivity extends AppCompatActivity {
             }
 
             Moshi moshi = new Moshi.Builder().build();
-            JsonAdapter<Popular> jsonAdapter = moshi.adapter(Popular.class);
+            JsonAdapter<Discover> jsonAdapter = moshi.adapter(Discover.class);
 
-            Popular popular = null;
+            Discover discover = null;
 
             try {
-                popular = jsonAdapter.fromJson(response);
+                discover = jsonAdapter.fromJson(response);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            return popular;
+            return discover;
         }
 
         @Override
-        protected void onPostExecute(Popular popular) {
-            CoverAdapter coverAdapter = new CoverAdapter(MainActivity.this, popular.results);
+        protected void onPostExecute(Discover discover) {
+            CoverAdapter coverAdapter = new CoverAdapter(MainActivity.this, discover.results);
             mRecyclerView.setAdapter(coverAdapter);
         }
     }

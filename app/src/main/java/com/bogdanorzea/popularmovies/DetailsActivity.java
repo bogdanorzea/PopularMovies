@@ -18,7 +18,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bogdanorzea.popularmovies.model.Movie;
+import com.bogdanorzea.popularmovies.model.objects.Movie;
 import com.bogdanorzea.popularmovies.utils.NetworkUtils;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -56,7 +56,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         int movieId = intent.getIntExtra(MOVIE_ID_INTENT_KEY, -1);
         if (movieId != -1) {
-            new AT().execute(NetworkUtils.buildMovieUrl(movieId));
+            new AT().execute(NetworkUtils.movieDetailsUrl(movieId));
         }
     }
 
@@ -111,7 +111,7 @@ public class DetailsActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.movie_website)).setText(mCurrentMovie.homepage);
         ((TextView) findViewById(R.id.movie_release_date)).setText(mCurrentMovie.releaseDate);
         ((TextView) findViewById(R.id.movie_overview)).setText(mCurrentMovie.overview);
-        ((RatingBar) findViewById(R.id.movie_score)).setRating((float) (mCurrentMovie.voteAverage / 2));
+        ((RatingBar) findViewById(R.id.movie_score)).setRating(mCurrentMovie.voteAverage / 2);
     }
 
     private class AT extends AsyncTask<HttpUrl, Void, Movie> {
