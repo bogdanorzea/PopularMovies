@@ -8,6 +8,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -50,13 +51,17 @@ public class DetailsActivity extends AppCompatActivity {
         mAppBarLayout = findViewById(R.id.app_bar);
 
         Intent intent = getIntent();
+        if (NetworkUtils.hasInternetConnection(this)) {
+            String movieName = intent.getStringExtra(MOVIE_TITLE_INTENT_KEY);
+            getSupportActionBar().setTitle(movieName);
 
-        String movieName = intent.getStringExtra(MOVIE_TITLE_INTENT_KEY);
-        getSupportActionBar().setTitle(movieName);
-
-        int movieId = intent.getIntExtra(MOVIE_ID_INTENT_KEY, -1);
-        if (movieId != -1) {
-            new AT().execute(NetworkUtils.movieDetailsUrl(movieId));
+            int movieId = intent.getIntExtra(MOVIE_ID_INTENT_KEY, -1);
+            if (movieId != -1) {
+                new AT().execute(NetworkUtils.movieDetailsUrl(movieId));
+            }
+        } else {
+            Toast.makeText(this, R.string.warning_no_internet, Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 
@@ -67,9 +72,9 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void hideProgress() {
-        mAppBarLayout.setExpanded(true);
-        mProgressBar.setVisibility(View.INVISIBLE);
+        mProgressBar.setVisibility(View.GONE);
         mConstraintLayout.setVisibility(View.VISIBLE);
+        mAppBarLayout.setExpanded(true);
     }
 
     @Override
@@ -98,8 +103,12 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void openMovieWebsite() {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mCurrentMovie.homepage));
-        startActivity(intent);
+        if (!TextUtils.isEmpty(mCurrentMovie.homepage)) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mCurrentMovie.homepage));
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, R.string.warning_no_website, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void renderMovieInformation() {

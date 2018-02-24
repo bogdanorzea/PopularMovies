@@ -1,6 +1,8 @@
 package com.bogdanorzea.popularmovies.utils;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.widget.ImageView;
 
 import com.bogdanorzea.popularmovies.BuildConfig;
@@ -108,4 +110,16 @@ public class NetworkUtils {
         Picasso.with(context).load(completeImagePath).into(imageView);
     }
 
+    /**
+     * Checks if there is an active internet connection
+     * @param context
+     * @return
+     */
+    public static boolean hasInternetConnection(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+        return (activeNetwork != null && activeNetwork.isConnectedOrConnecting());
+    }
 }

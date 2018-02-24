@@ -7,6 +7,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.bogdanorzea.popularmovies.model.response.Discover;
 import com.bogdanorzea.popularmovies.utils.NetworkUtils;
@@ -32,8 +33,14 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         mRecyclerView.setAdapter(null);
 
-        HttpUrl url = NetworkUtils.movieDiscoverUrl();
-        new AT().execute(url);
+        if (NetworkUtils.hasInternetConnection(this)) {
+            HttpUrl url = NetworkUtils.movieDiscoverUrl();
+            new AT().execute(url);
+        } else {
+            TextView textView = (TextView) findViewById(R.id.warning_message);
+            textView.setText(R.string.warning_no_internet);
+            textView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void showProgress() {
@@ -42,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void hideProgress() {
-        mProgressBar.setVisibility(View.INVISIBLE);
+        mProgressBar.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);
     }
 
