@@ -36,7 +36,7 @@ public class CoverAdapter extends RecyclerView.Adapter<CoverAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
         Movie currentMovie = movies.get(position);
 
-        holder.itemView.setTag(currentMovie.id);
+        holder.itemView.setTag(currentMovie);
         NetworkUtils.loadImage(context, holder.coverImage, currentMovie.posterPath);
     }
 
@@ -60,10 +60,12 @@ public class CoverAdapter extends RecyclerView.Adapter<CoverAdapter.ViewHolder> 
         public void onClick(View view) {
             Context context = view.getContext();
 
-            int id = (int) itemView.getTag();
+            Movie currentMovie = (Movie) itemView.getTag();
+
             Intent intent = new Intent(context, DetailsActivity.class);
             // TODO extract hardcoded key
-            intent.putExtra("movie_id", id);
+            intent.putExtra("movie_title", currentMovie.title);
+            intent.putExtra("movie_id", currentMovie.id);
             context.startActivity(intent);
         }
     }

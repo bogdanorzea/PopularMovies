@@ -8,8 +8,8 @@
     tools:context="com.bogdanorzea.popularmovies.DetailsActivity"
     tools:showIn="@layout/activity_details">
 
-
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraint_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -70,6 +70,22 @@
             tools:text="Mischief. Mayhem. Soap." />
 
         <TextView
+            android:id="@+id/label_website"
+            style="@style/label_style"
+            android:text="Website"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/movie_website" />
+
+        <TextView
+            android:id="@+id/movie_website"
+            style="@style/attributes_style"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/movie_tagline"
+            tools:text="http://www.foxmovies.com/movies/fight-club" />
+
+        <TextView
             android:id="@+id/label_release_date"
             style="@style/label_style"
             android:text="Release date"
@@ -84,7 +100,7 @@
             android:textAlignment="viewStart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/movie_tagline"
+            app:layout_constraintTop_toBottomOf="@+id/movie_website"
             tools:text="1999-10-15" />
 
         <TextView

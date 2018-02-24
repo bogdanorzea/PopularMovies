@@ -1,17 +1,17 @@
 package com.bogdanorzea.popularmovies;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.model.Movie;
 import com.bogdanorzea.popularmovies.utils.NetworkUtils;
@@ -24,14 +24,19 @@ import okhttp3.HttpUrl;
 
 public class DetailsActivity extends AppCompatActivity {
 
+    ProgressBar progressBar;
     private Movie mMovie;
+    private ConstraintLayout constraintLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("");
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        progressBar = findViewById(R.id.progressBar);
+        constraintLayout = findViewById(R.id.constraint_layout);
+
+        //toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
 
@@ -46,17 +51,32 @@ public class DetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
+        // TODO add checks fot intent validity
         int movieId = intent.getIntExtra("movie_id", -1);
+
+        String movieName = intent.getStringExtra("movie_title");
+        getSupportActionBar().setTitle(movieName);
+
         if (movieId != -1) {
             new AT().execute(NetworkUtils.buildMovieUrl(movieId));
         }
     }
 
+    private void showProgress(){
+        progressBar.setVisibility(View.VISIBLE);
+        constraintLayout.setVisibility(View.INVISIBLE);
+    }
+
+    private void hideProgress(){
+        progressBar.setVisibility(View.INVISIBLE);
+        constraintLayout.setVisibility(View.VISIBLE);
+    }
+
     private void displayMovie() {
-        Toast.makeText(this, "Movie " + mMovie.title + " is ready!", Toast.LENGTH_SHORT).show();
-        getSupportActionBar().setTitle(mMovie.title);
+
         ((TextView) findViewById(R.id.movie_title)).setText(mMovie.title);
         ((TextView) findViewById(R.id.movie_tagline)).setText(mMovie.tagline);
+        ((TextView) findViewById(R.id.movie_website)).setText(mMovie.homepage);
         ((TextView) findViewById(R.id.movie_release_date)).setText(mMovie.releaseDate);
         ((TextView) findViewById(R.id.movie_overview)).setText(mMovie.overview);
 
@@ -66,6 +86,11 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private class AT extends AsyncTask<HttpUrl, Void, Movie> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgress();
+        }
 
         @Override
         protected Movie doInBackground(HttpUrl... httpUrls) {
@@ -93,6 +118,7 @@ public class DetailsActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Movie movie) {
             mMovie = movie;
+            hideProgress();
             displayMovie();
         }
     }
