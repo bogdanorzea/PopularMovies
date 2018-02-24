@@ -1,6 +1,7 @@
 package com.bogdanorzea.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +36,7 @@ public class CoverAdapter extends RecyclerView.Adapter<CoverAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
         Movie currentMovie = movies.get(position);
 
-        holder.itemView.setTag(currentMovie);
+        holder.itemView.setTag(currentMovie.id);
         NetworkUtils.loadImage(context, holder.coverImage, currentMovie.posterPath);
     }
 
@@ -57,8 +58,13 @@ public class CoverAdapter extends RecyclerView.Adapter<CoverAdapter.ViewHolder> 
 
         @Override
         public void onClick(View view) {
-            String message = ((Movie) itemView.getTag()).title;
-            Toast.makeText(view.getContext(), message, Toast.LENGTH_SHORT).show();
+            Context context = view.getContext();
+
+            int id = (int) itemView.getTag();
+            Intent intent = new Intent(context, DetailsActivity.class);
+            // TODO extract hardcoded key
+            intent.putExtra("movie_id", id);
+            context.startActivity(intent);
         }
     }
 

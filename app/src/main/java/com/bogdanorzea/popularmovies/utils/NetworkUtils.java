@@ -82,10 +82,10 @@ public class NetworkUtils {
      * Builds the full path from a relative image and loads it in the ImageView
      * @param context
      * @param imageView
-     * @param posterPath
+     * @param relativeImagePath
      */
-    public static void loadImage(Context context, ImageView imageView, String posterPath) {
-        String completeImagePath = IMAGE_BASE_URL + IMAGE_SIZE + posterPath;
+    public static void loadImage(Context context, ImageView imageView, String relativeImagePath) {
+        String completeImagePath = IMAGE_BASE_URL + IMAGE_SIZE + relativeImagePath;
 
         Picasso.with(context).load(completeImagePath).into(imageView);
     }
