@@ -1,19 +1,20 @@
 package com.bogdanorzea.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.bogdanorzea.popularmovies.model.Movie;
+import com.bogdanorzea.popularmovies.model.objects.Movie;
 import com.bogdanorzea.popularmovies.utils.NetworkUtils;
 
 import java.util.List;
 
 public class CoverAdapter extends RecyclerView.Adapter<CoverAdapter.ViewHolder> {
+
     private final Context context;
     private List<Movie> movies;
     private LayoutInflater inflater;
@@ -57,8 +58,14 @@ public class CoverAdapter extends RecyclerView.Adapter<CoverAdapter.ViewHolder> 
 
         @Override
         public void onClick(View view) {
-            String message = ((Movie) itemView.getTag()).title;
-            Toast.makeText(view.getContext(), message, Toast.LENGTH_SHORT).show();
+            Context context = view.getContext();
+
+            Movie currentMovie = (Movie) itemView.getTag();
+
+            Intent intent = new Intent(context, DetailsActivity.class);
+            intent.putExtra(DetailsActivity.MOVIE_TITLE_INTENT_KEY, currentMovie.title);
+            intent.putExtra(DetailsActivity.MOVIE_ID_INTENT_KEY, currentMovie.id);
+            context.startActivity(intent);
         }
     }
 

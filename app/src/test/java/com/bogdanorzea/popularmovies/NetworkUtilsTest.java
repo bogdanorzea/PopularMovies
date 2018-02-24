@@ -9,12 +9,17 @@ import org.junit.Test;
 public class NetworkUtilsTest {
 
     @Test
-    public void getMovieUrl() throws Exception {
-        Assert.assertEquals(NetworkUtils.buildMovieUrl(550).toString(), "https://api.themoviedb.org/3/movie/550?api_key=" + BuildConfig.TheMovieDBApiKey);
+    public void movieDetailsUrl() throws Exception {
+        Assert.assertEquals(NetworkUtils.movieDetailsUrl(550).toString(), "https://api.themoviedb.org/3/movie/550?api_key=" + BuildConfig.TheMovieDBApiKey);
     }
 
     @Test
-    public void getDiscoverUrl() throws Exception {
-        Assert.assertEquals(NetworkUtils.buildDiscoverUrl().toString(), "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=" + BuildConfig.TheMovieDBApiKey);
+    public void movieDiscoverUrl() throws Exception {
+        Assert.assertEquals(NetworkUtils.movieDiscoverUrl().toString(), "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=" + BuildConfig.TheMovieDBApiKey);
+    }
+
+    @Test
+    public void movieVideosUrl() throws Exception {
+        Assert.assertEquals(NetworkUtils.movieVideosUrl(550).toString(), "https://api.themoviedb.org/3/movie/550/videos?api_key=" + BuildConfig.TheMovieDBApiKey);
     }
 }
