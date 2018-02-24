@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,7 @@ public class DetailsActivity extends AppCompatActivity {
     ProgressBar progressBar;
     private Movie mMovie;
     private ConstraintLayout constraintLayout;
+    private AppBarLayout appBarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +37,7 @@ public class DetailsActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         progressBar = findViewById(R.id.progressBar);
         constraintLayout = findViewById(R.id.constraint_layout);
-
+        appBarLayout = findViewById(R.id.app_bar);
         //toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
@@ -65,9 +67,11 @@ public class DetailsActivity extends AppCompatActivity {
     private void showProgress(){
         progressBar.setVisibility(View.VISIBLE);
         constraintLayout.setVisibility(View.INVISIBLE);
+        appBarLayout.setExpanded(false);
     }
 
     private void hideProgress(){
+        appBarLayout.setExpanded(true);
         progressBar.setVisibility(View.INVISIBLE);
         constraintLayout.setVisibility(View.VISIBLE);
     }

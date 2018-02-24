@@ -13,21 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/movie_poster"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginEnd="0dp"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="0dp"
-            android:adjustViewBounds="true"
-            android:contentDescription="Movie cover"
-            android:scaleType="centerCrop"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@mipmap/ic_launcher" />
-
         <android.support.constraint.Guideline
             android:id="@+id/guideline"
             android:layout_width="wrap_content"
@@ -47,10 +32,11 @@
         <TextView
             android:id="@+id/movie_title"
             style="@style/attributes_style"
+            android:layout_marginTop="8dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/movie_poster"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="Fight Club" />
 
         <TextView
