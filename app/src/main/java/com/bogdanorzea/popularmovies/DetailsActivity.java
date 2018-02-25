@@ -22,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.model.objects.Movie;
+import com.bogdanorzea.popularmovies.model.objects.Video;
+import com.bogdanorzea.popularmovies.model.response.VideosResponse;
 import com.bogdanorzea.popularmovies.utils.NetworkUtils;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -37,6 +39,8 @@ public class DetailsActivity extends AppCompatActivity {
 
     ProgressBar mProgressBar;
     private Movie mCurrentMovie;
+    private VideosResponse mCurrentVideosResponse;
+
     private ConstraintLayout mConstraintLayout;
     private AppBarLayout mAppBarLayout;
 
@@ -64,7 +68,8 @@ public class DetailsActivity extends AppCompatActivity {
 
             int movieId = intent.getIntExtra(MOVIE_ID_INTENT_KEY, -1);
             if (movieId != -1) {
-                new AT().execute(NetworkUtils.movieDetailsUrl(movieId));
+                new MovieDetailsAsyncTask().execute(NetworkUtils.movieDetailsUrl(movieId));
+                new MovieVideosAsyncTask().execute(NetworkUtils.movieVideosUrl(movieId));
             }
         } else {
             Toast.makeText(this, R.string.warning_no_internet, Toast.LENGTH_SHORT).show();
@@ -85,6 +90,49 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        int actionTrailerId = 200;
+        int actionWebsiteId = 300;
+
+        if (mCurrentMovie != null) {
+            if (!TextUtils.isEmpty(mCurrentMovie.homepage) &&
+                    menu.findItem(actionWebsiteId) == null) {
+
+                MenuItem item = menu.add(
+                        Menu.NONE,
+                        actionWebsiteId,
+                        actionWebsiteId,
+                        R.string.action_website);
+
+                item.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
+                item.setOnMenuItemClickListener(menuItem -> {
+                    openMovieWebsite();
+                    return true;
+                });
+            }
+        }
+
+        if (mCurrentVideosResponse != null) {
+            if (mCurrentVideosResponse.results.size() > 0 && menu.findItem(actionTrailerId) == null) {
+
+                MenuItem item = menu.add(
+                        Menu.NONE,
+                        actionTrailerId,
+                        actionTrailerId,
+                        R.string.action_trailer);
+
+                item.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
+                item.setOnMenuItemClickListener(menuItem -> {
+                    openMovieTrailer();
+                    return true;
+                });
+            }
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_details, menu);
@@ -97,44 +145,28 @@ public class DetailsActivity extends AppCompatActivity {
             case R.id.action_favorite:
                 addToFavorites();
                 return true;
-            case R.id.action_trailer:
-                openMovieTrailer();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        int actionWebsiteId = 300;
-
-        if (mCurrentMovie != null) {
-            if (!TextUtils.isEmpty(mCurrentMovie.homepage) &&
-                    menu.findItem(actionWebsiteId) == null) {
-
-                MenuItem actionWebsiteMenuItem = menu.add(
-                        Menu.NONE,
-                        actionWebsiteId,
-                        actionWebsiteId,
-                        R.string.action_website);
-
-                actionWebsiteMenuItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
-                actionWebsiteMenuItem.setOnMenuItemClickListener(menuItem -> {
-                    openMovieWebsite();
-                    return true;
-                });
-            }
-        }
-        return super.onPrepareOptionsMenu(menu);
-    }
 
     private void addToFavorites() {
         Toast.makeText(this, "Will be added soon", Toast.LENGTH_SHORT).show();
     }
 
     private void openMovieTrailer() {
-        Toast.makeText(this, "Will be added soon", Toast.LENGTH_SHORT).show();
+        for (int i = 0; i < mCurrentVideosResponse.results.size(); i++) {
+            Video result = mCurrentVideosResponse.results.get(i);
+            if (result.site.equalsIgnoreCase("YouTube") &&
+                    result.type.equalsIgnoreCase("trailer")) {
+                String youtubeLink = "https://www.youtube.com/watch?v=" + result.key;
+
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(youtubeLink));
+                startActivity(intent);
+                return;
+            }
+        }
     }
 
     private void openMovieWebsite() {
@@ -156,7 +188,7 @@ public class DetailsActivity extends AppCompatActivity {
         ((RatingBar) findViewById(R.id.movie_score)).setRating(mCurrentMovie.voteAverage / 2);
     }
 
-    private class AT extends AsyncTask<HttpUrl, Void, Movie> {
+    private class MovieDetailsAsyncTask extends AsyncTask<HttpUrl, Void, Movie> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -193,4 +225,35 @@ public class DetailsActivity extends AppCompatActivity {
             renderMovieInformation();
         }
     }
+
+    private class MovieVideosAsyncTask extends AsyncTask<HttpUrl, Void, VideosResponse> {
+        @Override
+        protected VideosResponse doInBackground(HttpUrl... httpUrls) {
+            String response = "";
+            try {
+                response = NetworkUtils.fetch(httpUrls[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Moshi moshi = new Moshi.Builder().build();
+            JsonAdapter<VideosResponse> jsonAdapter = moshi.adapter(VideosResponse.class);
+
+            VideosResponse videosResponse = null;
+
+            try {
+                videosResponse = jsonAdapter.fromJson(response);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return videosResponse;
+        }
+
+        @Override
+        protected void onPostExecute(VideosResponse videosResponse) {
+            mCurrentVideosResponse = videosResponse;
+        }
+    }
+
 }

@@ -8,9 +8,5 @@
         android:orderInCategory="100"
         android:title="@string/action_favorite"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/action_trailer"
-        android:orderInCategory="200"
-        android:title="@string/action_trailer"
-        app:showAsAction="never" />
+
 </menu>

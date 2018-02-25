@@ -15,7 +15,7 @@ public class NetworkUtilsTest {
 
     @Test
     public void movieDiscoverUrl() throws Exception {
-        Assert.assertEquals(NetworkUtils.movieDiscoverUrl().toString(), "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=" + BuildConfig.TheMovieDBApiKey);
+        Assert.assertEquals(NetworkUtils.movieDiscoverUrl(1).toString(), "https://api.themoviedb.org/3/discover/movie?page=1&sort_by=popularity.desc&api_key=" + BuildConfig.TheMovieDBApiKey);
     }
 
     @Test
