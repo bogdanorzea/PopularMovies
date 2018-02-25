@@ -1,6 +1,7 @@
 package com.bogdanorzea.popularmovies;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -71,14 +72,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_sorting:
-                showSortingDialog();
-                break;
+            case R.id.action_settings:
+                Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
+                startActivity(startSettingsActivity);
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
-
-        return true;
     }
 
     private void showSortingDialog() {

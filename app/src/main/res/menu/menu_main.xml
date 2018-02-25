@@ -4,9 +4,9 @@
     tools:context="com.bogdanorzea.popularmovies.MainActivity">
 
     <item
-        android:id="@+id/action_sorting"
+        android:id="@+id/action_settings"
         android:orderInCategory="100"
-        android:title="@string/action_sorting"
+        android:title="@string/action_settings"
         app:showAsAction="never" />
 
 </menu>
