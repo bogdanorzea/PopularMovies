@@ -7,124 +7,43 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.bogdanorzea.popularmovies.DetailsActivity"
     tools:showIn="@layout/activity_details">
+    <!--app:behavior_overlapTop="64dp"-->
+
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraint_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="128dp" />
-
-        <TextView
-            android:id="@+id/label_title"
-            style="@style/label_style"
-            android:text="Title"
-            app:layout_constraintEnd_toStartOf="@+id/guideline"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/movie_title" />
-
-        <TextView
-            android:id="@+id/movie_title"
-            style="@style/attributes_style"
-            android:layout_marginTop="8dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Fight Club" />
-
-        <TextView
-            android:id="@+id/label_score"
-            style="@style/label_style"
-            android:text="User score"
-            app:layout_constraintEnd_toStartOf="@+id/guideline"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/movie_score" />
-
-        <RatingBar
-            android:id="@+id/movie_score"
-            style="@style/Widget.AppCompat.RatingBar.Indicator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <include
+            android:id="@+id/movie_small"
+            layout="@layout/movie_small_description"
+            android:layout_width="match_parent"
+            android:layout_height="236dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:isIndicator="true"
-            android:numStars="5"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/movie_title"
-            android:layout_marginLeft="8dp" />
-
-        <TextView
-            android:id="@+id/label_tagline"
-            style="@style/label_style"
-            android:text="Tagline"
-            app:layout_constraintEnd_toStartOf="@+id/guideline"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/movie_tagline" />
-
-        <TextView
-            android:id="@+id/movie_tagline"
-            style="@style/attributes_style"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/movie_score"
-            tools:text="Mischief. Mayhem. Soap." />
-
-        <TextView
-            android:id="@+id/label_website"
-            style="@style/label_style"
-            android:text="Website"
-            app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/movie_website" />
-
-        <TextView
-            android:id="@+id/movie_website"
-            style="@style/attributes_style"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/movie_tagline"
-            tools:text="http://www.foxmovies.com/movies/fight-club" />
-
-        <TextView
-            android:id="@+id/label_release_date"
-            style="@style/label_style"
-            android:text="Release date"
-            app:layout_constraintEnd_toStartOf="@+id/guideline"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/movie_release_date" />
-
-        <TextView
-            android:id="@+id/movie_release_date"
-            style="@style/attributes_style"
-            android:gravity="start"
-            android:textAlignment="viewStart"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/movie_website"
-            tools:text="1999-10-15" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/label_overview"
             style="@style/label_style"
+            android:layout_marginTop="8dp"
             android:text="Overview"
-            app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/movie_overview" />
+            app:layout_constraintTop_toBottomOf="@+id/movie_small" />
 
         <TextView
             android:id="@+id/movie_overview"
             style="@style/attributes_style"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/movie_release_date"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/label_overview"
             tools:text="A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground &quot;fight clubs&quot; forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion." />
 
     </android.support.constraint.ConstraintLayout>

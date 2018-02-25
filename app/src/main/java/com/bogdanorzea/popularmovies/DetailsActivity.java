@@ -107,17 +107,20 @@ public class DetailsActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        int actionWebsiteId = 300;
+
         if (mCurrentMovie != null) {
-            if (!TextUtils.isEmpty(mCurrentMovie.homepage)) {
-                int idActionWebsite = 300;
-                MenuItem actionWebsite = menu.add(
+            if (!TextUtils.isEmpty(mCurrentMovie.homepage) &&
+                    menu.findItem(actionWebsiteId) == null) {
+
+                MenuItem actionWebsiteMenuItem = menu.add(
                         Menu.NONE,
-                        idActionWebsite,
-                        idActionWebsite,
+                        actionWebsiteId,
+                        actionWebsiteId,
                         R.string.action_website);
 
-                actionWebsite.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
-                actionWebsite.setOnMenuItemClickListener(menuItem -> {
+                actionWebsiteMenuItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
+                actionWebsiteMenuItem.setOnMenuItemClickListener(menuItem -> {
                     openMovieWebsite();
                     return true;
                 });
@@ -140,12 +143,14 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void renderMovieInformation() {
-        ImageView poster = findViewById(R.id.movie_backdrop);
-        NetworkUtils.loadImage(this, poster, mCurrentMovie.backdropPath);
+        ImageView backdrop = findViewById(R.id.movie_backdrop);
+        NetworkUtils.loadImage(this, backdrop, mCurrentMovie.backdropPath);
+
+        ImageView poster = findViewById(R.id.movie_cover);
+        NetworkUtils.loadImage(this, poster, mCurrentMovie.posterPath);
 
         ((TextView) findViewById(R.id.movie_title)).setText(mCurrentMovie.title);
         ((TextView) findViewById(R.id.movie_tagline)).setText(mCurrentMovie.tagline);
-        ((TextView) findViewById(R.id.movie_website)).setText(mCurrentMovie.homepage);
         ((TextView) findViewById(R.id.movie_release_date)).setText(mCurrentMovie.releaseDate);
         ((TextView) findViewById(R.id.movie_overview)).setText(mCurrentMovie.overview);
         ((RatingBar) findViewById(R.id.movie_score)).setRating(mCurrentMovie.voteAverage / 2);
