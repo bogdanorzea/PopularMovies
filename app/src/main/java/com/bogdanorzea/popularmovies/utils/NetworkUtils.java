@@ -27,6 +27,7 @@ public class NetworkUtils {
     private static final String MOVIE = "movie";
     private static final String API_KEY = "api_key";
     public static final String VIDEOS = "videos";
+    public static final String PAGE = "page";
 
     /**
      * Returns the response string from the HttpUrl address
@@ -69,13 +70,14 @@ public class NetworkUtils {
      *
      * @return
      */
-    public static HttpUrl movieDiscoverUrl() {
+    public static HttpUrl movieDiscoverUrl(int pageNumber) {
         return new HttpUrl.Builder()
                 .scheme(HTTPS)
                 .host(HOST)
                 .addPathSegment(API_VERSION)
                 .addPathSegment(DISCOVER)
                 .addPathSegment(MOVIE)
+                .addQueryParameter(PAGE, String.valueOf(pageNumber))
                 .addQueryParameter(SORT_BY, "popularity.desc")
                 .addQueryParameter(API_KEY, BuildConfig.TheMovieDBApiKey)
                 .build();
