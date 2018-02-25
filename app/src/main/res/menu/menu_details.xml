@@ -2,14 +2,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.bogdanorzea.popularmovies.DetailsActivity">
+
     <item
-        android:id="@+id/action_trailer"
+        android:id="@+id/action_favorite"
         android:orderInCategory="100"
-        android:title="@string/action_trailer"
+        android:title="@string/action_favorite"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_website"
+        android:id="@+id/action_trailer"
         android:orderInCategory="200"
-        android:title="@string/action_website"
+        android:title="@string/action_trailer"
         app:showAsAction="never" />
 </menu>

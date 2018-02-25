@@ -94,8 +94,8 @@ public class DetailsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_website:
-                openMovieWebsite();
+            case R.id.action_favorite:
+                addToFavorites();
                 return true;
             case R.id.action_trailer:
                 openMovieTrailer();
@@ -105,17 +105,38 @@ public class DetailsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (mCurrentMovie != null) {
+            if (!TextUtils.isEmpty(mCurrentMovie.homepage)) {
+                int idActionWebsite = 300;
+                MenuItem actionWebsite = menu.add(
+                        Menu.NONE,
+                        idActionWebsite,
+                        idActionWebsite,
+                        R.string.action_website);
+
+                actionWebsite.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
+                actionWebsite.setOnMenuItemClickListener(menuItem -> {
+                    openMovieWebsite();
+                    return true;
+                });
+            }
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void addToFavorites() {
+        Toast.makeText(this, "Will be added soon", Toast.LENGTH_SHORT).show();
+    }
+
     private void openMovieTrailer() {
         Toast.makeText(this, "Will be added soon", Toast.LENGTH_SHORT).show();
     }
 
     private void openMovieWebsite() {
-        if (!TextUtils.isEmpty(mCurrentMovie.homepage)) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mCurrentMovie.homepage));
-            startActivity(intent);
-        } else {
-            Toast.makeText(this, R.string.warning_no_website, Toast.LENGTH_SHORT).show();
-        }
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mCurrentMovie.homepage));
+        startActivity(intent);
     }
 
     private void renderMovieInformation() {

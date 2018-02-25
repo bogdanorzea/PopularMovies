@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Popular Movies</string>
     <string name="title_activity_details">DetailsActivity</string>
+    <string name="action_favorite">Add to favorites</string>
     <string name="action_trailer">Trailer</string>
     <string name="action_website">Website</string>
     <string name="warning_no_internet">No internet connection</string>
-    <string name="warning_no_website">There is no webpage to display</string>
 </resources>
