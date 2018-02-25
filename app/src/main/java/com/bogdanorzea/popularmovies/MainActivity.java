@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.bogdanorzea.popularmovies.model.response.Discover;
+import com.bogdanorzea.popularmovies.model.response.DiscoverResponse;
 import com.bogdanorzea.popularmovies.utils.NetworkUtils;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
         mProgressBar = findViewById(R.id.progressBar);
         mRecyclerView = findViewById(R.id.lv);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        //mRecyclerView.setAdapter(null);
         mRecyclerView.setHasFixedSize(true);
 
         mAdapter = new CoverAdapter(MainActivity.this, null);
@@ -59,24 +58,22 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadData() {
         HttpUrl url = NetworkUtils.movieDiscoverUrl(mAdapter.nextPageToLoad);
-        new AT().execute(url);
+        new DiscoverAsyncTask().execute(url);
     }
 
     private void showProgress() {
         mProgressBar.setVisibility(View.VISIBLE);
-        //mRecyclerView.setVisibility(View.INVISIBLE);
     }
 
     private void hideProgress() {
         mProgressBar.setVisibility(View.GONE);
-        //mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     private void loadMoreData() {
         mAdapter.notifyDataSetChanged();
     }
 
-    private class AT extends AsyncTask<HttpUrl, Void, Discover> {
+    private class DiscoverAsyncTask extends AsyncTask<HttpUrl, Void, DiscoverResponse> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -84,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Discover doInBackground(HttpUrl... httpUrls) {
+        protected DiscoverResponse doInBackground(HttpUrl... httpUrls) {
             String response = "";
             try {
                 response = NetworkUtils.fetch(httpUrls[0]);
@@ -93,26 +90,26 @@ public class MainActivity extends AppCompatActivity {
             }
 
             Moshi moshi = new Moshi.Builder().build();
-            JsonAdapter<Discover> jsonAdapter = moshi.adapter(Discover.class);
+            JsonAdapter<DiscoverResponse> jsonAdapter = moshi.adapter(DiscoverResponse.class);
 
-            Discover discover = null;
+            DiscoverResponse discoverResponse = null;
 
             try {
-                discover = jsonAdapter.fromJson(response);
+                discoverResponse = jsonAdapter.fromJson(response);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            return discover;
+            return discoverResponse;
         }
 
         @Override
-        protected void onPostExecute(Discover discover) {
+        protected void onPostExecute(DiscoverResponse discoverResponse) {
             if (mAdapter.movies == null) {
-                mAdapter.movies = discover.results;
+                mAdapter.movies = discoverResponse.results;
                 mRecyclerView.setAdapter(mAdapter);
             } else {
-                mAdapter.movies.addAll(discover.results);
+                mAdapter.movies.addAll(discoverResponse.results);
             }
 
             hideProgress();
