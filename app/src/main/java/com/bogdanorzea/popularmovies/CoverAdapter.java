@@ -14,9 +14,9 @@ import com.bogdanorzea.popularmovies.utils.NetworkUtils;
 import java.util.List;
 
 public class CoverAdapter extends RecyclerView.Adapter<CoverAdapter.ViewHolder> {
-
+    int nextPageToLoad = 1;
+    List<Movie> movies;
     private final Context context;
-    private List<Movie> movies;
     private LayoutInflater inflater;
 
     CoverAdapter(Context context, List<Movie> movies) {

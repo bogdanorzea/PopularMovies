@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
+    private CoverAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +32,24 @@ public class MainActivity extends AppCompatActivity {
         mProgressBar = findViewById(R.id.progressBar);
         mRecyclerView = findViewById(R.id.lv);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        mRecyclerView.setAdapter(null);
+        //mRecyclerView.setAdapter(null);
+        mRecyclerView.setHasFixedSize(true);
+
+        mAdapter = new CoverAdapter(MainActivity.this, null);
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (!recyclerView.canScrollVertically(1)) {
+                    loadData();
+                }
+            }
+        });
 
         if (NetworkUtils.hasInternetConnection(this)) {
-            HttpUrl url = NetworkUtils.movieDiscoverUrl();
-            new AT().execute(url);
+            loadData();
         } else {
             TextView textView = (TextView) findViewById(R.id.warning_message);
             textView.setText(R.string.warning_no_internet);
@@ -43,14 +57,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void loadData() {
+        HttpUrl url = NetworkUtils.movieDiscoverUrl(mAdapter.nextPageToLoad);
+        new AT().execute(url);
+    }
+
     private void showProgress() {
         mProgressBar.setVisibility(View.VISIBLE);
-        mRecyclerView.setVisibility(View.INVISIBLE);
+        //mRecyclerView.setVisibility(View.INVISIBLE);
     }
 
     private void hideProgress() {
         mProgressBar.setVisibility(View.GONE);
-        mRecyclerView.setVisibility(View.VISIBLE);
+        //mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    private void loadMoreData() {
+        mAdapter.notifyDataSetChanged();
     }
 
     private class AT extends AsyncTask<HttpUrl, Void, Discover> {
@@ -85,9 +108,16 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Discover discover) {
-            CoverAdapter coverAdapter = new CoverAdapter(MainActivity.this, discover.results);
-            mRecyclerView.setAdapter(coverAdapter);
+            if (mAdapter.movies == null) {
+                mAdapter.movies = discover.results;
+                mRecyclerView.setAdapter(mAdapter);
+            } else {
+                mAdapter.movies.addAll(discover.results);
+            }
+
             hideProgress();
+            mAdapter.notifyDataSetChanged();
+            mAdapter.nextPageToLoad += 1;
         }
     }
 
