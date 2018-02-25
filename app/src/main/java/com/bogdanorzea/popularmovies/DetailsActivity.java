@@ -1,6 +1,8 @@
 package com.bogdanorzea.popularmovies;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -45,6 +47,11 @@ public class DetailsActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        ImageView backdropImage = findViewById(R.id.movie_backdrop);
+        backdropImage.setColorFilter(
+                new PorterDuffColorFilter(getResources().getColor(
+                        R.color.colorPrimary), PorterDuff.Mode.LIGHTEN));
 
         mProgressBar = findViewById(R.id.progressBar);
         mConstraintLayout = findViewById(R.id.constraint_layout);
