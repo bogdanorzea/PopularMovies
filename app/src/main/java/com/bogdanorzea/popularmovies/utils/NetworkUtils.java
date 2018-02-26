@@ -70,7 +70,7 @@ public class NetworkUtils {
      *
      * @return
      */
-    public static HttpUrl movieDiscoverUrl(int pageNumber) {
+    public static HttpUrl movieDiscoverUrl(int pageNumber, String sortRule) {
         return new HttpUrl.Builder()
                 .scheme(HTTPS)
                 .host(HOST)
@@ -78,7 +78,7 @@ public class NetworkUtils {
                 .addPathSegment(DISCOVER)
                 .addPathSegment(MOVIE)
                 .addQueryParameter(PAGE, String.valueOf(pageNumber))
-                .addQueryParameter(SORT_BY, "popularity.desc")
+                .addQueryParameter(SORT_BY, sortRule)
                 .addQueryParameter(API_KEY, BuildConfig.TheMovieDBApiKey)
                 .build();
     }

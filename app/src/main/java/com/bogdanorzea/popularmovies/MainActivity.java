@@ -1,10 +1,8 @@
 package com.bogdanorzea.popularmovies;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bogdanorzea.popularmovies.model.response.DiscoverResponse;
+import com.bogdanorzea.popularmovies.utils.DataUtils;
 import com.bogdanorzea.popularmovies.utils.NetworkUtils;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -82,18 +81,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void showSortingDialog() {
-        new AlertDialog.Builder(this)
-                .setSingleChoiceItems(new String[] {"ana", "are", "mere" }, 0, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                }).show();
-    }
-
     private void loadData() {
-        HttpUrl url = NetworkUtils.movieDiscoverUrl(mAdapter.nextPageToLoad);
+        String preferredSortRule = DataUtils.getPreferredSortRule(this);
+        HttpUrl url = NetworkUtils.movieDiscoverUrl(mAdapter.nextPageToLoad, preferredSortRule);
+
         new DiscoverAsyncTask().execute(url);
     }
 
@@ -103,10 +94,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void hideProgress() {
         mProgressBar.setVisibility(View.GONE);
-    }
-
-    private void loadMoreData() {
-        mAdapter.notifyDataSetChanged();
     }
 
     private class DiscoverAsyncTask extends AsyncTask<HttpUrl, Void, DiscoverResponse> {
