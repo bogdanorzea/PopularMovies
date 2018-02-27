@@ -39,7 +39,7 @@ public class Movie {
     @Json(name = "release_date")
     public String releaseDate;
     @Json(name = "revenue")
-    public int revenue;
+    public long revenue;
     @Json(name = "runtime")
     public int runtime;
     @Json(name = "spoken_languages")
