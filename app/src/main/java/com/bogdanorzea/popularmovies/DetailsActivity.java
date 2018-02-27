@@ -41,7 +41,7 @@ public class DetailsActivity extends AppCompatActivity {
     static final String MOVIE_ID_INTENT_KEY = "movie_id";
     static final String MOVIE_TITLE_INTENT_KEY = "movie_title";
 
-    ProgressBar mProgressBar;
+    private ProgressBar mProgressBar;
     private Movie mCurrentMovie;
     private VideosResponse mCurrentVideosResponse;
 

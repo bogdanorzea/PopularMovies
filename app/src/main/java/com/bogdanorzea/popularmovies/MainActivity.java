@@ -28,7 +28,7 @@ import okhttp3.HttpUrl;
 public class MainActivity extends AppCompatActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
-    ProgressBar mProgressBar;
+    private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
     private CoverAdapter mAdapter;
 
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity
         if (NetworkUtils.hasInternetConnection(this)) {
             loadData();
         } else {
-            TextView textView = (TextView) findViewById(R.id.warning_message);
+            TextView textView = findViewById(R.id.warning_message);
             textView.setText(R.string.warning_no_internet);
             textView.setVisibility(View.VISIBLE);
         }
