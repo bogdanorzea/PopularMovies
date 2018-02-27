@@ -35,4 +35,11 @@
     <string name="pref_sort_by_vote_count_label">Vote count</string>
     <string name="pref_sort_by_vote_count">vote_count</string>
     <string name="title_activity_settings">Settings</string>
+
+    <!--Strings used in DetailsActivity-->
+    <string name="overview_label">Overview</string>
+    <string name="genre_label">Genre</string>
+    <string name="runtime_label">Runtime</string>
+    <string name="budget_label">Budget</string>
+    <string name="revenue_label">Revenue</string>
 </resources>
