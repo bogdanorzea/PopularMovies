@@ -6,9 +6,9 @@ import android.graphics.PorterDuffColorFilter;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.bogdanorzea.popularmovies.model.objects.Movie;
 import com.bogdanorzea.popularmovies.model.objects.Video;
 import com.bogdanorzea.popularmovies.model.response.VideosResponse;
+import com.bogdanorzea.popularmovies.utils.DataUtils;
 import com.bogdanorzea.popularmovies.utils.NetworkUtils;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -31,6 +32,9 @@ import com.squareup.moshi.Moshi;
 import java.io.IOException;
 
 import okhttp3.HttpUrl;
+
+import static com.bogdanorzea.popularmovies.utils.DataUtils.formatDuration;
+import static com.bogdanorzea.popularmovies.utils.DataUtils.formatMoney;
 
 public class DetailsActivity extends AppCompatActivity {
 
@@ -41,7 +45,7 @@ public class DetailsActivity extends AppCompatActivity {
     private Movie mCurrentMovie;
     private VideosResponse mCurrentVideosResponse;
 
-    private ConstraintLayout mConstraintLayout;
+    private CardView mMovieCardView;
     private AppBarLayout mAppBarLayout;
 
     @Override
@@ -58,34 +62,33 @@ public class DetailsActivity extends AppCompatActivity {
                         R.color.colorPrimary), PorterDuff.Mode.LIGHTEN));
 
         mProgressBar = findViewById(R.id.progressBar);
-        mConstraintLayout = findViewById(R.id.constraint_layout);
+        mMovieCardView = findViewById(R.id.movie_card);
         mAppBarLayout = findViewById(R.id.app_bar);
 
         Intent intent = getIntent();
-        if (NetworkUtils.hasInternetConnection(this)) {
-            String movieName = intent.getStringExtra(MOVIE_TITLE_INTENT_KEY);
-            getSupportActionBar().setTitle(movieName);
-
-            int movieId = intent.getIntExtra(MOVIE_ID_INTENT_KEY, -1);
-            if (movieId != -1) {
-                new MovieDetailsAsyncTask().execute(NetworkUtils.movieDetailsUrl(movieId));
-                new MovieVideosAsyncTask().execute(NetworkUtils.movieVideosUrl(movieId));
+        if (intent != null) {
+            if (NetworkUtils.hasInternetConnection(this)) {
+                int movieId = intent.getIntExtra(MOVIE_ID_INTENT_KEY, -1);
+                if (movieId != -1) {
+                    new MovieDetailsAsyncTask().execute(NetworkUtils.movieDetailsUrl(movieId));
+                    new MovieVideosAsyncTask().execute(NetworkUtils.movieVideosUrl(movieId));
+                }
+            } else {
+                Toast.makeText(this, R.string.warning_no_internet, Toast.LENGTH_SHORT).show();
+                finish();
             }
-        } else {
-            Toast.makeText(this, R.string.warning_no_internet, Toast.LENGTH_SHORT).show();
-            finish();
         }
     }
 
     private void showProgress() {
         mProgressBar.setVisibility(View.VISIBLE);
-        mConstraintLayout.setVisibility(View.INVISIBLE);
+        mMovieCardView.setVisibility(View.INVISIBLE);
         mAppBarLayout.setExpanded(false);
     }
 
     private void hideProgress() {
         mProgressBar.setVisibility(View.GONE);
-        mConstraintLayout.setVisibility(View.VISIBLE);
+        mMovieCardView.setVisibility(View.VISIBLE);
         mAppBarLayout.setExpanded(true);
     }
 
@@ -150,7 +153,6 @@ public class DetailsActivity extends AppCompatActivity {
         }
     }
 
-
     private void addToFavorites() {
         Toast.makeText(this, "Will be added soon", Toast.LENGTH_SHORT).show();
     }
@@ -181,10 +183,17 @@ public class DetailsActivity extends AppCompatActivity {
         ImageView poster = findViewById(R.id.movie_cover);
         NetworkUtils.loadImage(this, poster, mCurrentMovie.posterPath);
 
+        ((TextView) findViewById(R.id.movie_release_date)).setText(
+                String.format("(%s)", mCurrentMovie.releaseDate.substring(0, 4)));
         ((TextView) findViewById(R.id.movie_title)).setText(mCurrentMovie.title);
-        ((TextView) findViewById(R.id.movie_tagline)).setText(mCurrentMovie.tagline);
-        ((TextView) findViewById(R.id.movie_release_date)).setText(mCurrentMovie.releaseDate);
+        ((TextView) findViewById(R.id.movie_tagline)).setText(
+                String.format("\"%s\"", mCurrentMovie.tagline));
         ((TextView) findViewById(R.id.movie_overview)).setText(mCurrentMovie.overview);
+        ((TextView) findViewById(R.id.movie_runtime)).setText(formatDuration(mCurrentMovie.runtime));
+        ((TextView) findViewById(R.id.movie_budget)).setText(formatMoney(mCurrentMovie.budget));
+        ((TextView) findViewById(R.id.movie_revenue)).setText(formatMoney(mCurrentMovie.revenue));
+        ((TextView) findViewById(R.id.movie_genre)).setText(DataUtils.printGenres(mCurrentMovie.genres));
+
         ((RatingBar) findViewById(R.id.movie_score)).setRating(mCurrentMovie.voteAverage / 2);
     }
 

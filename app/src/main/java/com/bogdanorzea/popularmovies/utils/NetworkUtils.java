@@ -16,6 +16,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class NetworkUtils {
+    public static final String VIDEOS = "videos";
+    public static final String PAGE = "page";
     private static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
     private static final String IMAGE_SIZE = "w500";
     private static final String SORT_BY = "sort_by";
@@ -26,8 +28,6 @@ public class NetworkUtils {
     private static final String DISCOVER = "discover";
     private static final String MOVIE = "movie";
     private static final String API_KEY = "api_key";
-    public static final String VIDEOS = "videos";
-    public static final String PAGE = "page";
 
     /**
      * Returns the response string from the HttpUrl address
@@ -85,6 +85,7 @@ public class NetworkUtils {
 
     /**
      * Builds the HttpUrl for the movie videos
+     *
      * @param movieId
      * @return
      */
@@ -102,6 +103,7 @@ public class NetworkUtils {
 
     /**
      * Builds the full path from a relative image and loads it in the ImageView
+     *
      * @param context
      * @param imageView
      * @param relativeImagePath
@@ -109,11 +111,14 @@ public class NetworkUtils {
     public static void loadImage(Context context, ImageView imageView, String relativeImagePath) {
         String completeImagePath = IMAGE_BASE_URL + IMAGE_SIZE + relativeImagePath;
 
-        Picasso.with(context).load(completeImagePath).into(imageView);
+        Picasso.with(context)
+                .load(completeImagePath)
+                .into(imageView);
     }
 
     /**
      * Checks if there is an active internet connection
+     *
      * @param context
      * @return
      */
