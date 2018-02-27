@@ -15,7 +15,7 @@
         android:scaleType="centerInside"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@mipmap/ic_launcher" />
+        tools:src="@drawable/missing_cover" />
 
     <TextView
         android:id="@+id/movie_title"
@@ -70,6 +70,7 @@
         style="@style/Widget.AppCompat.RatingBar.Indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="2dp"
         android:isIndicator="true"

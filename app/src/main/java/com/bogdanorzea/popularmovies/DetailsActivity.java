@@ -178,16 +178,16 @@ public class DetailsActivity extends AppCompatActivity {
 
     private void renderMovieInformation() {
         ImageView backdrop = findViewById(R.id.movie_backdrop);
-        NetworkUtils.loadImage(this, backdrop, mCurrentMovie.backdropPath);
+        NetworkUtils.loadBackdrop(this, backdrop, mCurrentMovie.backdropPath);
 
         ImageView poster = findViewById(R.id.movie_cover);
-        NetworkUtils.loadImage(this, poster, mCurrentMovie.posterPath);
+        NetworkUtils.loadPoster(this, poster, mCurrentMovie.posterPath);
 
         ((TextView) findViewById(R.id.movie_release_date)).setText(
                 String.format("(%s)", mCurrentMovie.releaseDate.substring(0, 4)));
         ((TextView) findViewById(R.id.movie_title)).setText(mCurrentMovie.title);
         ((TextView) findViewById(R.id.movie_tagline)).setText(
-                String.format("\"%s\"", mCurrentMovie.tagline));
+                DataUtils.quoteString(mCurrentMovie.tagline));
         ((TextView) findViewById(R.id.movie_overview)).setText(mCurrentMovie.overview);
         ((TextView) findViewById(R.id.movie_runtime)).setText(formatDuration(mCurrentMovie.runtime));
         ((TextView) findViewById(R.id.movie_budget)).setText(formatMoney(mCurrentMovie.budget));

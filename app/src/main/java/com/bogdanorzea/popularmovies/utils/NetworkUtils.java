@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 import android.widget.ImageView;
 
 import com.bogdanorzea.popularmovies.BuildConfig;
+import com.bogdanorzea.popularmovies.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -16,10 +17,11 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class NetworkUtils {
-    public static final String VIDEOS = "videos";
-    public static final String PAGE = "page";
+    private static final String VIDEOS = "videos";
+    private static final String PAGE = "page";
     private static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
-    private static final String IMAGE_SIZE = "w500";
+    private static final String POSTER_SIZE = "w500";
+    private static final String BACKDROP_SIZE = "w500";
     private static final String SORT_BY = "sort_by";
     private static final String LOG_TAG = NetworkUtils.class.getSimpleName();
     private static final String HTTPS = "https";
@@ -108,8 +110,24 @@ public class NetworkUtils {
      * @param imageView
      * @param relativeImagePath
      */
-    public static void loadImage(Context context, ImageView imageView, String relativeImagePath) {
-        String completeImagePath = IMAGE_BASE_URL + IMAGE_SIZE + relativeImagePath;
+    public static void loadPoster(Context context, ImageView imageView, String relativeImagePath) {
+        String completeImagePath = IMAGE_BASE_URL + POSTER_SIZE + relativeImagePath;
+
+        Picasso.with(context)
+                .load(completeImagePath)
+                .error(R.drawable.missing_cover)
+                .into(imageView);
+    }
+
+    /**
+     * Builds the full path from a relative image and loads it in the ImageView
+     *
+     * @param context
+     * @param imageView
+     * @param relativeImagePath
+     */
+    public static void loadBackdrop(Context context, ImageView imageView, String relativeImagePath) {
+        String completeImagePath = IMAGE_BASE_URL + BACKDROP_SIZE + relativeImagePath;
 
         Picasso.with(context)
                 .load(completeImagePath)

@@ -32,7 +32,7 @@ public class DataUtilsTest {
     @Test
     public void printGenres() throws Exception {
         List<Genre> genreList = new ArrayList<>();
-        assertEquals(DataUtils.printGenres(genreList), "");
+        assertEquals(DataUtils.printGenres(genreList), "Unknown");
         Genre g = new Genre();
         g.name = "First";
         genreList.add(g);
@@ -43,4 +43,9 @@ public class DataUtilsTest {
         assertEquals(DataUtils.printGenres(genreList), "First, Second");
     }
 
+    @Test
+    public void quoteString() throws Exception {
+        assertEquals(DataUtils.quoteString(""), "");
+        assertEquals(DataUtils.quoteString("a"), "\"a\"");
+    }
 }

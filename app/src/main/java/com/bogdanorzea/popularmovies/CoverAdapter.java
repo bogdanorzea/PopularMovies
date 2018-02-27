@@ -37,7 +37,7 @@ public class CoverAdapter extends RecyclerView.Adapter<CoverAdapter.ViewHolder> 
         Movie currentMovie = movies.get(position);
 
         holder.itemView.setTag(currentMovie);
-        NetworkUtils.loadImage(context, holder.coverImage, currentMovie.posterPath);
+        NetworkUtils.loadPoster(context, holder.coverImage, currentMovie.posterPath);
     }
 
     @Override

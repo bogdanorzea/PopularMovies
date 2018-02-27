@@ -26,22 +26,30 @@ public class DataUtils {
     }
 
     public static String formatMoney(long sum) {
-        DecimalFormat formatter = new DecimalFormat("###,###,###.##");
+        if (sum > 0) {
+            DecimalFormat formatter = new DecimalFormat("###,###,###.##");
 
-        return "$" + formatter.format(sum);
+            return "$" + formatter.format(sum);
+        } else {
+            return "Unknown";
+        }
     }
 
     public static String formatDuration(int duration) {
-        String result = "";
-        int hours = duration / 60;
-        int minutes = duration % 60;
+        if (duration > 0) {
+            String result = "";
+            int hours = duration / 60;
+            int minutes = duration % 60;
 
-        if (hours > 0) {
-            result += hours + "h ";
+            if (hours > 0) {
+                result += hours + "h ";
+            }
+            result += minutes + "m";
+
+            return result;
+        } else {
+            return "Unknown";
         }
-        result += minutes + "m";
-
-        return result;
     }
 
 
@@ -54,7 +62,15 @@ public class DataUtils {
 
             return result.substring(0, result.length() - 2);
         } else {
-            return "";
+            return "Unknown";
         }
+    }
+
+    public static String quoteString(String string) {
+        if (string != null && string.length() > 0) {
+            return String.format("\"%s\"", string);
+        }
+
+        return "";
     }
 }
