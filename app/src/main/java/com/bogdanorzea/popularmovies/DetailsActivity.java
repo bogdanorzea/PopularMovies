@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -24,14 +23,9 @@ import android.widget.Toast;
 import com.bogdanorzea.popularmovies.model.objects.Movie;
 import com.bogdanorzea.popularmovies.model.objects.Video;
 import com.bogdanorzea.popularmovies.model.response.VideosResponse;
+import com.bogdanorzea.popularmovies.utils.AsyncTaskUtils;
 import com.bogdanorzea.popularmovies.utils.DataUtils;
 import com.bogdanorzea.popularmovies.utils.NetworkUtils;
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
-
-import java.io.IOException;
-
-import okhttp3.HttpUrl;
 
 import static com.bogdanorzea.popularmovies.utils.DataUtils.formatDuration;
 import static com.bogdanorzea.popularmovies.utils.DataUtils.formatMoney;
@@ -44,11 +38,34 @@ public class DetailsActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;
     private Movie mCurrentMovie;
     private VideosResponse mCurrentVideosResponse;
-
     private CardView mMovieCardView;
     private AppBarLayout mAppBarLayout;
+    private AsyncTaskUtils.AsyncTaskListener<Movie> mMovieAsyncTaskListener =
+            new AsyncTaskUtils.AsyncTaskListener<Movie>() {
+                @Override
+                public void onTaskStarting() {
+                    showProgress();
+                }
 
-    @Override
+                @Override
+                public void onTaskComplete(Movie movie) {
+                    mCurrentMovie = movie;
+                    hideProgress();
+                    renderMovieInformation();
+                }
+            };
+    private AsyncTaskUtils.AsyncTaskListener<VideosResponse> mMovieVideosAsyncTaskListener =
+            new AsyncTaskUtils.AsyncTaskListener<VideosResponse>() {
+                @Override
+                public void onTaskStarting() {
+                }
+
+                @Override
+                public void onTaskComplete(VideosResponse videosResponse) {
+                    mCurrentVideosResponse = videosResponse;
+                }
+            };
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
@@ -70,8 +87,8 @@ public class DetailsActivity extends AppCompatActivity {
             if (NetworkUtils.hasInternetConnection(this)) {
                 int movieId = intent.getIntExtra(MOVIE_ID_INTENT_KEY, -1);
                 if (movieId != -1) {
-                    new MovieDetailsAsyncTask().execute(NetworkUtils.movieDetailsUrl(movieId));
-                    new MovieVideosAsyncTask().execute(NetworkUtils.movieVideosUrl(movieId));
+                    new AsyncTaskUtils.MovieDetailsAsyncTask(mMovieAsyncTaskListener).execute(NetworkUtils.movieDetailsUrl(movieId));
+                    new AsyncTaskUtils.MovieVideosAsyncTask(mMovieVideosAsyncTaskListener).execute(NetworkUtils.movieVideosUrl(movieId));
                 }
             } else {
                 Toast.makeText(this, R.string.warning_no_internet, Toast.LENGTH_SHORT).show();
@@ -195,74 +212,6 @@ public class DetailsActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.movie_genre)).setText(DataUtils.printGenres(mCurrentMovie.genres));
 
         ((RatingBar) findViewById(R.id.movie_score)).setRating(mCurrentMovie.voteAverage / 2);
-    }
-
-    private class MovieDetailsAsyncTask extends AsyncTask<HttpUrl, Void, Movie> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            showProgress();
-        }
-
-        @Override
-        protected Movie doInBackground(HttpUrl... httpUrls) {
-            String response = "";
-            try {
-                response = NetworkUtils.fetch(httpUrls[0]);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            Moshi moshi = new Moshi.Builder().build();
-            JsonAdapter<Movie> jsonAdapter = moshi.adapter(Movie.class);
-
-            Movie movie = null;
-
-            try {
-                movie = jsonAdapter.fromJson(response);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return movie;
-        }
-
-        @Override
-        protected void onPostExecute(Movie movie) {
-            mCurrentMovie = movie;
-            hideProgress();
-            renderMovieInformation();
-        }
-    }
-
-    private class MovieVideosAsyncTask extends AsyncTask<HttpUrl, Void, VideosResponse> {
-        @Override
-        protected VideosResponse doInBackground(HttpUrl... httpUrls) {
-            String response = "";
-            try {
-                response = NetworkUtils.fetch(httpUrls[0]);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            Moshi moshi = new Moshi.Builder().build();
-            JsonAdapter<VideosResponse> jsonAdapter = moshi.adapter(VideosResponse.class);
-
-            VideosResponse videosResponse = null;
-
-            try {
-                videosResponse = jsonAdapter.fromJson(response);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return videosResponse;
-        }
-
-        @Override
-        protected void onPostExecute(VideosResponse videosResponse) {
-            mCurrentVideosResponse = videosResponse;
-        }
     }
 
 }
