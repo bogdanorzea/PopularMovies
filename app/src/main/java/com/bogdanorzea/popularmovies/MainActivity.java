@@ -13,7 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.model.response.DiscoverResponse;
 import com.bogdanorzea.popularmovies.utils.DataUtils;
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private ProgressBar mProgressBar;
-    private RecyclerView mRecyclerView;
+    private RecyclerView mCoverRecyclerView;
     private CoverAdapter mAdapter;
 
     @Override
@@ -38,13 +38,13 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         mProgressBar = findViewById(R.id.progressBar);
-        mRecyclerView = findViewById(R.id.lv);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        mRecyclerView.setHasFixedSize(true);
+        mCoverRecyclerView = findViewById(R.id.cover_rv);
+        mCoverRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        mCoverRecyclerView.setHasFixedSize(true);
 
         mAdapter = new CoverAdapter(MainActivity.this, null);
 
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        mCoverRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -55,13 +55,15 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        if (NetworkUtils.hasInternetConnection(this)) {
-            loadData();
-        } else {
-            TextView textView = findViewById(R.id.warning_message);
-            textView.setText(R.string.warning_no_internet);
-            textView.setVisibility(View.VISIBLE);
-        }
+        loadData();
+    }
+
+    private void showNoInternetWarning() {
+        findViewById(R.id.warning_message).setVisibility(View.VISIBLE);
+    }
+
+    private void hideNoInternetWarning() {
+        findViewById(R.id.warning_message).setVisibility(View.GONE);
     }
 
     @Override
@@ -88,15 +90,25 @@ public class MainActivity extends AppCompatActivity
 
     private void reloadData() {
         mAdapter = new CoverAdapter(MainActivity.this, null);
-        mRecyclerView.setAdapter(null);
+        mCoverRecyclerView.setAdapter(null);
         loadData();
     }
 
     private void loadData() {
-        String preferredSortRule = DataUtils.getPreferredSortRule(this);
-        HttpUrl url = NetworkUtils.movieDiscoverUrl(mAdapter.nextPageToLoad, preferredSortRule);
+        if (NetworkUtils.hasInternetConnection(this)) {
+            hideNoInternetWarning();
+            String preferredSortRule = DataUtils.getPreferredSortRule(this);
+            HttpUrl url = NetworkUtils.movieDiscoverUrl(mAdapter.nextPageToLoad, preferredSortRule);
 
-        new DiscoverAsyncTask().execute(url);
+            new DiscoverAsyncTask().execute(url);
+        } else {
+            hideProgress();
+            if (mAdapter.movies == null || mAdapter.movies.isEmpty()) {
+                showNoInternetWarning();
+            } else {
+                Toast.makeText(this, getString(R.string.warning_no_internet), Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void showProgress() {
@@ -157,16 +169,18 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(DiscoverResponse discoverResponse) {
-            if (mAdapter.movies == null) {
-                mAdapter.movies = discoverResponse.results;
-                mRecyclerView.setAdapter(mAdapter);
-            } else {
-                mAdapter.movies.addAll(discoverResponse.results);
-            }
+            if (discoverResponse != null) {
+                if (null == mAdapter.movies) {
+                    mAdapter.movies = discoverResponse.results;
+                    mCoverRecyclerView.setAdapter(mAdapter);
+                } else {
+                    mAdapter.movies.addAll(discoverResponse.results);
+                }
 
-            hideProgress();
-            mAdapter.notifyDataSetChanged();
-            mAdapter.nextPageToLoad += 1;
+                hideProgress();
+                mAdapter.notifyDataSetChanged();
+                mAdapter.nextPageToLoad += 1;
+            }
         }
     }
 
