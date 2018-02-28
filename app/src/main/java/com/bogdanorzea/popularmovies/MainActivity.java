@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.bogdanorzea.popularmovies.model.response.DiscoverResponse;
+import com.bogdanorzea.popularmovies.model.response.ListOfMoviesResponse;
 import com.bogdanorzea.popularmovies.utils.DataUtils;
 import com.bogdanorzea.popularmovies.utils.NetworkUtils;
 import com.squareup.moshi.JsonAdapter;
@@ -98,9 +98,17 @@ public class MainActivity extends AppCompatActivity
         if (NetworkUtils.hasInternetConnection(this)) {
             hideNoInternetWarning();
             String preferredSortRule = DataUtils.getPreferredSortRule(this);
-            HttpUrl url = NetworkUtils.movieDiscoverUrl(mAdapter.nextPageToLoad, preferredSortRule);
 
-            new DiscoverAsyncTask().execute(url);
+            HttpUrl url;
+            if (preferredSortRule.equals(getString(R.string.pref_sort_by_popularity))) {
+                url = NetworkUtils.moviePopularUrl(mAdapter.nextPageToLoad);
+            } else if (preferredSortRule.equals(getString(R.string.pref_sort_by_top_rated))) {
+                url = NetworkUtils.movieTopRatedUrl(mAdapter.nextPageToLoad);
+            } else {
+                return;
+            }
+
+            new ListOfMoviesAsyncTask().execute(url);
         } else {
             hideProgress();
             if (mAdapter.movies == null || mAdapter.movies.isEmpty()) {
@@ -137,7 +145,7 @@ public class MainActivity extends AppCompatActivity
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
 
-    private class DiscoverAsyncTask extends AsyncTask<HttpUrl, Void, DiscoverResponse> {
+    private class ListOfMoviesAsyncTask extends AsyncTask<HttpUrl, Void, ListOfMoviesResponse> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -145,7 +153,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         @Override
-        protected DiscoverResponse doInBackground(HttpUrl... httpUrls) {
+        protected ListOfMoviesResponse doInBackground(HttpUrl... httpUrls) {
             String response = "";
             try {
                 response = NetworkUtils.fetch(httpUrls[0]);
@@ -154,27 +162,27 @@ public class MainActivity extends AppCompatActivity
             }
 
             Moshi moshi = new Moshi.Builder().build();
-            JsonAdapter<DiscoverResponse> jsonAdapter = moshi.adapter(DiscoverResponse.class);
+            JsonAdapter<ListOfMoviesResponse> jsonAdapter = moshi.adapter(ListOfMoviesResponse.class);
 
-            DiscoverResponse discoverResponse = null;
+            ListOfMoviesResponse listOfMoviesResponse = null;
 
             try {
-                discoverResponse = jsonAdapter.fromJson(response);
+                listOfMoviesResponse = jsonAdapter.fromJson(response);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            return discoverResponse;
+            return listOfMoviesResponse;
         }
 
         @Override
-        protected void onPostExecute(DiscoverResponse discoverResponse) {
-            if (discoverResponse != null) {
+        protected void onPostExecute(ListOfMoviesResponse listOfMoviesResponse) {
+            if (listOfMoviesResponse != null) {
                 if (null == mAdapter.movies) {
-                    mAdapter.movies = discoverResponse.results;
+                    mAdapter.movies = listOfMoviesResponse.results;
                     mCoverRecyclerView.setAdapter(mAdapter);
                 } else {
-                    mAdapter.movies.addAll(discoverResponse.results);
+                    mAdapter.movies.addAll(listOfMoviesResponse.results);
                 }
 
                 hideProgress();

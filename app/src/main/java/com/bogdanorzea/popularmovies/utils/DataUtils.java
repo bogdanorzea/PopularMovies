@@ -15,14 +15,11 @@ public class DataUtils {
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
 
-        String sortAttribute = sharedPreferences.getString(
+        String sortOrder = sharedPreferences.getString(
                 context.getString(R.string.pref_sort_by),
                 context.getString(R.string.pref_sort_by_popularity));
 
-        String sortOrder = sharedPreferences.getString(
-                context.getString(R.string.pref_sort_order),
-                context.getString(R.string.pref_sort_order_desc));
-        return String.format("%s.%s", sortAttribute, sortOrder);
+        return sortOrder;
     }
 
     public static String formatMoney(long sum) {

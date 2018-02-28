@@ -22,14 +22,14 @@ public class NetworkUtils {
     private static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
     private static final String POSTER_SIZE = "w500";
     private static final String BACKDROP_SIZE = "w500";
-    private static final String SORT_BY = "sort_by";
     private static final String LOG_TAG = NetworkUtils.class.getSimpleName();
     private static final String HTTPS = "https";
     private static final String HOST = "api.themoviedb.org";
     private static final String API_VERSION = "3";
-    private static final String DISCOVER = "discover";
     private static final String MOVIE = "movie";
     private static final String API_KEY = "api_key";
+    private static final String POPULAR = "popular";
+    private static final String TOP_RATED = "top_rated";
 
     /**
      * Returns the response string from the HttpUrl address
@@ -72,15 +72,31 @@ public class NetworkUtils {
      *
      * @return
      */
-    public static HttpUrl movieDiscoverUrl(int pageNumber, String sortRule) {
+    public static HttpUrl moviePopularUrl(int pageNumber) {
         return new HttpUrl.Builder()
                 .scheme(HTTPS)
                 .host(HOST)
                 .addPathSegment(API_VERSION)
-                .addPathSegment(DISCOVER)
                 .addPathSegment(MOVIE)
+                .addPathSegment(POPULAR)
                 .addQueryParameter(PAGE, String.valueOf(pageNumber))
-                .addQueryParameter(SORT_BY, sortRule)
+                .addQueryParameter(API_KEY, BuildConfig.TheMovieDBApiKey)
+                .build();
+    }
+
+    /**
+     * Builds the HttpUrl for the top rated movies list
+     *
+     * @return
+     */
+    public static HttpUrl movieTopRatedUrl(int pageNumber) {
+        return new HttpUrl.Builder()
+                .scheme(HTTPS)
+                .host(HOST)
+                .addPathSegment(API_VERSION)
+                .addPathSegment(MOVIE)
+                .addPathSegment(TOP_RATED)
+                .addQueryParameter(PAGE, String.valueOf(pageNumber))
                 .addQueryParameter(API_KEY, BuildConfig.TheMovieDBApiKey)
                 .build();
     }

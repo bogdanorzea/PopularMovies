@@ -5,7 +5,7 @@ import com.squareup.moshi.Json;
 
 import java.util.List;
 
-public class DiscoverResponse {
+public class ListOfMoviesResponse {
 
     @Json(name = "page")
     public int page;
