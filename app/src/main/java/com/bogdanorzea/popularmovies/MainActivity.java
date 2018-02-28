@@ -2,7 +2,6 @@ package com.bogdanorzea.popularmovies;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
@@ -16,17 +15,15 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.model.response.ListOfMoviesResponse;
+import com.bogdanorzea.popularmovies.utils.AsyncTaskUtils;
 import com.bogdanorzea.popularmovies.utils.DataUtils;
 import com.bogdanorzea.popularmovies.utils.NetworkUtils;
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
-
-import java.io.IOException;
 
 import okhttp3.HttpUrl;
 
-public class MainActivity extends AppCompatActivity
-        implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class MainActivity extends AppCompatActivity implements
+        SharedPreferences.OnSharedPreferenceChangeListener,
+        AsyncTaskUtils.AsyncTaskCompleteListener<ListOfMoviesResponse> {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private ProgressBar mProgressBar;
     private RecyclerView mCoverRecyclerView;
@@ -108,7 +105,7 @@ public class MainActivity extends AppCompatActivity
                 return;
             }
 
-            new ListOfMoviesAsyncTask().execute(url);
+            new AsyncTaskUtils.ListOfMoviesAsyncTask(this).execute(url);
         } else {
             hideProgress();
             if (mAdapter.movies == null || mAdapter.movies.isEmpty()) {
@@ -145,50 +142,24 @@ public class MainActivity extends AppCompatActivity
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
 
-    private class ListOfMoviesAsyncTask extends AsyncTask<HttpUrl, Void, ListOfMoviesResponse> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            showProgress();
-        }
+    @Override
+    public void onTaskStarting() {
+        showProgress();
+    }
 
-        @Override
-        protected ListOfMoviesResponse doInBackground(HttpUrl... httpUrls) {
-            String response = "";
-            try {
-                response = NetworkUtils.fetch(httpUrls[0]);
-            } catch (IOException e) {
-                e.printStackTrace();
+    @Override
+    public void onTaskComplete(ListOfMoviesResponse listOfMoviesResponse) {
+        if (listOfMoviesResponse != null) {
+            if (null == mAdapter.movies) {
+                mAdapter.movies = listOfMoviesResponse.results;
+                mCoverRecyclerView.setAdapter(mAdapter);
+            } else {
+                mAdapter.movies.addAll(listOfMoviesResponse.results);
             }
 
-            Moshi moshi = new Moshi.Builder().build();
-            JsonAdapter<ListOfMoviesResponse> jsonAdapter = moshi.adapter(ListOfMoviesResponse.class);
-
-            ListOfMoviesResponse listOfMoviesResponse = null;
-
-            try {
-                listOfMoviesResponse = jsonAdapter.fromJson(response);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return listOfMoviesResponse;
-        }
-
-        @Override
-        protected void onPostExecute(ListOfMoviesResponse listOfMoviesResponse) {
-            if (listOfMoviesResponse != null) {
-                if (null == mAdapter.movies) {
-                    mAdapter.movies = listOfMoviesResponse.results;
-                    mCoverRecyclerView.setAdapter(mAdapter);
-                } else {
-                    mAdapter.movies.addAll(listOfMoviesResponse.results);
-                }
-
-                hideProgress();
-                mAdapter.notifyDataSetChanged();
-                mAdapter.nextPageToLoad += 1;
-            }
+            hideProgress();
+            mAdapter.notifyDataSetChanged();
+            mAdapter.nextPageToLoad += 1;
         }
     }
 
