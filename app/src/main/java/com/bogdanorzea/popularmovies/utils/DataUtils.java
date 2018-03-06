@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.support.v7.preference.PreferenceManager;
 
 import com.bogdanorzea.popularmovies.R;
-import com.bogdanorzea.popularmovies.model.objects.Genre;
+import com.bogdanorzea.popularmovies.model.object.Genre;
 
 import java.text.DecimalFormat;
 import java.util.List;

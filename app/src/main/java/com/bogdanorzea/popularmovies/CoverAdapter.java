@@ -8,18 +8,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bogdanorzea.popularmovies.model.objects.Movie;
+import com.bogdanorzea.popularmovies.model.object.TruncatedMovie;
 import com.bogdanorzea.popularmovies.utils.NetworkUtils;
 
 import java.util.List;
 
 public class CoverAdapter extends RecyclerView.Adapter<CoverAdapter.ViewHolder> {
-    int nextPageToLoad = 1;
-    List<Movie> movies;
     private final Context context;
+    int nextPageToLoad = 1;
+    List<TruncatedMovie> movies;
     private LayoutInflater inflater;
 
-    CoverAdapter(Context context, List<Movie> movies) {
+    CoverAdapter(Context context, List<TruncatedMovie> movies) {
         this.movies = movies;
         this.context = context;
         this.inflater = LayoutInflater.from(context);
@@ -34,7 +34,7 @@ public class CoverAdapter extends RecyclerView.Adapter<CoverAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Movie currentMovie = movies.get(position);
+        TruncatedMovie currentMovie = movies.get(position);
 
         holder.itemView.setTag(currentMovie);
         NetworkUtils.loadPoster(context, holder.coverImage, currentMovie.posterPath);
@@ -60,10 +60,9 @@ public class CoverAdapter extends RecyclerView.Adapter<CoverAdapter.ViewHolder> 
         public void onClick(View view) {
             Context context = view.getContext();
 
-            Movie currentMovie = (Movie) itemView.getTag();
+            TruncatedMovie currentMovie = (TruncatedMovie) itemView.getTag();
 
             Intent intent = new Intent(context, DetailsActivity.class);
-            intent.putExtra(DetailsActivity.MOVIE_TITLE_INTENT_KEY, currentMovie.title);
             intent.putExtra(DetailsActivity.MOVIE_ID_INTENT_KEY, currentMovie.id);
             context.startActivity(intent);
         }

@@ -1,6 +1,6 @@
 package com.bogdanorzea.popularmovies.utils;
 
-import com.bogdanorzea.popularmovies.model.objects.Genre;
+import com.bogdanorzea.popularmovies.model.object.Genre;
 
 import org.junit.Test;
 

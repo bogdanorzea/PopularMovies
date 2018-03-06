@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.bogdanorzea.popularmovies.model.response.ListOfMoviesResponse;
+import com.bogdanorzea.popularmovies.model.response.MoviesResponse;
 import com.bogdanorzea.popularmovies.utils.AsyncTaskUtils;
 import com.bogdanorzea.popularmovies.utils.DataUtils;
 import com.bogdanorzea.popularmovies.utils.NetworkUtils;
@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity implements
     private ProgressBar mProgressBar;
     private RecyclerView mCoverRecyclerView;
     private CoverAdapter mAdapter;
-    private AsyncTaskUtils.AsyncTaskListener<ListOfMoviesResponse> mCoverListener =
-            new AsyncTaskUtils.AsyncTaskListener<ListOfMoviesResponse>() {
+    private AsyncTaskUtils.AsyncTaskListener<MoviesResponse> mCoverListener =
+            new AsyncTaskUtils.AsyncTaskListener<MoviesResponse>() {
 
         @Override
         public void onTaskStarting() {
@@ -36,13 +36,13 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         @Override
-        public void onTaskComplete(ListOfMoviesResponse listOfMoviesResponse) {
-            if (listOfMoviesResponse != null) {
+        public void onTaskComplete(MoviesResponse moviesResponse) {
+            if (moviesResponse != null) {
                 if (null == mAdapter.movies) {
-                    mAdapter.movies = listOfMoviesResponse.results;
+                    mAdapter.movies = moviesResponse.results;
                     mCoverRecyclerView.setAdapter(mAdapter);
                 } else {
-                    mAdapter.movies.addAll(listOfMoviesResponse.results);
+                    mAdapter.movies.addAll(moviesResponse.results);
                 }
 
                 hideProgress();

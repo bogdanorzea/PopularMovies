@@ -3,8 +3,8 @@ package com.bogdanorzea.popularmovies.utils;
 
 import android.os.AsyncTask;
 
-import com.bogdanorzea.popularmovies.model.objects.Movie;
-import com.bogdanorzea.popularmovies.model.response.ListOfMoviesResponse;
+import com.bogdanorzea.popularmovies.model.object.Movie;
+import com.bogdanorzea.popularmovies.model.response.MoviesResponse;
 import com.bogdanorzea.popularmovies.model.response.VideosResponse;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -20,10 +20,10 @@ public class AsyncTaskUtils {
         void onTaskComplete(T result);
     }
 
-    public static class ListOfMoviesAsyncTask extends AsyncTask<HttpUrl, Void, ListOfMoviesResponse> {
-        private final AsyncTaskListener<ListOfMoviesResponse> listener;
+    public static class ListOfMoviesAsyncTask extends AsyncTask<HttpUrl, Void, MoviesResponse> {
+        private final AsyncTaskListener<MoviesResponse> listener;
 
-        public ListOfMoviesAsyncTask(AsyncTaskListener<ListOfMoviesResponse> listener) {
+        public ListOfMoviesAsyncTask(AsyncTaskListener<MoviesResponse> listener) {
             this.listener = listener;
         }
 
@@ -34,7 +34,7 @@ public class AsyncTaskUtils {
         }
 
         @Override
-        protected ListOfMoviesResponse doInBackground(HttpUrl... httpUrls) {
+        protected MoviesResponse doInBackground(HttpUrl... httpUrls) {
             String response = "";
             try {
                 response = NetworkUtils.fetch(httpUrls[0]);
@@ -43,23 +43,23 @@ public class AsyncTaskUtils {
             }
 
             Moshi moshi = new Moshi.Builder().build();
-            JsonAdapter<ListOfMoviesResponse> jsonAdapter = moshi.adapter(ListOfMoviesResponse.class);
+            JsonAdapter<MoviesResponse> jsonAdapter = moshi.adapter(MoviesResponse.class);
 
-            ListOfMoviesResponse listOfMoviesResponse = null;
+            MoviesResponse moviesResponse = null;
 
             try {
-                listOfMoviesResponse = jsonAdapter.fromJson(response);
+                moviesResponse = jsonAdapter.fromJson(response);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            return listOfMoviesResponse;
+            return moviesResponse;
         }
 
         @Override
-        protected void onPostExecute(ListOfMoviesResponse listOfMoviesResponse) {
-            super.onPostExecute(listOfMoviesResponse);
-            listener.onTaskComplete(listOfMoviesResponse);
+        protected void onPostExecute(MoviesResponse moviesResponse) {
+            super.onPostExecute(moviesResponse);
+            listener.onTaskComplete(moviesResponse);
         }
     }
 

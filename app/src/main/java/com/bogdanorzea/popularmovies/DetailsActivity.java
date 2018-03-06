@@ -20,8 +20,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bogdanorzea.popularmovies.model.objects.Movie;
-import com.bogdanorzea.popularmovies.model.objects.Video;
+import com.bogdanorzea.popularmovies.model.object.Movie;
+import com.bogdanorzea.popularmovies.model.object.Video;
 import com.bogdanorzea.popularmovies.model.response.VideosResponse;
 import com.bogdanorzea.popularmovies.utils.AsyncTaskUtils;
 import com.bogdanorzea.popularmovies.utils.DataUtils;
@@ -33,7 +33,6 @@ import static com.bogdanorzea.popularmovies.utils.DataUtils.formatMoney;
 public class DetailsActivity extends AppCompatActivity {
 
     static final String MOVIE_ID_INTENT_KEY = "movie_id";
-    static final String MOVIE_TITLE_INTENT_KEY = "movie_title";
 
     private ProgressBar mProgressBar;
     private Movie mCurrentMovie;

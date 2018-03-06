@@ -1,4 +1,4 @@
-package com.bogdanorzea.popularmovies.model.objects;
+package com.bogdanorzea.popularmovies.model.object;
 
 import com.squareup.moshi.Json;
 
