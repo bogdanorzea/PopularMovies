@@ -27,30 +27,31 @@ public class MainActivity extends AppCompatActivity implements
     private ProgressBar mProgressBar;
     private RecyclerView mCoverRecyclerView;
     private CoverAdapter mAdapter;
+    private boolean isLoading = false;
     private AsyncTaskUtils.AsyncTaskListener<MoviesResponse> mCoverListener =
             new AsyncTaskUtils.AsyncTaskListener<MoviesResponse>() {
 
-        @Override
-        public void onTaskStarting() {
-            showProgress();
-        }
-
-        @Override
-        public void onTaskComplete(MoviesResponse moviesResponse) {
-            if (moviesResponse != null) {
-                if (null == mAdapter.movies) {
-                    mAdapter.movies = moviesResponse.results;
-                    mCoverRecyclerView.setAdapter(mAdapter);
-                } else {
-                    mAdapter.movies.addAll(moviesResponse.results);
+                @Override
+                public void onTaskStarting() {
+                    showProgress();
                 }
 
-                hideProgress();
-                mAdapter.notifyDataSetChanged();
-                mAdapter.nextPageToLoad += 1;
-            }
-        }
-    };
+                @Override
+                public void onTaskComplete(MoviesResponse moviesResponse) {
+                    if (moviesResponse != null) {
+                        if (null == mAdapter.movies) {
+                            mAdapter.movies = moviesResponse.results;
+                            mCoverRecyclerView.setAdapter(mAdapter);
+                        } else {
+                            mAdapter.movies.addAll(moviesResponse.results);
+                        }
+
+                        hideProgress();
+                        mAdapter.notifyDataSetChanged();
+                        mAdapter.nextPageToLoad += 1;
+                    }
+                }
+            };
 
 
     @Override
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
 
-                if (!recyclerView.canScrollVertically(1)) {
+                if (!recyclerView.canScrollVertically(1) && !isLoading) {
                     loadData();
                 }
             }
@@ -141,10 +142,12 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void showProgress() {
+        isLoading = true;
         mProgressBar.setVisibility(View.VISIBLE);
     }
 
     private void hideProgress() {
+        isLoading = false;
         mProgressBar.setVisibility(View.GONE);
     }
 
