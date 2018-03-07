@@ -24,10 +24,12 @@ import okhttp3.HttpUrl;
 public class MainActivity extends AppCompatActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+
     private ProgressBar mProgressBar;
     private RecyclerView mCoverRecyclerView;
     private CoverAdapter mAdapter;
     private boolean isLoading = false;
+
     private AsyncTaskUtils.AsyncTaskListener<MoviesResponse> mCoverListener =
             new AsyncTaskUtils.AsyncTaskListener<MoviesResponse>() {
 
@@ -80,14 +82,6 @@ public class MainActivity extends AppCompatActivity implements
         loadData();
     }
 
-    private void showNoInternetWarning() {
-        findViewById(R.id.warning_message).setVisibility(View.VISIBLE);
-    }
-
-    private void hideNoInternetWarning() {
-        findViewById(R.id.warning_message).setVisibility(View.GONE);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -108,6 +102,32 @@ public class MainActivity extends AppCompatActivity implements
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        reloadData();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    private void showNoInternetWarning() {
+        findViewById(R.id.warning_message).setVisibility(View.VISIBLE);
+    }
+
+    private void hideNoInternetWarning() {
+        findViewById(R.id.warning_message).setVisibility(View.GONE);
     }
 
     private void reloadData() {
@@ -150,23 +170,4 @@ public class MainActivity extends AppCompatActivity implements
         isLoading = false;
         mProgressBar.setVisibility(View.GONE);
     }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        reloadData();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        PreferenceManager.getDefaultSharedPreferences(this)
-                .unregisterOnSharedPreferenceChangeListener(this);
-    }
-
 }
