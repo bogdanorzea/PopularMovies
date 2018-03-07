@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 
 import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.model.response.MoviesResponse;
+import com.bogdanorzea.popularmovies.model.response.ReviewsResponse;
 import com.bogdanorzea.popularmovies.model.response.VideosResponse;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -148,4 +149,48 @@ public class AsyncTaskUtils {
             listener.onTaskComplete(videosResponse);
         }
     }
+
+    public static class MovieReviewsAsyncTask extends AsyncTask<HttpUrl, Void, ReviewsResponse> {
+        private final AsyncTaskListener<ReviewsResponse> listener;
+
+        public MovieReviewsAsyncTask(AsyncTaskUtils.AsyncTaskListener<ReviewsResponse> listener) {
+            this.listener = listener;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            listener.onTaskStarting();
+        }
+
+        @Override
+        protected ReviewsResponse doInBackground(HttpUrl... httpUrls) {
+            String response = "";
+            try {
+                response = NetworkUtils.fetch(httpUrls[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Moshi moshi = new Moshi.Builder().build();
+            JsonAdapter<ReviewsResponse> jsonAdapter = moshi.adapter(ReviewsResponse.class);
+
+            ReviewsResponse videosResponse = null;
+
+            try {
+                videosResponse = jsonAdapter.fromJson(response);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return videosResponse;
+        }
+
+        @Override
+        protected void onPostExecute(ReviewsResponse reviewsResponse) {
+            super.onPostExecute(reviewsResponse);
+            listener.onTaskComplete(reviewsResponse);
+        }
+    }
+
 }

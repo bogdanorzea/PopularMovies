@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.model.object.Video;
+import com.bogdanorzea.popularmovies.model.response.ReviewsResponse;
 import com.bogdanorzea.popularmovies.model.response.VideosResponse;
 import com.bogdanorzea.popularmovies.utils.AsyncTaskUtils;
 import com.bogdanorzea.popularmovies.utils.DataUtils;
@@ -39,6 +41,7 @@ public class DetailsActivity extends AppCompatActivity {
     private VideosResponse mCurrentVideosResponse;
     private CardView mMovieCardView;
     private AppBarLayout mAppBarLayout;
+
     private AsyncTaskUtils.AsyncTaskListener<Movie> mMovieAsyncTaskListener =
             new AsyncTaskUtils.AsyncTaskListener<Movie>() {
                 @Override
@@ -50,7 +53,7 @@ public class DetailsActivity extends AppCompatActivity {
                 public void onTaskComplete(Movie movie) {
                     mCurrentMovie = movie;
                     hideProgress();
-                    renderMovieInformation();
+                    displayMovieDetails();
                 }
             };
     private AsyncTaskUtils.AsyncTaskListener<VideosResponse> mMovieVideosAsyncTaskListener =
@@ -64,48 +67,35 @@ public class DetailsActivity extends AppCompatActivity {
                     mCurrentVideosResponse = videosResponse;
                 }
             };
+    private AsyncTaskUtils.AsyncTaskListener<ReviewsResponse> mMovieReviewsAsyncTaskListener =
+            new AsyncTaskUtils.AsyncTaskListener<ReviewsResponse>() {
+                @Override
+                public void onTaskStarting() {
 
+                }
+
+                @Override
+                public void onTaskComplete(ReviewsResponse result) {
+                    displayMovieReviews(result);
+                }
+            };
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ImageView backdropImage = findViewById(R.id.movie_backdrop);
-        backdropImage.setColorFilter(
-                new PorterDuffColorFilter(getResources().getColor(
-                        R.color.colorPrimary), PorterDuff.Mode.LIGHTEN));
+        setBackdropColorFilter();
 
         mProgressBar = findViewById(R.id.progressBar);
         mMovieCardView = findViewById(R.id.movie_card);
         mAppBarLayout = findViewById(R.id.app_bar);
 
-        Intent intent = getIntent();
-        if (intent != null) {
-            if (NetworkUtils.hasInternetConnection(this)) {
-                int movieId = intent.getIntExtra(MOVIE_ID_INTENT_KEY, -1);
-                if (movieId != -1) {
-                    new AsyncTaskUtils.MovieDetailsAsyncTask(mMovieAsyncTaskListener).execute(NetworkUtils.movieDetailsUrl(movieId));
-                    new AsyncTaskUtils.MovieVideosAsyncTask(mMovieVideosAsyncTaskListener).execute(NetworkUtils.movieVideosUrl(movieId));
-                }
-            } else {
-                Toast.makeText(this, R.string.warning_no_internet, Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        }
-    }
-
-    private void showProgress() {
-        mProgressBar.setVisibility(View.VISIBLE);
-        mMovieCardView.setVisibility(View.INVISIBLE);
-        mAppBarLayout.setExpanded(false);
-    }
-
-    private void hideProgress() {
-        mProgressBar.setVisibility(View.GONE);
-        mMovieCardView.setVisibility(View.VISIBLE);
-        mAppBarLayout.setExpanded(true);
+        handleIntent();
     }
 
     @Override
@@ -169,6 +159,42 @@ public class DetailsActivity extends AppCompatActivity {
         }
     }
 
+    private void handleIntent() {
+        Intent intent = getIntent();
+        if (intent != null) {
+            if (NetworkUtils.hasInternetConnection(this)) {
+                int movieId = intent.getIntExtra(MOVIE_ID_INTENT_KEY, -1);
+                if (movieId != -1) {
+                    new AsyncTaskUtils.MovieDetailsAsyncTask(mMovieAsyncTaskListener).execute(NetworkUtils.movieDetailsUrl(movieId));
+                    new AsyncTaskUtils.MovieVideosAsyncTask(mMovieVideosAsyncTaskListener).execute(NetworkUtils.movieVideosUrl(movieId));
+                    new AsyncTaskUtils.MovieReviewsAsyncTask(mMovieReviewsAsyncTaskListener).execute(NetworkUtils.movieReviewsUrl(movieId, 1));
+                }
+            } else {
+                Toast.makeText(this, R.string.warning_no_internet, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+    }
+
+    private void setBackdropColorFilter() {
+        ImageView backdropImage = findViewById(R.id.movie_backdrop);
+        backdropImage.setColorFilter(
+                new PorterDuffColorFilter(getResources().getColor(
+                        R.color.colorPrimary), PorterDuff.Mode.LIGHTEN));
+    }
+
+    private void showProgress() {
+        mProgressBar.setVisibility(View.VISIBLE);
+        mMovieCardView.setVisibility(View.INVISIBLE);
+        mAppBarLayout.setExpanded(false);
+    }
+
+    private void hideProgress() {
+        mProgressBar.setVisibility(View.GONE);
+        mMovieCardView.setVisibility(View.VISIBLE);
+        mAppBarLayout.setExpanded(true);
+    }
+
     private void addToFavorites() {
         Toast.makeText(this, "Will be added soon", Toast.LENGTH_SHORT).show();
     }
@@ -192,7 +218,7 @@ public class DetailsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void renderMovieInformation() {
+    private void displayMovieDetails() {
         ImageView backdrop = findViewById(R.id.movie_backdrop);
         NetworkUtils.loadBackdrop(this, backdrop, mCurrentMovie.backdropPath);
 
@@ -211,6 +237,10 @@ public class DetailsActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.movie_genre)).setText(DataUtils.printGenres(mCurrentMovie.genres));
 
         ((RatingBar) findViewById(R.id.movie_score)).setRating(mCurrentMovie.voteAverage / 2);
+    }
+
+    private void displayMovieReviews(ReviewsResponse result) {
+        Log.d("DetailsActivity", result.results.toString());
     }
 
 }
