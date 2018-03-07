@@ -28,4 +28,5 @@
     <string name="runtime_label">Runtime</string>
     <string name="budget_label">Budget</string>
     <string name="revenue_label">Revenue</string>
+    <string name="reviews_label">Reviews</string>
 </resources>
