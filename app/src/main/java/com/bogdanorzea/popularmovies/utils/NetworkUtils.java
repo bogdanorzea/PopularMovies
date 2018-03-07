@@ -30,6 +30,7 @@ public class NetworkUtils {
     private static final String API_KEY = "api_key";
     private static final String POPULAR = "popular";
     private static final String TOP_RATED = "top_rated";
+    public static final String REVIEWS = "reviews";
 
     /**
      * Returns the response string from the HttpUrl address
@@ -115,6 +116,25 @@ public class NetworkUtils {
                 .addPathSegment(MOVIE)
                 .addPathSegment(String.valueOf(movieId))
                 .addPathSegment(VIDEOS)
+                .addQueryParameter(API_KEY, BuildConfig.TheMovieDBApiKey)
+                .build();
+    }
+
+    /**
+     * Builds the HttpUrl for the movie review list
+     * @param movieId
+     * @param pageNumber
+     * @return
+     */
+    public static HttpUrl movieReviewsUrl(int movieId, int pageNumber) {
+        return new HttpUrl.Builder()
+                .scheme(HTTPS)
+                .host(HOST)
+                .addPathSegment(API_VERSION)
+                .addPathSegment(MOVIE)
+                .addPathSegment(String.valueOf(movieId))
+                .addPathSegment(REVIEWS)
+                .addQueryParameter(PAGE, String.valueOf(pageNumber))
                 .addQueryParameter(API_KEY, BuildConfig.TheMovieDBApiKey)
                 .build();
     }
