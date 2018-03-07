@@ -14,8 +14,13 @@ public class NetworkUtilsTest {
     }
 
     @Test
-    public void movieDiscoverUrl() throws Exception {
-        Assert.assertEquals(NetworkUtils.movieDiscoverUrl(1, "popularity.desc").toString(), "https://api.themoviedb.org/3/discover/movie?page=1&sort_by=popularity.desc&api_key=" + BuildConfig.TheMovieDBApiKey);
+    public void moviePopularUrl() throws Exception {
+        Assert.assertEquals(NetworkUtils.moviePopularUrl(1).toString(), "https://api.themoviedb.org/3/movie/popular?page=1&api_key=" + BuildConfig.TheMovieDBApiKey);
+    }
+
+    @Test
+    public void movieTopRatedUrl() throws Exception {
+        Assert.assertEquals(NetworkUtils.movieTopRatedUrl(1).toString(), "https://api.themoviedb.org/3/movie/top_rated?page=1&api_key=" + BuildConfig.TheMovieDBApiKey);
     }
 
     @Test
