@@ -51,7 +51,7 @@ public class DataUtils {
 
 
     public static String printGenres(List<Genre> genres) {
-        if (genres.size() > 0) {
+        if (genres != null && genres.size() > 0) {
             StringBuilder result = new StringBuilder();
             for (Genre genre : genres) {
                 result.append(genre.name).append(", ");
