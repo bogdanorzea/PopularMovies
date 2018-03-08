@@ -10,12 +10,11 @@ import android.widget.TextView;
 
 import com.bogdanorzea.popularmovies.model.object.Review;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ReviewsAdapter extends ArrayAdapter<Review> {
 
-    List<Review> mReviews;
+    private List<Review> mReviews;
 
     public ReviewsAdapter(@NonNull Context context, List<Review> reviews) {
         super(context, 0, reviews);
@@ -24,11 +23,19 @@ public class ReviewsAdapter extends ArrayAdapter<Review> {
 
     @Override
     public int getCount() {
+        if (mReviews == null) {
+            return 0;
+        }
+
         return mReviews.size();
     }
 
     @Override
     public Review getItem(int i) {
+        if (mReviews == null) {
+            return null;
+        }
+
         return mReviews.get(i);
     }
 
