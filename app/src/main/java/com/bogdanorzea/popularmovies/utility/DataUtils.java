@@ -70,4 +70,13 @@ public class DataUtils {
 
         return "";
     }
+
+    public static String getYear(String releaseDate) {
+        if (releaseDate != null && releaseDate.length() > 3) {
+            return String.format("(%s)", releaseDate.substring(0, 4));
+        }
+
+        return "";
+    }
+
 }

@@ -21,32 +21,32 @@ import com.bogdanorzea.popularmovies.adapter.MovieCategoryPagerAdapter;
 import com.bogdanorzea.popularmovies.fragment.MovieDescription;
 import com.bogdanorzea.popularmovies.fragment.MovieFacts;
 import com.bogdanorzea.popularmovies.fragment.MovieReviews;
-import com.bogdanorzea.popularmovies.model.response.VideosResponse;
+import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 
 public class DetailsActivity extends AppCompatActivity {
 
     public static final String MOVIE_ID_INTENT_KEY = "movie_id";
-
+    public Movie mCurrentMovie;
     private ProgressBar mProgressBar;
     //private VideosResponse mCurrentVideosResponse;
     private AppBarLayout mAppBarLayout;
-
-    private AsyncTaskUtils.AsyncTaskListener<VideosResponse> mMovieVideosAsyncTaskListener =
-            new AsyncTaskUtils.AsyncTaskListener<VideosResponse>() {
+    private AsyncTaskUtils.AsyncTaskListener<Movie> mMovieAsyncTaskListener =
+            new AsyncTaskUtils.AsyncTaskListener<Movie>() {
                 @Override
                 public void onTaskStarting() {
+                    showProgress();
                 }
 
                 @Override
-                public void onTaskComplete(VideosResponse videosResponse) {
-                    //mCurrentVideosResponse = videosResponse;
+                public void onTaskComplete(Movie movie) {
+                    mCurrentMovie = movie;
+                    hideProgress();
+                    loadBackdropImage();
+                    populateTabs();
                 }
             };
-
-    private int movieId;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,30 +64,49 @@ public class DetailsActivity extends AppCompatActivity {
 
         handleIntent();
 
+    }
+
+    private void populateTabs() {
         ViewPager viewPager = findViewById(R.id.tab_viewpager);
-
-
         MovieCategoryPagerAdapter pagerAdapter = new MovieCategoryPagerAdapter(getSupportFragmentManager());
-        MovieDescription description = new MovieDescription();
-        MovieFacts facts = new MovieFacts();
-        MovieReviews reviews = new MovieReviews();
 
-        Bundle bundle = new Bundle();
-        bundle.putInt("movie_id", movieId);
-
-        description.setArguments(bundle);
-        facts.setArguments(bundle);
-        reviews.setArguments(bundle);
-
-        pagerAdapter.addFragment(description, "OVERVIEW");
-        pagerAdapter.addFragment(facts, "FACTS");
-        pagerAdapter.addFragment(reviews, "REVIEWS");
-
+        pagerAdapter.addFragment(buildMovieDescription(mCurrentMovie), "DESCRIPTION");
+        pagerAdapter.addFragment(buildMovieFacts(mCurrentMovie), "FACTS");
+        pagerAdapter.addFragment(buildMovieReviews(mCurrentMovie), "REVIEWS");
 
         viewPager.setAdapter(pagerAdapter);
 
         TabLayout tabLayout = findViewById(R.id.htab_tabs);
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    private MovieDescription buildMovieDescription(Movie movie) {
+        MovieDescription description = new MovieDescription();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("movie", movie);
+        description.setArguments(bundle);
+
+        return description;
+    }
+
+    private MovieFacts buildMovieFacts(Movie movie) {
+        MovieFacts facts = new MovieFacts();
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("movie", movie);
+        facts.setArguments(bundle);
+
+        return facts;
+    }
+
+    private MovieReviews buildMovieReviews(Movie movie) {
+        MovieReviews reviews = new MovieReviews();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt("movie_id", movie.id);
+        reviews.setArguments(bundle);
+
+        return reviews;
     }
 
     @Override
@@ -155,9 +174,12 @@ public class DetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             if (NetworkUtils.hasInternetConnection(this)) {
-                movieId = intent.getIntExtra(MOVIE_ID_INTENT_KEY, -1);
+                int movieId = intent.getIntExtra(MOVIE_ID_INTENT_KEY, -1);
                 if (movieId != -1) {
-                    new AsyncTaskUtils.MovieVideosAsyncTask(mMovieVideosAsyncTaskListener).execute(NetworkUtils.movieVideosUrl(movieId));
+                    new AsyncTaskUtils.MovieDetailsAsyncTask(mMovieAsyncTaskListener)
+                            .execute(NetworkUtils.movieDetailsUrl(movieId));
+
+                    //new AsyncTaskUtils.MovieVideosAsyncTask(mMovieVideosAsyncTaskListener).execute(NetworkUtils.movieVideosUrl(movieId));
                 }
             } else {
                 Toast.makeText(this, R.string.warning_no_internet, Toast.LENGTH_SHORT).show();
@@ -206,8 +228,8 @@ public class DetailsActivity extends AppCompatActivity {
 //        startActivity(intent);
 //    }
 
-    private void displayBackdrop() {
+    private void loadBackdropImage() {
         ImageView backdrop = findViewById(R.id.movie_backdrop);
-        //NetworkUtils.loadBackdrop(this, backdrop, mCurrentMovie.backdropPath);
+        NetworkUtils.loadBackdrop(this, backdrop, mCurrentMovie.backdropPath);
     }
 }

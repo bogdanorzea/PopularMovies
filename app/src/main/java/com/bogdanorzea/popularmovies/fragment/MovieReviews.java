@@ -33,11 +33,12 @@ public class MovieReviews extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.movie_reviews_layout, container, false);
 
-        Bundle arguments = getArguments();
-        int movieId = arguments.getInt("movie_id");
+        if (getArguments() != null) {
+            int movieId = getArguments().getInt("movie_id");
 
-        new AsyncTaskUtils.MovieReviewsAsyncTask(mMovieReviewsAsyncTaskListener)
-                .execute(NetworkUtils.movieReviewsUrl(movieId, 1));
+            new AsyncTaskUtils.MovieReviewsAsyncTask(mMovieReviewsAsyncTaskListener)
+                    .execute(NetworkUtils.movieReviewsUrl(movieId, 1));
+        }
 
         return view;
     }
