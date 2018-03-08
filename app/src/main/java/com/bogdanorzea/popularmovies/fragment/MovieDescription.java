@@ -20,8 +20,6 @@ import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 
 public class MovieDescription extends Fragment {
 
-    private View view;
-    private Movie mCurrentMovie;
     private AsyncTaskUtils.AsyncTaskListener<Movie> mMovieAsyncTaskListener =
             new AsyncTaskUtils.AsyncTaskListener<Movie>() {
                 @Override
@@ -30,14 +28,13 @@ public class MovieDescription extends Fragment {
 
                 @Override
                 public void onTaskComplete(Movie movie) {
-                    mCurrentMovie = movie;
-                    displayDescription();
+                    displayDescription(movie);
                 }
             };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.movie_description_layout, container, false);
+        View view = inflater.inflate(R.layout.movie_description_layout, container, false);
 
         Bundle arguments = getArguments();
         int movieId = arguments.getInt("movie_id");
@@ -48,28 +45,30 @@ public class MovieDescription extends Fragment {
         return view;
     }
 
-    private void displayDescription() {
+    private void displayDescription(Movie movie) {
+        View view = getView();
+
         ScrollView scrollView = view.findViewById(R.id.scroll_view);
         ViewCompat.setNestedScrollingEnabled(scrollView, true);
 
         // Poster
         ImageView poster = view.findViewById(R.id.movie_cover);
-        NetworkUtils.loadPoster(getActivity(), poster, mCurrentMovie.posterPath);
+        NetworkUtils.loadPoster(getActivity(), poster, movie.posterPath);
 
         // Release date
         ((TextView) view.findViewById(R.id.movie_release_date)).setText(
-                String.format("(%s)", mCurrentMovie.releaseDate.substring(0, 4)));
+                String.format("(%s)", movie.releaseDate.substring(0, 4)));
         // Title
-        ((TextView) view.findViewById(R.id.movie_title)).setText(mCurrentMovie.title);
+        ((TextView) view.findViewById(R.id.movie_title)).setText(movie.title);
 
         // Tagline
         ((TextView) view.findViewById(R.id.movie_tagline)).setText(
-                DataUtils.quoteString(mCurrentMovie.tagline));
+                DataUtils.quoteString(movie.tagline));
         // Overview
-        ((TextView) view.findViewById(R.id.movie_overview)).setText(mCurrentMovie.overview);
+        ((TextView) view.findViewById(R.id.movie_overview)).setText(movie.overview);
 
         // Score
-        ((RatingBar) view.findViewById(R.id.movie_score)).setRating(mCurrentMovie.voteAverage / 2);
+        ((RatingBar) view.findViewById(R.id.movie_score)).setRating(movie.voteAverage / 2);
     }
 
 

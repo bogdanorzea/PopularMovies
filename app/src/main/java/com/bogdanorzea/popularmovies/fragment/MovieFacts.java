@@ -20,9 +20,7 @@ import static com.bogdanorzea.popularmovies.utility.DataUtils.formatMoney;
 
 
 public class MovieFacts extends Fragment {
-    private int movieId;
-    private Movie mCurrentMovie;
-    private View view;
+
     private AsyncTaskUtils.AsyncTaskListener<Movie> mMovieAsyncTaskListener =
             new AsyncTaskUtils.AsyncTaskListener<Movie>() {
                 @Override
@@ -31,17 +29,16 @@ public class MovieFacts extends Fragment {
 
                 @Override
                 public void onTaskComplete(Movie movie) {
-                    mCurrentMovie = movie;
-                    displayFacts();
+                    displayFacts(movie);
                 }
             };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.movie_facts_layout, container, false);
+        View view = inflater.inflate(R.layout.movie_facts_layout, container, false);
 
         Bundle arguments = getArguments();
-        movieId = arguments.getInt("movie_id");
+        int movieId = arguments.getInt("movie_id");
 
         new AsyncTaskUtils.MovieDetailsAsyncTask(mMovieAsyncTaskListener)
                 .execute(NetworkUtils.movieDetailsUrl(movieId));
@@ -49,13 +46,14 @@ public class MovieFacts extends Fragment {
         return view;
     }
 
-    private void displayFacts() {
+    private void displayFacts(Movie movie) {
+        View view = getView();
         ScrollView scrollView = view.findViewById(R.id.scroll_view);
         ViewCompat.setNestedScrollingEnabled(scrollView, true);
 
-        ((TextView) view.findViewById(R.id.movie_runtime)).setText(formatDuration(mCurrentMovie.runtime));
-        ((TextView) view.findViewById(R.id.movie_budget)).setText(formatMoney(mCurrentMovie.budget));
-        ((TextView) view.findViewById(R.id.movie_revenue)).setText(formatMoney(mCurrentMovie.revenue));
-        ((TextView) view.findViewById(R.id.movie_genre)).setText(DataUtils.printGenres(mCurrentMovie.genres));
+        ((TextView) view.findViewById(R.id.movie_runtime)).setText(formatDuration(movie.runtime));
+        ((TextView) view.findViewById(R.id.movie_budget)).setText(formatMoney(movie.budget));
+        ((TextView) view.findViewById(R.id.movie_revenue)).setText(formatMoney(movie.revenue));
+        ((TextView) view.findViewById(R.id.movie_genre)).setText(DataUtils.printGenres(movie.genres));
     }
 }
