@@ -1,6 +1,6 @@
 package com.bogdanorzea.popularmovies;
 
-import com.bogdanorzea.popularmovies.utils.NetworkUtils;
+import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 
 import junit.framework.Assert;
 

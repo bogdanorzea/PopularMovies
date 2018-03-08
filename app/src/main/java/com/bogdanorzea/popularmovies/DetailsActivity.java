@@ -17,13 +17,16 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bogdanorzea.popularmovies.adapter.MovieCategoryPagerAdapter;
+import com.bogdanorzea.popularmovies.fragment.MovieFactsFragment;
+import com.bogdanorzea.popularmovies.fragment.MovieReviewsFragment;
 import com.bogdanorzea.popularmovies.model.response.VideosResponse;
-import com.bogdanorzea.popularmovies.utils.AsyncTaskUtils;
-import com.bogdanorzea.popularmovies.utils.NetworkUtils;
+import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
+import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 
 public class DetailsActivity extends AppCompatActivity {
 
-    static final String MOVIE_ID_INTENT_KEY = "movie_id";
+    public static final String MOVIE_ID_INTENT_KEY = "movie_id";
 
     private ProgressBar mProgressBar;
     private VideosResponse mCurrentVideosResponse;

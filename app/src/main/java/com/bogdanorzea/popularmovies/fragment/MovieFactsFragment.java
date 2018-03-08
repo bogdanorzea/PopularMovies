@@ -1,4 +1,4 @@
-package com.bogdanorzea.popularmovies;
+package com.bogdanorzea.popularmovies.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,13 +10,14 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.model.object.Movie;
-import com.bogdanorzea.popularmovies.utils.AsyncTaskUtils;
-import com.bogdanorzea.popularmovies.utils.DataUtils;
-import com.bogdanorzea.popularmovies.utils.NetworkUtils;
+import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
+import com.bogdanorzea.popularmovies.utility.DataUtils;
+import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 
-import static com.bogdanorzea.popularmovies.utils.DataUtils.formatDuration;
-import static com.bogdanorzea.popularmovies.utils.DataUtils.formatMoney;
+import static com.bogdanorzea.popularmovies.utility.DataUtils.formatDuration;
+import static com.bogdanorzea.popularmovies.utility.DataUtils.formatMoney;
 
 
 public class MovieFactsFragment extends Fragment {

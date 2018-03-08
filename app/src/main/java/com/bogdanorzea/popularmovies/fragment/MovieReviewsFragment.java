@@ -1,4 +1,4 @@
-package com.bogdanorzea.popularmovies;
+package com.bogdanorzea.popularmovies.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,9 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.bogdanorzea.popularmovies.R;
+import com.bogdanorzea.popularmovies.adapter.ReviewsAdapter;
 import com.bogdanorzea.popularmovies.model.response.ReviewsResponse;
-import com.bogdanorzea.popularmovies.utils.AsyncTaskUtils;
-import com.bogdanorzea.popularmovies.utils.NetworkUtils;
+import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
+import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 
 
 public class MovieReviewsFragment extends Fragment {

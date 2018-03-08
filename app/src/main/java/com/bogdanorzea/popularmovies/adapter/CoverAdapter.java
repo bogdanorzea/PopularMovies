@@ -1,4 +1,4 @@
-package com.bogdanorzea.popularmovies;
+package com.bogdanorzea.popularmovies.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,18 +8,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bogdanorzea.popularmovies.DetailsActivity;
+import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.model.object.TruncatedMovie;
-import com.bogdanorzea.popularmovies.utils.NetworkUtils;
+import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 
 import java.util.List;
 
 public class CoverAdapter extends RecyclerView.Adapter<CoverAdapter.ViewHolder> {
     private final Context context;
-    int nextPageToLoad = 1;
-    List<TruncatedMovie> movies;
+    public int nextPageToLoad = 1;
+    public List<TruncatedMovie> movies;
     private LayoutInflater inflater;
 
-    CoverAdapter(Context context, List<TruncatedMovie> movies) {
+    public CoverAdapter(Context context, List<TruncatedMovie> movies) {
         this.movies = movies;
         this.context = context;
         this.inflater = LayoutInflater.from(context);
