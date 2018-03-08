@@ -16,9 +16,6 @@ import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 
 
 public class MovieReviews extends Fragment {
-    private int movieId;
-
-    private View view;
     private AsyncTaskUtils.AsyncTaskListener<ReviewsResponse> mMovieReviewsAsyncTaskListener =
             new AsyncTaskUtils.AsyncTaskListener<ReviewsResponse>() {
                 @Override
@@ -34,10 +31,10 @@ public class MovieReviews extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.movie_reviews_layout, container, false);
+        View view = inflater.inflate(R.layout.movie_reviews_layout, container, false);
 
         Bundle arguments = getArguments();
-        movieId = arguments.getInt("movie_id");
+        int movieId = arguments.getInt("movie_id");
 
         new AsyncTaskUtils.MovieReviewsAsyncTask(mMovieReviewsAsyncTaskListener)
                 .execute(NetworkUtils.movieReviewsUrl(movieId, 1));
@@ -46,6 +43,8 @@ public class MovieReviews extends Fragment {
     }
 
     private void displayReviews(ReviewsResponse result) {
+        View view = getView();
+
         ListView reviewsListView = view.findViewById(R.id.list);
         ViewCompat.setNestedScrollingEnabled(reviewsListView, true);
 
