@@ -15,7 +15,7 @@ import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 
 
-public class MovieReviewsFragment extends Fragment {
+public class MovieReviews extends Fragment {
     private int movieId;
 
     private View view;

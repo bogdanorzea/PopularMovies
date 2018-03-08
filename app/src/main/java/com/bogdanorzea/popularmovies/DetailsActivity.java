@@ -18,8 +18,9 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.adapter.MovieCategoryPagerAdapter;
-import com.bogdanorzea.popularmovies.fragment.MovieFactsFragment;
-import com.bogdanorzea.popularmovies.fragment.MovieReviewsFragment;
+import com.bogdanorzea.popularmovies.fragment.MovieDescription;
+import com.bogdanorzea.popularmovies.fragment.MovieFacts;
+import com.bogdanorzea.popularmovies.fragment.MovieReviews;
 import com.bogdanorzea.popularmovies.model.response.VideosResponse;
 import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
@@ -29,7 +30,7 @@ public class DetailsActivity extends AppCompatActivity {
     public static final String MOVIE_ID_INTENT_KEY = "movie_id";
 
     private ProgressBar mProgressBar;
-    private VideosResponse mCurrentVideosResponse;
+    //private VideosResponse mCurrentVideosResponse;
     private AppBarLayout mAppBarLayout;
 
     private AsyncTaskUtils.AsyncTaskListener<VideosResponse> mMovieVideosAsyncTaskListener =
@@ -40,7 +41,7 @@ public class DetailsActivity extends AppCompatActivity {
 
                 @Override
                 public void onTaskComplete(VideosResponse videosResponse) {
-                    mCurrentVideosResponse = videosResponse;
+                    //mCurrentVideosResponse = videosResponse;
                 }
             };
 
@@ -67,19 +68,20 @@ public class DetailsActivity extends AppCompatActivity {
 
 
         MovieCategoryPagerAdapter pagerAdapter = new MovieCategoryPagerAdapter(getSupportFragmentManager());
-        //MovieDescriptionFragment descriptionFragment = new MovieDescriptionFragment();
-        MovieFactsFragment factsFragment = new MovieFactsFragment();
-        MovieReviewsFragment reviewsFragment = new MovieReviewsFragment();
+        MovieDescription description = new MovieDescription();
+        MovieFacts facts = new MovieFacts();
+        MovieReviews reviews = new MovieReviews();
 
         Bundle bundle = new Bundle();
         bundle.putInt("movie_id", movieId);
 
-        factsFragment.setArguments(bundle);
-        reviewsFragment.setArguments(bundle);
+        description.setArguments(bundle);
+        facts.setArguments(bundle);
+        reviews.setArguments(bundle);
 
-        //pagerAdapter.addFragment(descriptionFragment, "DETAILS");
-        pagerAdapter.addFragment(factsFragment, "FACTS");
-        pagerAdapter.addFragment(reviewsFragment, "REVIEWS");
+        pagerAdapter.addFragment(description, "OVERVIEW");
+        pagerAdapter.addFragment(facts, "FACTS");
+        pagerAdapter.addFragment(reviews, "REVIEWS");
 
 
         viewPager.setAdapter(pagerAdapter);
@@ -204,5 +206,8 @@ public class DetailsActivity extends AppCompatActivity {
 //        startActivity(intent);
 //    }
 
-
+    private void displayBackdrop() {
+        ImageView backdrop = findViewById(R.id.movie_backdrop);
+        //NetworkUtils.loadBackdrop(this, backdrop, mCurrentMovie.backdropPath);
+    }
 }
