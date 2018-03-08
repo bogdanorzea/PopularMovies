@@ -1,4 +1,4 @@
-package com.bogdanorzea.popularmovies.utils;
+package com.bogdanorzea.popularmovies.utility;
 
 import android.content.Context;
 import android.content.SharedPreferences;

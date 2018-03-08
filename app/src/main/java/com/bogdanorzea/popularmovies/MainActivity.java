@@ -14,10 +14,11 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bogdanorzea.popularmovies.adapter.CoverAdapter;
 import com.bogdanorzea.popularmovies.model.response.MoviesResponse;
-import com.bogdanorzea.popularmovies.utils.AsyncTaskUtils;
-import com.bogdanorzea.popularmovies.utils.DataUtils;
-import com.bogdanorzea.popularmovies.utils.NetworkUtils;
+import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
+import com.bogdanorzea.popularmovies.utility.DataUtils;
+import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 
 import okhttp3.HttpUrl;
 
