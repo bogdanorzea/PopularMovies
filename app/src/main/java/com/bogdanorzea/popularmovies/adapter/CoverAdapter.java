@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bogdanorzea.popularmovies.DetailsActivity;
+import com.bogdanorzea.popularmovies.ui.DetailsActivity;
 import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.model.object.TruncatedMovie;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
