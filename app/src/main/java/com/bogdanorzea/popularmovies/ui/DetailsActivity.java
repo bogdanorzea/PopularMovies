@@ -1,4 +1,4 @@
-package com.bogdanorzea.popularmovies;
+package com.bogdanorzea.popularmovies.ui;
 
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.adapter.MovieCategoryPagerAdapter;
 import com.bogdanorzea.popularmovies.fragment.MovieDescription;
 import com.bogdanorzea.popularmovies.fragment.MovieFacts;

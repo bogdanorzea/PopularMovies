@@ -1,8 +1,10 @@
-package com.bogdanorzea.popularmovies;
+package com.bogdanorzea.popularmovies.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+
+import com.bogdanorzea.popularmovies.R;
 
 public class SettingsActivity extends AppCompatActivity {
     @Override
