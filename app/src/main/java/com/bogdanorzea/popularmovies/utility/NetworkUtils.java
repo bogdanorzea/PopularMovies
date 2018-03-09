@@ -22,7 +22,6 @@ public class NetworkUtils {
     private static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
     private static final String POSTER_SIZE = "w500";
     private static final String BACKDROP_SIZE = "w500";
-    private static final String LOG_TAG = NetworkUtils.class.getSimpleName();
     private static final String HTTPS = "https";
     private static final String HOST = "api.themoviedb.org";
     private static final String API_VERSION = "3";

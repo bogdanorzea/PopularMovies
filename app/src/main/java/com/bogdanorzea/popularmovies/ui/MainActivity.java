@@ -25,7 +25,6 @@ import okhttp3.HttpUrl;
 
 public class MainActivity extends AppCompatActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener {
-    private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     private ProgressBar mProgressBar;
     private RecyclerView mCoverRecyclerView;
