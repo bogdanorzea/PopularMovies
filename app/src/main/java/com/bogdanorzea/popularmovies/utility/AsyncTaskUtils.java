@@ -4,6 +4,7 @@ package com.bogdanorzea.popularmovies.utility;
 import android.os.AsyncTask;
 
 import com.bogdanorzea.popularmovies.model.object.Movie;
+import com.bogdanorzea.popularmovies.model.response.CreditsResponse;
 import com.bogdanorzea.popularmovies.model.response.MoviesResponse;
 import com.bogdanorzea.popularmovies.model.response.ReviewsResponse;
 import com.bogdanorzea.popularmovies.model.response.VideosResponse;
@@ -190,6 +191,49 @@ public class AsyncTaskUtils {
         protected void onPostExecute(ReviewsResponse reviewsResponse) {
             super.onPostExecute(reviewsResponse);
             listener.onTaskComplete(reviewsResponse);
+        }
+    }
+
+    public static class MovieCreditsAsyncTask extends AsyncTask<HttpUrl, Void, CreditsResponse> {
+        private final AsyncTaskListener<CreditsResponse> listener;
+
+        public MovieCreditsAsyncTask(AsyncTaskUtils.AsyncTaskListener<CreditsResponse> listener) {
+            this.listener = listener;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            listener.onTaskStarting();
+        }
+
+        @Override
+        protected CreditsResponse doInBackground(HttpUrl... httpUrls) {
+            String response = "";
+            try {
+                response = NetworkUtils.fetch(httpUrls[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Moshi moshi = new Moshi.Builder().build();
+            JsonAdapter<CreditsResponse> jsonAdapter = moshi.adapter(CreditsResponse.class);
+
+            CreditsResponse creditsResponse = null;
+
+            try {
+                creditsResponse = jsonAdapter.fromJson(response);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return creditsResponse;
+        }
+
+        @Override
+        protected void onPostExecute(CreditsResponse creditsResponse) {
+            super.onPostExecute(creditsResponse);
+            listener.onTaskComplete(creditsResponse);
         }
     }
 

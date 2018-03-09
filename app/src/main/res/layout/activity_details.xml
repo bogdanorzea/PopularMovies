@@ -22,7 +22,6 @@
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:toolbarId="@+id/toolbar">
-            <!--app:expandedTitleMarginBottom="70dp"-->
 
             <ImageView
                 android:id="@+id/movie_backdrop"
@@ -49,6 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 app:tabIndicatorColor="@android:color/white"
+                app:tabMode="scrollable"
                 app:tabSelectedTextColor="@android:color/white"
                 app:tabTextColor="@android:color/white" />
 
