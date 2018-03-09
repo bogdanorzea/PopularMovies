@@ -26,12 +26,13 @@ import com.bogdanorzea.popularmovies.fragment.MovieReviews;
 import com.bogdanorzea.popularmovies.fragment.MovieVideos;
 import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
+import com.bogdanorzea.popularmovies.utility.FragmentUtils;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 
 public class DetailsActivity extends AppCompatActivity {
 
     public static final String MOVIE_ID_INTENT_KEY = "movie_id";
-    public Movie mCurrentMovie;
+    public Movie mMovie;
     private ProgressBar mProgressBar;
     private AppBarLayout mAppBarLayout;
     private AsyncTaskUtils.AsyncTaskListener<Movie> mMovieAsyncTaskListener =
@@ -43,7 +44,7 @@ public class DetailsActivity extends AppCompatActivity {
 
                 @Override
                 public void onTaskComplete(Movie movie) {
-                    mCurrentMovie = movie;
+                    mMovie = movie;
                     hideProgress();
                     loadBackdropImage();
                     populateTabs();
@@ -72,11 +73,12 @@ public class DetailsActivity extends AppCompatActivity {
         ViewPager viewPager = findViewById(R.id.tab_viewpager);
         MovieCategoryPagerAdapter pagerAdapter = new MovieCategoryPagerAdapter(getSupportFragmentManager());
 
-        pagerAdapter.addFragment(buildMovieDescription(mCurrentMovie), "DESCRIPTION");
-        pagerAdapter.addFragment(buildMovieFacts(mCurrentMovie), "FACTS");
-        pagerAdapter.addFragment(buildMovieVideos(mCurrentMovie), "VIDEOS");
-        pagerAdapter.addFragment(buildMovieCast(mCurrentMovie), "CAST");
-        pagerAdapter.addFragment(buildMovieReviews(mCurrentMovie), "REVIEWS");
+        pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovie, MovieDescription.class), "DESCRIPTION");
+        pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovie, MovieFacts.class), "FACTS");
+
+        pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovie.id, MovieVideos.class), "VIDEOS");
+        pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovie.id, MovieCast.class), "CAST");
+        pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovie.id, MovieReviews.class), "REVIEWS");
 
         viewPager.setAdapter(pagerAdapter);
 
@@ -84,62 +86,13 @@ public class DetailsActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
-    private MovieDescription buildMovieDescription(Movie movie) {
-        MovieDescription description = new MovieDescription();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("movie", movie);
-        description.setArguments(bundle);
-
-        return description;
-    }
-
-    private MovieFacts buildMovieFacts(Movie movie) {
-        MovieFacts facts = new MovieFacts();
-
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("movie", movie);
-        facts.setArguments(bundle);
-
-        return facts;
-    }
-
-    private MovieReviews buildMovieReviews(Movie movie) {
-        MovieReviews reviews = new MovieReviews();
-
-        Bundle bundle = new Bundle();
-        bundle.putInt("movie_id", movie.id);
-        reviews.setArguments(bundle);
-
-        return reviews;
-    }
-
-    private MovieVideos buildMovieVideos(Movie movie) {
-        MovieVideos videos = new MovieVideos();
-
-        Bundle bundle = new Bundle();
-        bundle.putInt("movie_id", movie.id);
-        videos.setArguments(bundle);
-
-        return videos;
-    }
-
-    private MovieCast buildMovieCast(Movie movie) {
-        MovieCast cast = new MovieCast();
-
-        Bundle bundle = new Bundle();
-        bundle.putInt("movie_id", movie.id);
-        cast.setArguments(bundle);
-
-        return cast;
-    }
-
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         int actionTrailerId = 200;
         int actionWebsiteId = 300;
 
-//        if (mCurrentMovie != null) {
-//            if (!TextUtils.isEmpty(mCurrentMovie.homepage) &&
+//        if (mMovie != null) {
+//            if (!TextUtils.isEmpty(mMovie.homepage) &&
 //                    menu.findItem(actionWebsiteId) == null) {
 //
 //                MenuItem item = menu.add(
@@ -246,12 +199,12 @@ public class DetailsActivity extends AppCompatActivity {
 //    }
 //
 //    private void openMovieWebsite() {
-//        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mCurrentMovie.homepage));
+//        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mMovie.homepage));
 //        startActivity(intent);
 //    }
 
     private void loadBackdropImage() {
         ImageView backdrop = findViewById(R.id.movie_backdrop);
-        NetworkUtils.loadBackdrop(this, backdrop, mCurrentMovie.backdropPath);
+        NetworkUtils.loadBackdrop(this, backdrop, mMovie.backdropPath);
     }
 }
