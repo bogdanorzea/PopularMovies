@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.adapter.MovieCategoryPagerAdapter;
+import com.bogdanorzea.popularmovies.fragment.MovieCast;
 import com.bogdanorzea.popularmovies.fragment.MovieDescription;
 import com.bogdanorzea.popularmovies.fragment.MovieFacts;
 import com.bogdanorzea.popularmovies.fragment.MovieReviews;
@@ -74,6 +75,7 @@ public class DetailsActivity extends AppCompatActivity {
         pagerAdapter.addFragment(buildMovieDescription(mCurrentMovie), "DESCRIPTION");
         pagerAdapter.addFragment(buildMovieFacts(mCurrentMovie), "FACTS");
         pagerAdapter.addFragment(buildMovieVideos(mCurrentMovie), "VIDEOS");
+        pagerAdapter.addFragment(buildMovieCast(mCurrentMovie), "CAST");
         pagerAdapter.addFragment(buildMovieReviews(mCurrentMovie), "REVIEWS");
 
         viewPager.setAdapter(pagerAdapter);
@@ -119,6 +121,16 @@ public class DetailsActivity extends AppCompatActivity {
         videos.setArguments(bundle);
 
         return videos;
+    }
+
+    private MovieCast buildMovieCast(Movie movie) {
+        MovieCast cast = new MovieCast();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt("movie_id", movie.id);
+        cast.setArguments(bundle);
+
+        return cast;
     }
 
     @Override
