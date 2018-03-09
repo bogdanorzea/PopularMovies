@@ -21,6 +21,7 @@ import com.bogdanorzea.popularmovies.adapter.MovieCategoryPagerAdapter;
 import com.bogdanorzea.popularmovies.fragment.MovieDescription;
 import com.bogdanorzea.popularmovies.fragment.MovieFacts;
 import com.bogdanorzea.popularmovies.fragment.MovieReviews;
+import com.bogdanorzea.popularmovies.fragment.MovieVideos;
 import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
@@ -30,7 +31,6 @@ public class DetailsActivity extends AppCompatActivity {
     public static final String MOVIE_ID_INTENT_KEY = "movie_id";
     public Movie mCurrentMovie;
     private ProgressBar mProgressBar;
-    //private VideosResponse mCurrentVideosResponse;
     private AppBarLayout mAppBarLayout;
     private AsyncTaskUtils.AsyncTaskListener<Movie> mMovieAsyncTaskListener =
             new AsyncTaskUtils.AsyncTaskListener<Movie>() {
@@ -72,6 +72,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         pagerAdapter.addFragment(buildMovieDescription(mCurrentMovie), "DESCRIPTION");
         pagerAdapter.addFragment(buildMovieFacts(mCurrentMovie), "FACTS");
+        pagerAdapter.addFragment(buildMovieVideos(mCurrentMovie), "VIDEOS");
         pagerAdapter.addFragment(buildMovieReviews(mCurrentMovie), "REVIEWS");
 
         viewPager.setAdapter(pagerAdapter);
@@ -107,6 +108,16 @@ public class DetailsActivity extends AppCompatActivity {
         reviews.setArguments(bundle);
 
         return reviews;
+    }
+
+    private MovieVideos buildMovieVideos(Movie movie) {
+        MovieVideos videos = new MovieVideos();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt("movie_id", movie.id);
+        videos.setArguments(bundle);
+
+        return videos;
     }
 
     @Override
@@ -178,8 +189,6 @@ public class DetailsActivity extends AppCompatActivity {
                 if (movieId != -1) {
                     new AsyncTaskUtils.MovieDetailsAsyncTask(mMovieAsyncTaskListener)
                             .execute(NetworkUtils.movieDetailsUrl(movieId));
-
-                    //new AsyncTaskUtils.MovieVideosAsyncTask(mMovieVideosAsyncTaskListener).execute(NetworkUtils.movieVideosUrl(movieId));
                 }
             } else {
                 Toast.makeText(this, R.string.warning_no_internet, Toast.LENGTH_SHORT).show();

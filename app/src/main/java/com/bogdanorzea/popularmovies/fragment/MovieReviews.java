@@ -45,6 +45,9 @@ public class MovieReviews extends Fragment {
 
     private void displayReviews(ReviewsResponse result) {
         View view = getView();
+        if (view == null) {
+            return;
+        }
 
         ListView reviewsListView = view.findViewById(R.id.list);
         ViewCompat.setNestedScrollingEnabled(reviewsListView, true);
