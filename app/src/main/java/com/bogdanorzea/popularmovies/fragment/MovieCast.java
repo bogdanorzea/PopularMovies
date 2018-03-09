@@ -17,8 +17,8 @@ import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 
 
 public class MovieCast extends Fragment {
-    private AsyncTaskUtils.AsyncTaskListener<CreditsResponse> mMovieCreditsAsyncTaskListener =
-            new AsyncTaskUtils.AsyncTaskListener<CreditsResponse>() {
+    private AsyncTaskUtils.RequestTaskListener<CreditsResponse> mRequestTaskListener =
+            new AsyncTaskUtils.RequestTaskListener<CreditsResponse>() {
                 @Override
                 public void onTaskStarting() {
 
@@ -37,7 +37,7 @@ public class MovieCast extends Fragment {
         if (getArguments() != null) {
             int movieId = getArguments().getInt("movie_id");
 
-            new AsyncTaskUtils.MovieCreditsAsyncTask(mMovieCreditsAsyncTaskListener)
+            new AsyncTaskUtils.RequestTask<>(mRequestTaskListener, CreditsResponse.class)
                     .execute(NetworkUtils.movieCreditsUrl(movieId));
         }
 

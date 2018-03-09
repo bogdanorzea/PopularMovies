@@ -1,6 +1,7 @@
 package com.bogdanorzea.popularmovies.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
@@ -16,8 +17,8 @@ import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 
 
 public class MovieReviews extends Fragment {
-    private AsyncTaskUtils.AsyncTaskListener<ReviewsResponse> mMovieReviewsAsyncTaskListener =
-            new AsyncTaskUtils.AsyncTaskListener<ReviewsResponse>() {
+    private AsyncTaskUtils.RequestTaskListener<ReviewsResponse> mMovieReviewsAsyncTaskListener =
+            new AsyncTaskUtils.RequestTaskListener<ReviewsResponse>() {
                 @Override
                 public void onTaskStarting() {
 
@@ -30,13 +31,13 @@ public class MovieReviews extends Fragment {
             };
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.movie_reviews_layout, container, false);
 
         if (getArguments() != null) {
             int movieId = getArguments().getInt("movie_id");
 
-            new AsyncTaskUtils.MovieReviewsAsyncTask(mMovieReviewsAsyncTaskListener)
+            new AsyncTaskUtils.RequestTask<>(mMovieReviewsAsyncTaskListener, ReviewsResponse.class)
                     .execute(NetworkUtils.movieReviewsUrl(movieId, 1));
         }
 

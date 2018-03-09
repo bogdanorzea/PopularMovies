@@ -35,8 +35,8 @@ public class DetailsActivity extends AppCompatActivity {
     public Movie mMovie;
     private ProgressBar mProgressBar;
     private AppBarLayout mAppBarLayout;
-    private AsyncTaskUtils.AsyncTaskListener<Movie> mMovieAsyncTaskListener =
-            new AsyncTaskUtils.AsyncTaskListener<Movie>() {
+    private AsyncTaskUtils.RequestTaskListener<Movie> mRequestTaskListener =
+            new AsyncTaskUtils.RequestTaskListener<Movie>() {
                 @Override
                 public void onTaskStarting() {
                     showProgress();
@@ -153,7 +153,7 @@ public class DetailsActivity extends AppCompatActivity {
             if (NetworkUtils.hasInternetConnection(this)) {
                 int movieId = intent.getIntExtra(MOVIE_ID_INTENT_KEY, -1);
                 if (movieId != -1) {
-                    new AsyncTaskUtils.MovieDetailsAsyncTask(mMovieAsyncTaskListener)
+                    new AsyncTaskUtils.RequestTask<>(mRequestTaskListener, Movie.class)
                             .execute(NetworkUtils.movieDetailsUrl(movieId));
                 }
             } else {

@@ -31,8 +31,8 @@ public class MainActivity extends AppCompatActivity implements
     private CoverAdapter mAdapter;
     private boolean isLoading = false;
 
-    private AsyncTaskUtils.AsyncTaskListener<MoviesResponse> mCoverListener =
-            new AsyncTaskUtils.AsyncTaskListener<MoviesResponse>() {
+    private AsyncTaskUtils.RequestTaskListener<MoviesResponse> mCoverListener =
+            new AsyncTaskUtils.RequestTaskListener<MoviesResponse>() {
 
                 @Override
                 public void onTaskStarting() {
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements
                 return;
             }
 
-            new AsyncTaskUtils.ListOfMoviesAsyncTask(mCoverListener).execute(url);
+            new AsyncTaskUtils.RequestTask<>(mCoverListener, MoviesResponse.class).execute(url);
         } else {
             hideProgress();
             if (mAdapter.movies == null || mAdapter.movies.isEmpty()) {
