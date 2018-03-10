@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -225,8 +226,10 @@ public class DetailsActivity extends AppCompatActivity {
 
     private void openMovieHomepage() {
         if (mMovie != null && !TextUtils.isEmpty(mMovie.homepage)) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mMovie.homepage));
-            startActivity(intent);
+            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+            CustomTabsIntent customTabsIntent = builder.build();
+            customTabsIntent.launchUrl(this, Uri.parse(mMovie.homepage));
+
         } else {
             Toast.makeText(this, "Couldn't launch the movie's homepage", Toast.LENGTH_SHORT).show();
         }
