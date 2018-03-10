@@ -7,6 +7,7 @@
         android:id="@+id/action_favorite"
         android:orderInCategory="100"
         android:title="@string/action_favorite"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_favorite_border_white_24dp"
+        app:showAsAction="ifRoom" />
 
 </menu>
