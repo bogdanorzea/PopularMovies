@@ -1,8 +1,11 @@
 package com.bogdanorzea.popularmovies.ui;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
@@ -19,6 +22,7 @@ import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.adapter.MovieCategoryPagerAdapter;
+import com.bogdanorzea.popularmovies.data.FavoritesContract.FavoriteEntry;
 import com.bogdanorzea.popularmovies.fragment.MovieCast;
 import com.bogdanorzea.popularmovies.fragment.MovieDescription;
 import com.bogdanorzea.popularmovies.fragment.MovieFacts;
@@ -29,10 +33,13 @@ import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
 import com.bogdanorzea.popularmovies.utility.FragmentUtils;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 
+import timber.log.Timber;
+
 public class DetailsActivity extends AppCompatActivity {
 
     public static final String MOVIE_ID_INTENT_KEY = "movie_id";
     public Movie mMovie;
+    private int mMovieId;
     private ProgressBar mProgressBar;
     private AppBarLayout mAppBarLayout;
     private AsyncTaskUtils.RequestTaskListener<Movie> mRequestTaskListener =
@@ -50,6 +57,7 @@ public class DetailsActivity extends AppCompatActivity {
                     populateTabs();
                 }
             };
+    private boolean isFavorite = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +98,27 @@ public class DetailsActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         int actionTrailerId = 200;
         int actionWebsiteId = 300;
+
+        Uri movieUri = Uri.withAppendedPath(FavoriteEntry.CONTENT_URI, String.valueOf(mMovieId));
+        Timber.d("Movie uri is %s", movieUri);
+
+        Cursor cursor = null;
+
+        try {
+            cursor = getContentResolver().query(movieUri, null, null, null, null);
+            if (cursor.getCount() == 1) {
+                isFavorite = true;
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+
+        if (isFavorite) {
+            MenuItem menuItemFavorite = menu.findItem(R.id.action_favorite);
+            menuItemFavorite.setIcon(R.drawable.ic_favorite_white_24dp);
+        }
+
 
 //        if (mMovie != null) {
 //            if (!TextUtils.isEmpty(mMovie.homepage) &&
@@ -151,10 +180,10 @@ public class DetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             if (NetworkUtils.hasInternetConnection(this)) {
-                int movieId = intent.getIntExtra(MOVIE_ID_INTENT_KEY, -1);
-                if (movieId != -1) {
+                mMovieId = intent.getIntExtra(MOVIE_ID_INTENT_KEY, -1);
+                if (mMovieId != -1) {
                     new AsyncTaskUtils.RequestTask<>(mRequestTaskListener, Movie.class)
-                            .execute(NetworkUtils.movieDetailsUrl(movieId));
+                            .execute(NetworkUtils.movieDetailsUrl(mMovieId));
                 }
             } else {
                 Toast.makeText(this, R.string.warning_no_internet, Toast.LENGTH_SHORT).show();
@@ -181,7 +210,15 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void addToFavorites() {
-        Toast.makeText(this, "Will be added soon", Toast.LENGTH_SHORT).show();
+        ContentValues values = new ContentValues();
+        values.put(FavoriteEntry._ID, mMovie.id);
+        Uri newRowID = getContentResolver().insert(FavoriteEntry.CONTENT_URI, values);
+
+        if (newRowID != null) {
+            Toast.makeText(this, "Successfully added movie " + mMovie.title + " to favorites", Toast.LENGTH_SHORT).show();
+        } else {
+            Timber.e("Failed to add to favorites the movie with id %s", mMovie.id);
+        }
     }
 
 //    private void openMovieTrailer() {
