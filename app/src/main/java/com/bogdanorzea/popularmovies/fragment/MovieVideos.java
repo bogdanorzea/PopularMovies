@@ -1,5 +1,7 @@
 package com.bogdanorzea.popularmovies.fragment;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -11,6 +13,7 @@ import android.widget.ListView;
 
 import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.adapter.VideosAdapter;
+import com.bogdanorzea.popularmovies.model.object.Video;
 import com.bogdanorzea.popularmovies.model.response.VideosResponse;
 import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
@@ -56,17 +59,15 @@ public class MovieVideos extends Fragment {
 
         reviewsListView.setAdapter(videosAdapter);
 
+        reviewsListView.setOnItemClickListener((adapterView, view1, position, id) -> {
+            Video video = (Video) adapterView.getItemAtPosition(position);
 
-//        for (int i = 0; i < mCurrentVideosResponse.results.size(); i++) {
-//            Video result = mCurrentVideosResponse.results.get(i);
-//            if (result.site.equalsIgnoreCase("YouTube") &&
-//                    result.type.equalsIgnoreCase("trailer")) {
-//                String youtubeLink = "https://www.youtube.com/watch?v=" + result.key;
-//
-//                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(youtubeLink));
-//                startActivity(intent);
-//                return;
-//            }
-//        }
+            if (video.site.equalsIgnoreCase("YouTube")) {
+                String youtubeLink = "https://www.youtube.com/watch?v=" + video.key;
+
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(youtubeLink));
+                startActivity(intent);
+            }
+        });
     }
 }
