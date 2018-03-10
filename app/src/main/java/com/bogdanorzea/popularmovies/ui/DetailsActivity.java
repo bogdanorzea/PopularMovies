@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.adapter.MovieCategoryPagerAdapter;
+import com.bogdanorzea.popularmovies.data.MoviesContract;
 import com.bogdanorzea.popularmovies.data.MoviesContract.MovieEntry;
 import com.bogdanorzea.popularmovies.fragment.MovieCast;
 import com.bogdanorzea.popularmovies.fragment.MovieDescription;
@@ -99,7 +100,7 @@ public class DetailsActivity extends AppCompatActivity {
         int actionTrailerId = 200;
         int actionWebsiteId = 300;
 
-        Uri movieUri = Uri.withAppendedPath(MovieEntry.CONTENT_URI, String.valueOf(mMovieId));
+        Uri movieUri = Uri.withAppendedPath(MoviesContract.CONTENT_URI, String.valueOf(mMovieId));
         Timber.d("Movie uri is %s", movieUri);
 
         Cursor cursor = null;
@@ -224,7 +225,7 @@ public class DetailsActivity extends AppCompatActivity {
         values.put(MovieEntry.COLUMN_NAME_TITLE, mMovie.title);
         values.put(MovieEntry.COLUMN_NAME_FAVORITE, 1);
 
-        Uri newRowID = getContentResolver().insert(MovieEntry.CONTENT_URI, values);
+        Uri newRowID = getContentResolver().insert(MoviesContract.CONTENT_URI, values);
 
         if (newRowID != null) {
             Toast.makeText(this, "Successfully added movie " + mMovie.title + " to favorites", Toast.LENGTH_SHORT).show();
