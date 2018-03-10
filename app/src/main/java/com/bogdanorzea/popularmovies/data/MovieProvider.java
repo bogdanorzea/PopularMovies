@@ -65,11 +65,6 @@ public class MovieProvider extends ContentProvider {
         return cursor;
     }
 
-    private Cursor queryFavorites(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-
-        return null;
-    }
-
     @Nullable
     @Override
     public String getType(@NonNull Uri uri) {
@@ -78,13 +73,13 @@ public class MovieProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
+    public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
 
         switch (sUriMatcher.match(uri)) {
             case MOVIES:
-                return insertMovie(uri, contentValues);
+                return insertMovie(uri, values);
             default:
-                throw new IllegalArgumentException("Insertion is not supported for Uri " + uri);
+                throw new IllegalArgumentException("Cannot insert unknown Uri " + uri);
         }
     }
 
@@ -113,7 +108,41 @@ public class MovieProvider extends ContentProvider {
     }
 
     @Override
-    public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s, @Nullable String[] strings) {
-        return 0;
+    public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
+
+        switch (sUriMatcher.match(uri)) {
+            case MOVIES:
+                return updateMovie(uri, values, selection, selectionArgs);
+
+            case MOVIE_ID:
+                selection = MovieEntry._ID + " = ?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+
+                return updateMovie(uri, values, selection, selectionArgs);
+
+            default:
+                throw new IllegalArgumentException("Cannot update unknown Uri " + uri);
+        }
+
     }
+
+    public int updateMovie(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgument) {
+        if (values.containsKey(MovieEntry._ID)) {
+            int movieId = values.getAsInteger(MovieEntry._ID);
+            if (movieId < 0) {
+                throw new IllegalArgumentException("Invalid movie id");
+            }
+        }
+
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        int rowsAffected = db.update(MovieEntry.TABLE_NAME, values, selection, selectionArgument);
+
+        if (rowsAffected != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        return rowsAffected;
+    }
+
 }
