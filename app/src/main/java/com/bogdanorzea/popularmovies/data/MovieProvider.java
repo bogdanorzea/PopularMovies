@@ -68,7 +68,14 @@ public class MovieProvider extends ContentProvider {
     @Nullable
     @Override
     public String getType(@NonNull Uri uri) {
-        return null;
+        switch (sUriMatcher.match(uri)) {
+            case MOVIES:
+                return MoviesContract.CONTENT_LIST_TYPE;
+            case MOVIE_ID:
+                return MoviesContract.CONTENT_ITEM_TYPE;
+            default:
+                throw new IllegalStateException("Unknown match for Uri " + uri);
+        }
     }
 
     @Nullable
