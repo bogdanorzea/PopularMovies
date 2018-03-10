@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.adapter.MovieCategoryPagerAdapter;
-import com.bogdanorzea.popularmovies.data.FavoritesContract.FavoriteEntry;
+import com.bogdanorzea.popularmovies.data.MoviesContract.MovieEntry;
 import com.bogdanorzea.popularmovies.fragment.MovieCast;
 import com.bogdanorzea.popularmovies.fragment.MovieDescription;
 import com.bogdanorzea.popularmovies.fragment.MovieFacts;
@@ -99,15 +99,24 @@ public class DetailsActivity extends AppCompatActivity {
         int actionTrailerId = 200;
         int actionWebsiteId = 300;
 
-        Uri movieUri = Uri.withAppendedPath(FavoriteEntry.CONTENT_URI, String.valueOf(mMovieId));
+        Uri movieUri = Uri.withAppendedPath(MovieEntry.CONTENT_URI, String.valueOf(mMovieId));
         Timber.d("Movie uri is %s", movieUri);
 
         Cursor cursor = null;
 
         try {
             cursor = getContentResolver().query(movieUri, null, null, null, null);
-            if (cursor.getCount() == 1) {
-                isFavorite = true;
+            if (cursor != null && cursor.getCount() == 1) {
+
+                cursor.moveToFirst();
+                int favoriteColumnIndex = cursor.getColumnIndex(MovieEntry.COLUMN_NAME_FAVORITE);
+                Timber.d("Favorite column index is %s", favoriteColumnIndex);
+
+                int favoriteValue = cursor.getInt(favoriteColumnIndex);
+
+                if (favoriteValue == 1) {
+                    isFavorite = true;
+                }
             }
         } finally {
             if (cursor != null)
@@ -169,7 +178,7 @@ public class DetailsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_favorite:
-                addToFavorites();
+                addMovie();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -209,10 +218,13 @@ public class DetailsActivity extends AppCompatActivity {
         mAppBarLayout.setExpanded(true);
     }
 
-    private void addToFavorites() {
+    private void addMovie() {
         ContentValues values = new ContentValues();
-        values.put(FavoriteEntry._ID, mMovie.id);
-        Uri newRowID = getContentResolver().insert(FavoriteEntry.CONTENT_URI, values);
+        values.put(MovieEntry._ID, mMovie.id);
+        values.put(MovieEntry.COLUMN_NAME_TITLE, mMovie.title);
+        values.put(MovieEntry.COLUMN_NAME_FAVORITE, 1);
+
+        Uri newRowID = getContentResolver().insert(MovieEntry.CONTENT_URI, values);
 
         if (newRowID != null) {
             Toast.makeText(this, "Successfully added movie " + mMovie.title + " to favorites", Toast.LENGTH_SHORT).show();

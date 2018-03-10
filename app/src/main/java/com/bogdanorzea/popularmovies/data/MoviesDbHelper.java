@@ -4,8 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import static com.bogdanorzea.popularmovies.data.FavoritesContract.SQL_CREATE_FAVORITES_TABLE;
-import static com.bogdanorzea.popularmovies.data.FavoritesContract.SQL_DELETE_FAVORITES_TABLE;
+import static com.bogdanorzea.popularmovies.data.MoviesContract.SQL_CREATE_FAVORITES_TABLE;
+import static com.bogdanorzea.popularmovies.data.MoviesContract.SQL_DELETE_FAVORITES_TABLE;
 
 
 public class MoviesDbHelper extends SQLiteOpenHelper {
