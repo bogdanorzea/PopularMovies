@@ -19,20 +19,30 @@ public class MoviesContract {
             ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIE;
 
     // SQL constants
-    private static final String INTEGER = " INTEGER";
     private static final String PRIMARY_KEY = " PRIMARY KEY";
-    private static final String SEPARATOR = ",";
+    private static final String SEPARATOR = ", ";
     private static final String TEXT = " TEXT";
+    private static final String INTEGER = " INTEGER";
+    public static final String REAL = " REAL";
     private static final String DEFAULT_0 = " DEFAULT 0";
 
     // SQL statements
-    static final String SQL_DELETE_FAVORITES_TABLE =
+    static final String SQL_DELETE_MOVIES_TABLE =
             "DROP TABLE IF EXISTS " + MovieEntry.TABLE_NAME;
-    static final String SQL_CREATE_FAVORITES_TABLE =
+    static final String SQL_CREATE_MOVIES_TABLE =
             "CREATE TABLE " + MovieEntry.TABLE_NAME + " (" +
                     MovieEntry._ID + INTEGER + PRIMARY_KEY + SEPARATOR +
                     MovieEntry.COLUMN_NAME_TITLE + TEXT + SEPARATOR +
-                    MovieEntry.COLUMN_NAME_FAVORITE + INTEGER + DEFAULT_0 +
+                    MovieEntry.COLUMN_NAME_FAVORITE + INTEGER + DEFAULT_0 + SEPARATOR +
+                    MovieEntry.COLUMN_NAME_RELEASE_DATE + TEXT + SEPARATOR +
+                    MovieEntry.COLUMN_NAME_TAGLINE + TEXT + SEPARATOR +
+                    MovieEntry.COLUMN_NAME_OVERVIEW + TEXT + SEPARATOR +
+                    MovieEntry.COLUMN_NAME_RUNTIME + INTEGER + SEPARATOR +
+                    MovieEntry.COLUMN_NAME_VOTE_AVERAGE + REAL + SEPARATOR +
+                    MovieEntry.COLUMN_NAME_VOTE_COUNT + INTEGER + SEPARATOR +
+                    MovieEntry.COLUMN_NAME_HOMEPAGE + TEXT + SEPARATOR +
+                    MovieEntry.COLUMN_NAME_BACKDROP_PATH + TEXT + SEPARATOR +
+                    MovieEntry.COLUMN_NAME_POSTER_PATH + TEXT +
                     ");";
 
     private MoviesContract() {
@@ -44,6 +54,15 @@ public class MoviesContract {
         // Column names
         public static final String COLUMN_NAME_TITLE = "title";
         public static final String COLUMN_NAME_FAVORITE = "favorite";
+        public static final String COLUMN_NAME_RELEASE_DATE = "release_date";
+        public static final String COLUMN_NAME_TAGLINE = "tagline";
+        public static final String COLUMN_NAME_OVERVIEW = "overview";
+        public static final String COLUMN_NAME_RUNTIME = "runtime";
+        public static final String COLUMN_NAME_VOTE_AVERAGE = "vote_average";
+        public static final String COLUMN_NAME_VOTE_COUNT = "vote_count";
+        public static final String COLUMN_NAME_HOMEPAGE = "homepage";
+        public static final String COLUMN_NAME_BACKDROP_PATH = "backdrop_path";
+        public static final String COLUMN_NAME_POSTER_PATH = "poster_path";
     }
 
 }

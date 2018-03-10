@@ -6,11 +6,6 @@
     <string name="action_refresh">Refresh</string>
     <string name="action_settings">Settings</string>
 
-    <!--Strings used in DetailsActivity-->
-    <string name="action_favorite">Add to favorites</string>
-    <string name="action_trailer">Trailer</string>
-    <string name="action_website">Website</string>
-
     <!--Strings used in SettingsActivity-->
     <string name="title_activity_settings">Settings</string>
 
@@ -23,6 +18,8 @@
     <string name="pref_sort_by_top_rated">top_rated</string>
 
     <!--Strings used in DetailsActivity-->
+    <string name="action_favorite">Add to favorites</string>
+    <string name="action_homepage">Website</string>
     <string name="overview_label">Overview</string>
     <string name="genre_label">Genre</string>
     <string name="runtime_label">Runtime</string>
