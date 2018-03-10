@@ -103,8 +103,28 @@ public class MovieProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
-        return 0;
+    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
+        int rowsDeleted;
+        switch (sUriMatcher.match(uri)) {
+            case MOVIES:
+                rowsDeleted = database.delete(MovieEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            case MOVIE_ID:
+                selection = MovieEntry._ID + " = ?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                rowsDeleted = database.delete(MovieEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            default:
+                throw new IllegalStateException("Deletion is not supported for uri " + uri);
+        }
+
+        if (rowsDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        return rowsDeleted;
     }
 
     @Override
