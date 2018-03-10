@@ -12,6 +12,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -97,8 +98,6 @@ public class DetailsActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        int actionTrailerId = 200;
-        int actionWebsiteId = 300;
 
         Uri movieUri = Uri.withAppendedPath(MoviesContract.CONTENT_URI, String.valueOf(mMovieId));
         Timber.d("Movie uri is %s", movieUri);
@@ -129,42 +128,6 @@ public class DetailsActivity extends AppCompatActivity {
             menuItemFavorite.setIcon(R.drawable.ic_favorite_white_24dp);
         }
 
-
-//        if (mMovie != null) {
-//            if (!TextUtils.isEmpty(mMovie.homepage) &&
-//                    menu.findItem(actionWebsiteId) == null) {
-//
-//                MenuItem item = menu.add(
-//                        Menu.NONE,
-//                        actionWebsiteId,
-//                        actionWebsiteId,
-//                        R.string.action_website);
-//
-//                item.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
-//                item.setOnMenuItemClickListener(menuItem -> {
-//                    openMovieWebsite();
-//                    return true;
-//                });
-//            }
-//        }
-//
-//        if (mCurrentVideosResponse != null) {
-//            if (mCurrentVideosResponse.results.size() > 0 && menu.findItem(actionTrailerId) == null) {
-//
-//                MenuItem item = menu.add(
-//                        Menu.NONE,
-//                        actionTrailerId,
-//                        actionTrailerId,
-//                        R.string.action_trailer);
-//
-//                item.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
-//                item.setOnMenuItemClickListener(menuItem -> {
-//                    openMovieTrailer();
-//                    return true;
-//                });
-//            }
-//        }
-
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -180,6 +143,12 @@ public class DetailsActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_favorite:
                 addMovie();
+                return true;
+            case R.id.action_homepage:
+                openMovieHomepage();
+                return true;
+            case R.id.action_delete_movie:
+                removeMovie();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -224,34 +193,44 @@ public class DetailsActivity extends AppCompatActivity {
         values.put(MovieEntry._ID, mMovie.id);
         values.put(MovieEntry.COLUMN_NAME_TITLE, mMovie.title);
         values.put(MovieEntry.COLUMN_NAME_FAVORITE, 1);
+        values.put(MovieEntry.COLUMN_NAME_RELEASE_DATE, mMovie.releaseDate);
+        values.put(MovieEntry.COLUMN_NAME_TAGLINE, mMovie.tagline);
+        values.put(MovieEntry.COLUMN_NAME_OVERVIEW, mMovie.overview);
+        values.put(MovieEntry.COLUMN_NAME_RUNTIME, mMovie.runtime);
+        values.put(MovieEntry.COLUMN_NAME_VOTE_AVERAGE, mMovie.voteAverage);
+        values.put(MovieEntry.COLUMN_NAME_VOTE_COUNT, mMovie.voteCount);
+        values.put(MovieEntry.COLUMN_NAME_BACKDROP_PATH, mMovie.backdropPath);
+        values.put(MovieEntry.COLUMN_NAME_POSTER_PATH, mMovie.posterPath);
 
         Uri newRowID = getContentResolver().insert(MoviesContract.CONTENT_URI, values);
 
         if (newRowID != null) {
-            Toast.makeText(this, "Successfully added movie " + mMovie.title + " to favorites", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Successfully saved movie " + mMovie.title + " to favorites", Toast.LENGTH_SHORT).show();
         } else {
             Timber.e("Failed to add to favorites the movie with id %s", mMovie.id);
         }
     }
 
-//    private void openMovieTrailer() {
-//        for (int i = 0; i < mCurrentVideosResponse.results.size(); i++) {
-//            Video result = mCurrentVideosResponse.results.get(i);
-//            if (result.site.equalsIgnoreCase("YouTube") &&
-//                    result.type.equalsIgnoreCase("trailer")) {
-//                String youtubeLink = "https://www.youtube.com/watch?v=" + result.key;
-//
-//                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(youtubeLink));
-//                startActivity(intent);
-//                return;
-//            }
-//        }
-//    }
-//
-//    private void openMovieWebsite() {
-//        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mMovie.homepage));
-//        startActivity(intent);
-//    }
+
+    private void removeMovie() {
+        Uri movieUri = Uri.withAppendedPath(MoviesContract.CONTENT_URI, String.valueOf(mMovieId));
+        int rowsAffected = getContentResolver().delete(movieUri, null, null);
+
+        if (1 == rowsAffected) {
+            Toast.makeText(this, "Successfully removed movie " + mMovie.title + " from database", Toast.LENGTH_SHORT).show();
+        } else {
+            Timber.e("Failed to remove the movie with id %s", mMovie.id);
+        }
+    }
+
+    private void openMovieHomepage() {
+        if (mMovie != null && !TextUtils.isEmpty(mMovie.homepage)) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mMovie.homepage));
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "Couldn't launch the movie's homepage", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private void loadBackdropImage() {
         ImageView backdrop = findViewById(R.id.movie_backdrop);

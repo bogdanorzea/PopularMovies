@@ -4,8 +4,11 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import static com.bogdanorzea.popularmovies.data.MoviesContract.SQL_CREATE_FAVORITES_TABLE;
-import static com.bogdanorzea.popularmovies.data.MoviesContract.SQL_DELETE_FAVORITES_TABLE;
+import timber.log.Timber;
+
+import static com.bogdanorzea.popularmovies.data.MoviesContract.MovieEntry.TABLE_NAME;
+import static com.bogdanorzea.popularmovies.data.MoviesContract.SQL_CREATE_MOVIES_TABLE;
+import static com.bogdanorzea.popularmovies.data.MoviesContract.SQL_DELETE_MOVIES_TABLE;
 
 
 public class MoviesDbHelper extends SQLiteOpenHelper {
@@ -19,12 +22,14 @@ public class MoviesDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(SQL_CREATE_FAVORITES_TABLE);
+        Timber.i("%s table created using statement: %s", TABLE_NAME, SQL_CREATE_MOVIES_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_MOVIES_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL(SQL_DELETE_FAVORITES_TABLE);
+        Timber.i("%s table deleted using statement: %s", TABLE_NAME, SQL_DELETE_MOVIES_TABLE);
+        sqLiteDatabase.execSQL(SQL_DELETE_MOVIES_TABLE);
         onCreate(sqLiteDatabase);
     }
 
