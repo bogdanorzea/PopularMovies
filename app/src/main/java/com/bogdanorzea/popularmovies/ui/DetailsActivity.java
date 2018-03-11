@@ -28,7 +28,6 @@ import com.bogdanorzea.popularmovies.data.MoviesContract;
 import com.bogdanorzea.popularmovies.data.MoviesContract.MovieEntry;
 import com.bogdanorzea.popularmovies.fragment.MovieCast;
 import com.bogdanorzea.popularmovies.fragment.MovieDescription;
-import com.bogdanorzea.popularmovies.fragment.MovieFacts;
 import com.bogdanorzea.popularmovies.fragment.MovieReviews;
 import com.bogdanorzea.popularmovies.fragment.MovieVideos;
 import com.bogdanorzea.popularmovies.model.object.Movie;
@@ -85,15 +84,13 @@ public class DetailsActivity extends AppCompatActivity {
         MovieCategoryPagerAdapter pagerAdapter = new MovieCategoryPagerAdapter(getSupportFragmentManager());
 
         pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovie, MovieDescription.class), "DESCRIPTION");
-        pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovie, MovieFacts.class), "FACTS");
-
         pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovie.id, MovieVideos.class), "VIDEOS");
         pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovie.id, MovieCast.class), "CAST");
         pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovie.id, MovieReviews.class), "REVIEWS");
 
         viewPager.setAdapter(pagerAdapter);
 
-        TabLayout tabLayout = findViewById(R.id.htab_tabs);
+        TabLayout tabLayout = findViewById(R.id.movie_tabs);
         tabLayout.setupWithViewPager(viewPager);
     }
 
@@ -126,7 +123,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         if (isFavorite) {
             MenuItem menuItemFavorite = menu.findItem(R.id.action_favorite);
-            menuItemFavorite.setIcon(R.drawable.ic_favorite_white_24dp);
+            menuItemFavorite.setIcon(R.drawable.ic_favorite_white_36dp);
         }
 
         return super.onPrepareOptionsMenu(menu);

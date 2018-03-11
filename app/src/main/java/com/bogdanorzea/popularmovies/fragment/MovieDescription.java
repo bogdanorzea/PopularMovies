@@ -16,6 +16,9 @@ import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.utility.DataUtils;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 
+import static com.bogdanorzea.popularmovies.utility.DataUtils.formatDuration;
+import static com.bogdanorzea.popularmovies.utility.DataUtils.formatMoney;
+
 
 public class MovieDescription extends Fragment {
 
@@ -49,6 +52,19 @@ public class MovieDescription extends Fragment {
                 // Score
                 ((RatingBar) view.findViewById(R.id.movie_score))
                         .setRating((float) movie.voteAverage / 2);
+
+                // Runtime
+                ((TextView) view.findViewById(R.id.movie_runtime)).setText(formatDuration(movie.runtime));
+
+                // Budget
+                ((TextView) view.findViewById(R.id.movie_budget)).setText(formatMoney(movie.budget));
+
+                // Revenue
+                ((TextView) view.findViewById(R.id.movie_revenue)).setText(formatMoney(movie.revenue));
+
+                // Genre
+                ((TextView) view.findViewById(R.id.movie_genre)).setText(DataUtils.printGenres(movie.genres));
+
             }
         }
 
