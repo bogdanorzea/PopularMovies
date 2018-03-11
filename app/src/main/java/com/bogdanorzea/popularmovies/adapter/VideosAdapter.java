@@ -53,8 +53,7 @@ public class VideosAdapter extends ArrayAdapter<Video> {
         title.setText(video.name);
 
         String youtubeLink = "";
-        if (video.site.equalsIgnoreCase("YouTube") &&
-                video.type.equalsIgnoreCase("trailer")) {
+        if (video.site.equalsIgnoreCase("YouTube")) {
             youtubeLink = "https://www.youtube.com/watch?v=" + video.key;
         }
 
