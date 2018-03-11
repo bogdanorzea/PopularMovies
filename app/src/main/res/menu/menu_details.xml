@@ -17,10 +17,4 @@
         android:title="@string/action_homepage"
         app:showAsAction="ifRoom" />
 
-    <item
-        android:id="@+id/action_delete_movie"
-        android:orderInCategory="900"
-        android:title="Delete movie"
-        app:showAsAction="never" />
-
 </menu>
