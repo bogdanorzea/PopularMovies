@@ -23,8 +23,9 @@ public class MoviesContract {
     private static final String SEPARATOR = ", ";
     private static final String TEXT = " TEXT";
     private static final String INTEGER = " INTEGER";
-    public static final String REAL = " REAL";
+    private static final String REAL = " REAL";
     private static final String DEFAULT_0 = " DEFAULT 0";
+    private static final String BLOB = " BLOB";
 
     // SQL statements
     static final String SQL_DELETE_MOVIES_TABLE =
@@ -42,7 +43,8 @@ public class MoviesContract {
                     MovieEntry.COLUMN_NAME_VOTE_COUNT + INTEGER + SEPARATOR +
                     MovieEntry.COLUMN_NAME_HOMEPAGE + TEXT + SEPARATOR +
                     MovieEntry.COLUMN_NAME_BACKDROP_PATH + TEXT + SEPARATOR +
-                    MovieEntry.COLUMN_NAME_POSTER_PATH + TEXT +
+                    MovieEntry.COLUMN_NAME_POSTER_PATH + TEXT + SEPARATOR +
+                    MovieEntry.COLUMN_NAME_POSTER_IMAGE + BLOB +
                     ");";
 
     private MoviesContract() {
@@ -63,6 +65,7 @@ public class MoviesContract {
         public static final String COLUMN_NAME_HOMEPAGE = "homepage";
         public static final String COLUMN_NAME_BACKDROP_PATH = "backdrop_path";
         public static final String COLUMN_NAME_POSTER_PATH = "poster_path";
+        public static final String COLUMN_NAME_POSTER_IMAGE = "poster_image";
     }
 
 }

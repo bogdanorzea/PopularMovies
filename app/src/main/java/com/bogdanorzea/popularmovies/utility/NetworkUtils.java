@@ -1,6 +1,8 @@
 package com.bogdanorzea.popularmovies.utility;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.ImageView;
@@ -8,7 +10,9 @@ import android.widget.ImageView;
 import com.bogdanorzea.popularmovies.BuildConfig;
 import com.bogdanorzea.popularmovies.R;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import okhttp3.HttpUrl;
@@ -163,13 +167,18 @@ public class NetworkUtils {
      * @param imageView
      * @param relativeImagePath
      */
+    // TODO Refactor this method to have as input full image path
     public static void loadPoster(Context context, ImageView imageView, String relativeImagePath) {
-        String completeImagePath = IMAGE_BASE_URL + POSTER_SIZE + relativeImagePath;
+        String completeImagePath = posterFullPath(relativeImagePath);
 
         Picasso.with(context)
                 .load(completeImagePath)
                 .error(R.drawable.missing_cover)
                 .into(imageView);
+    }
+
+    public static String posterFullPath(String relativeImagePath) {
+        return IMAGE_BASE_URL + POSTER_SIZE + relativeImagePath;
     }
 
     /**
@@ -179,12 +188,17 @@ public class NetworkUtils {
      * @param imageView
      * @param relativeImagePath
      */
+    // TODO Refactor this method to have as input full image path
     public static void loadBackdrop(Context context, ImageView imageView, String relativeImagePath) {
-        String completeImagePath = IMAGE_BASE_URL + BACKDROP_SIZE + relativeImagePath;
+        String completeImagePath = backdropFullPath(relativeImagePath);
 
         Picasso.with(context)
                 .load(completeImagePath)
                 .into(imageView);
+    }
+
+    public static String backdropFullPath(String relativeImagePath) {
+        return IMAGE_BASE_URL + BACKDROP_SIZE + relativeImagePath;
     }
 
     /**
@@ -203,4 +217,28 @@ public class NetworkUtils {
 
         return (activeNetwork != null && activeNetwork.isConnectedOrConnecting());
     }
+
+    public static byte[] getImageBytes(Context context, String imageUrl) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        Picasso.with(context)
+                .load(imageUrl)
+                .into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
+                        ;
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Drawable errorDrawable) {
+                    }
+                });
+
+        return outputStream.toByteArray();
+    }
+
 }

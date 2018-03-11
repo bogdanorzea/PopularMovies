@@ -38,6 +38,8 @@ import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 
 import timber.log.Timber;
 
+import static com.bogdanorzea.popularmovies.utility.NetworkUtils.posterFullPath;
+
 public class DetailsActivity extends AppCompatActivity {
 
     public static final String MOVIE_ID_INTENT_KEY = "movie_id";
@@ -107,6 +109,8 @@ public class DetailsActivity extends AppCompatActivity {
         values.put(MovieEntry.COLUMN_NAME_VOTE_COUNT, movie.voteCount);
         values.put(MovieEntry.COLUMN_NAME_BACKDROP_PATH, movie.backdropPath);
         values.put(MovieEntry.COLUMN_NAME_POSTER_PATH, movie.posterPath);
+        values.put(MovieEntry.COLUMN_NAME_POSTER_IMAGE,
+                NetworkUtils.getImageBytes(context, posterFullPath(movie.posterPath)));
 
         return context.getContentResolver().insert(MoviesContract.CONTENT_URI, values);
     }
