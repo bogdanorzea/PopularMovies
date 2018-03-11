@@ -45,6 +45,7 @@ dependencies {
     // Libraries
     implementation 'com.squareup.okhttp3:okhttp:3.9.1'
     implementation 'com.squareup.moshi:moshi:1.5.0'
+    implementation 'com.serjltt.moshi:moshi-lazy-adapters:2.1'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.jakewharton.timber:timber:4.6.1'
 }
