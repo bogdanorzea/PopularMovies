@@ -1,5 +1,6 @@
 package com.bogdanorzea.popularmovies.model.object;
 
+import com.serjltt.moshi.adapters.FallbackOnNull;
 import com.squareup.moshi.Json;
 
 public class Crew {
@@ -9,6 +10,7 @@ public class Crew {
     @Json(name = "department")
     public String department;
     @Json(name = "gender")
+    @FallbackOnNull(fallbackInt = -1)
     public int gender;
     @Json(name = "id")
     public int id;

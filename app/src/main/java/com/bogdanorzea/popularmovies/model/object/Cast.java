@@ -1,5 +1,6 @@
 package com.bogdanorzea.popularmovies.model.object;
 
+import com.serjltt.moshi.adapters.FallbackOnNull;
 import com.squareup.moshi.Json;
 
 public class Cast {
@@ -11,6 +12,7 @@ public class Cast {
     @Json(name = "credit_id")
     public String creditId;
     @Json(name = "gender")
+    @FallbackOnNull(fallbackInt = -1)
     public int gender;
     @Json(name = "id")
     public int id;

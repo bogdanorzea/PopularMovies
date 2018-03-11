@@ -3,6 +3,7 @@ package com.bogdanorzea.popularmovies.model.object;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.serjltt.moshi.adapters.FallbackOnNull;
 import com.squareup.moshi.Json;
 
 import java.util.List;
@@ -55,6 +56,7 @@ public class Movie implements Parcelable {
     @Json(name = "revenue")
     public long revenue;
     @Json(name = "runtime")
+    @FallbackOnNull(fallbackInt = -1)
     public int runtime;
     @Json(name = "spoken_languages")
     public List<SpokenLanguage> spokenLanguages = null;

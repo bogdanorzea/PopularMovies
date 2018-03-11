@@ -3,6 +3,7 @@ package com.bogdanorzea.popularmovies.utility;
 
 import android.os.AsyncTask;
 
+import com.serjltt.moshi.adapters.FallbackOnNull;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 
@@ -52,7 +53,9 @@ public class AsyncTaskUtils {
                 e.printStackTrace();
             }
 
-            Moshi moshi = new Moshi.Builder().build();
+            Moshi moshi = new Moshi.Builder()
+                    .add(FallbackOnNull.ADAPTER_FACTORY)
+                    .build();
             JsonAdapter<T> jsonAdapter = moshi.adapter(classType);
 
             T jsonResponse = null;
