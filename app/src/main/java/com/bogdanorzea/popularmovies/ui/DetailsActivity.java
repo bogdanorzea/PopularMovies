@@ -1,6 +1,7 @@
 package com.bogdanorzea.popularmovies.ui;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
@@ -59,7 +60,61 @@ public class DetailsActivity extends AppCompatActivity {
                     populateTabs();
                 }
             };
-    private boolean isFavorite = false;
+    private Menu mMenu;
+
+    public static boolean isMovieFavorite(Context context, int movieId) {
+        Uri movieUri = Uri.withAppendedPath(MoviesContract.CONTENT_URI, String.valueOf(movieId));
+        Timber.d("Movie uri is %s", movieUri);
+        boolean isFavorite = false;
+
+        Cursor cursor = null;
+        try {
+            cursor = context.getContentResolver().query(movieUri, null, null, null, null);
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                int favoriteColumnIndex = cursor.getColumnIndex(MovieEntry.COLUMN_NAME_FAVORITE);
+                int favoriteValue = cursor.getInt(favoriteColumnIndex);
+
+                if (favoriteValue == 1) {
+                    isFavorite = true;
+                }
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+
+        return isFavorite;
+    }
+
+    public static void changeFavoriteMenuItemResource(Menu menu, int imageResource) {
+        int actionFavorite = R.id.action_favorite;
+
+        MenuItem menuItemFavorite = menu.findItem(actionFavorite);
+        menuItemFavorite.setIcon(imageResource);
+    }
+
+    private static Uri saveMovie(Context context, Movie movie) {
+        ContentValues values = new ContentValues();
+        values.put(MovieEntry._ID, movie.id);
+        values.put(MovieEntry.COLUMN_NAME_TITLE, movie.title);
+        values.put(MovieEntry.COLUMN_NAME_FAVORITE, 1);
+        values.put(MovieEntry.COLUMN_NAME_RELEASE_DATE, movie.releaseDate);
+        values.put(MovieEntry.COLUMN_NAME_TAGLINE, movie.tagline);
+        values.put(MovieEntry.COLUMN_NAME_OVERVIEW, movie.overview);
+        values.put(MovieEntry.COLUMN_NAME_RUNTIME, movie.runtime);
+        values.put(MovieEntry.COLUMN_NAME_VOTE_AVERAGE, movie.voteAverage);
+        values.put(MovieEntry.COLUMN_NAME_VOTE_COUNT, movie.voteCount);
+        values.put(MovieEntry.COLUMN_NAME_BACKDROP_PATH, movie.backdropPath);
+        values.put(MovieEntry.COLUMN_NAME_POSTER_PATH, movie.posterPath);
+
+        return context.getContentResolver().insert(MoviesContract.CONTENT_URI, values);
+    }
+
+    private static int removeMovie(Context context, int movieId) {
+        Uri movieUri = Uri.withAppendedPath(MoviesContract.CONTENT_URI, String.valueOf(movieId));
+        return context.getContentResolver().delete(movieUri, null, null);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,34 +151,10 @@ public class DetailsActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-
-        Uri movieUri = Uri.withAppendedPath(MoviesContract.CONTENT_URI, String.valueOf(mMovieId));
-        Timber.d("Movie uri is %s", movieUri);
-
-        Cursor cursor = null;
-
-        try {
-            cursor = getContentResolver().query(movieUri, null, null, null, null);
-            if (cursor != null && cursor.getCount() == 1) {
-
-                cursor.moveToFirst();
-                int favoriteColumnIndex = cursor.getColumnIndex(MovieEntry.COLUMN_NAME_FAVORITE);
-                Timber.d("Favorite column index is %s", favoriteColumnIndex);
-
-                int favoriteValue = cursor.getInt(favoriteColumnIndex);
-
-                if (favoriteValue == 1) {
-                    isFavorite = true;
-                }
-            }
-        } finally {
-            if (cursor != null)
-                cursor.close();
-        }
-
-        if (isFavorite) {
-            MenuItem menuItemFavorite = menu.findItem(R.id.action_favorite);
-            menuItemFavorite.setIcon(R.drawable.ic_favorite_white_24dp);
+        if (isMovieFavorite(this, mMovieId)) {
+            changeFavoriteMenuItemResource(menu, R.drawable.ic_favorite_white_24dp);
+        } else {
+            changeFavoriteMenuItemResource(menu, R.drawable.ic_favorite_border_white_24dp);
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -131,6 +162,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        mMenu = menu;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_details, menu);
         return true;
@@ -140,16 +172,37 @@ public class DetailsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_favorite:
-                addMovie();
+                toggleMovieFavoriteStatus(mMovie);
                 return true;
             case R.id.action_homepage:
                 openMovieHomepage();
                 return true;
-            case R.id.action_delete_movie:
-                removeMovie();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void toggleMovieFavoriteStatus(Movie movie) {
+        Context context = this;
+        int movieId = movie.id;
+
+        if (isMovieFavorite(context, movieId)) {
+            int rowsAffected = removeMovie(context, movieId);
+
+            if (1 == rowsAffected) {
+                changeFavoriteMenuItemResource(mMenu, R.drawable.ic_favorite_border_white_24dp);
+            } else {
+                Timber.e("Failed to remove the movie with id %s", movieId);
+            }
+
+        } else {
+            Uri newRowID = saveMovie(context, movie);
+
+            if (newRowID != null) {
+                changeFavoriteMenuItemResource(mMenu, R.drawable.ic_favorite_white_24dp);
+            } else {
+                Timber.e("Failed to add to favorites the movie with id %s", movieId);
+            }
         }
     }
 
@@ -184,41 +237,6 @@ public class DetailsActivity extends AppCompatActivity {
     private void hideProgress() {
         mProgressBar.setVisibility(View.GONE);
         mAppBarLayout.setExpanded(true);
-    }
-
-    private void addMovie() {
-        ContentValues values = new ContentValues();
-        values.put(MovieEntry._ID, mMovie.id);
-        values.put(MovieEntry.COLUMN_NAME_TITLE, mMovie.title);
-        values.put(MovieEntry.COLUMN_NAME_FAVORITE, 1);
-        values.put(MovieEntry.COLUMN_NAME_RELEASE_DATE, mMovie.releaseDate);
-        values.put(MovieEntry.COLUMN_NAME_TAGLINE, mMovie.tagline);
-        values.put(MovieEntry.COLUMN_NAME_OVERVIEW, mMovie.overview);
-        values.put(MovieEntry.COLUMN_NAME_RUNTIME, mMovie.runtime);
-        values.put(MovieEntry.COLUMN_NAME_VOTE_AVERAGE, mMovie.voteAverage);
-        values.put(MovieEntry.COLUMN_NAME_VOTE_COUNT, mMovie.voteCount);
-        values.put(MovieEntry.COLUMN_NAME_BACKDROP_PATH, mMovie.backdropPath);
-        values.put(MovieEntry.COLUMN_NAME_POSTER_PATH, mMovie.posterPath);
-
-        Uri newRowID = getContentResolver().insert(MoviesContract.CONTENT_URI, values);
-
-        if (newRowID != null) {
-            Toast.makeText(this, "Successfully saved movie " + mMovie.title + " to favorites", Toast.LENGTH_SHORT).show();
-        } else {
-            Timber.e("Failed to add to favorites the movie with id %s", mMovie.id);
-        }
-    }
-
-
-    private void removeMovie() {
-        Uri movieUri = Uri.withAppendedPath(MoviesContract.CONTENT_URI, String.valueOf(mMovieId));
-        int rowsAffected = getContentResolver().delete(movieUri, null, null);
-
-        if (1 == rowsAffected) {
-            Toast.makeText(this, "Successfully removed movie " + mMovie.title + " from database", Toast.LENGTH_SHORT).show();
-        } else {
-            Timber.e("Failed to remove the movie with id %s", mMovie.id);
-        }
     }
 
     private void openMovieHomepage() {
