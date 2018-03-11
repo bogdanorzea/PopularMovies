@@ -123,7 +123,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         if (isFavorite) {
             MenuItem menuItemFavorite = menu.findItem(R.id.action_favorite);
-            menuItemFavorite.setIcon(R.drawable.ic_favorite_white_36dp);
+            menuItemFavorite.setIcon(R.drawable.ic_favorite_white_24dp);
         }
 
         return super.onPrepareOptionsMenu(menu);
