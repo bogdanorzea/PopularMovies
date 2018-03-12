@@ -35,6 +35,8 @@ public class NetworkUtils {
     private static final String TOP_RATED = "top_rated";
     private static final String REVIEWS = "reviews";
     private static final String CREDITS = "credits";
+    public static final String SEARCH = "search";
+    public static final String QUERY = "query";
 
     /**
      * Returns the response string from the HttpUrl address
@@ -241,4 +243,15 @@ public class NetworkUtils {
         return outputStream.toByteArray();
     }
 
+    public static HttpUrl movieSearchUrl(String queryString) {
+        return new HttpUrl.Builder()
+                .scheme(HTTPS)
+                .host(HOST)
+                .addPathSegment(API_VERSION)
+                .addPathSegment(SEARCH)
+                .addPathSegment(MOVIE)
+                .addQueryParameter(QUERY, queryString)
+                .addQueryParameter(API_KEY, BuildConfig.TheMovieDBApiKey)
+                .build();
+    }
 }
