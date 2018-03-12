@@ -4,14 +4,23 @@
     tools:context="com.bogdanorzea.popularmovies.ui.MainActivity">
 
     <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:orderInCategory="200"
+        android:title="@string/action_search"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView" />
+
+    <item
         android:id="@+id/action_refresh"
-        android:orderInCategory="100"
+        android:orderInCategory="200"
         android:title="@string/action_refresh"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="200"
+        android:icon="@drawable/ic_settings_white_24dp"
+        android:orderInCategory="300"
         android:title="@string/action_settings"
         app:showAsAction="never" />
 
