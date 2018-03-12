@@ -1,5 +1,7 @@
 package com.bogdanorzea.popularmovies.ui;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -7,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,32 +34,6 @@ public class MainActivity extends AppCompatActivity implements
     private CoverAdapter mAdapter;
     private boolean isLoading = false;
 
-    private AsyncTaskUtils.RequestTaskListener<MoviesResponse> mCoverListener =
-            new AsyncTaskUtils.RequestTaskListener<MoviesResponse>() {
-
-                @Override
-                public void onTaskStarting() {
-                    showProgress();
-                }
-
-                @Override
-                public void onTaskComplete(MoviesResponse moviesResponse) {
-                    if (moviesResponse != null) {
-                        if (null == mAdapter.movies) {
-                            mAdapter.movies = moviesResponse.results;
-                            mCoverRecyclerView.setAdapter(mAdapter);
-                        } else {
-                            mAdapter.movies.addAll(moviesResponse.results);
-                        }
-
-                        hideProgress();
-                        mAdapter.notifyDataSetChanged();
-                        mAdapter.nextPageToLoad += 1;
-                    }
-                }
-            };
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,13 +57,22 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        loadData();
+        handleIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        handleIntent(intent);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+
+        prepareSearchMenuItem(menu);
+
         return true;
     }
 
@@ -123,6 +109,14 @@ public class MainActivity extends AppCompatActivity implements
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
 
+    private void handleIntent(Intent intent) {
+        if (intent != null && Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            displaySearchResult(intent.getStringExtra(SearchManager.QUERY));
+        } else {
+            reloadData();
+        }
+    }
+
     private void showNoInternetWarning() {
         findViewById(R.id.warning_message).setVisibility(View.VISIBLE);
     }
@@ -151,7 +145,32 @@ public class MainActivity extends AppCompatActivity implements
                 return;
             }
 
-            new AsyncTaskUtils.RequestTask<>(mCoverListener, MoviesResponse.class).execute(url);
+            AsyncTaskUtils.RequestTaskListener<MoviesResponse> listener =
+                    new AsyncTaskUtils.RequestTaskListener<MoviesResponse>() {
+
+                        @Override
+                        public void onTaskStarting() {
+                            showProgress();
+                        }
+
+                        @Override
+                        public void onTaskComplete(MoviesResponse moviesResponse) {
+                            if (moviesResponse != null) {
+                                if (null == mAdapter.movies) {
+                                    mAdapter.movies = moviesResponse.results;
+                                    mCoverRecyclerView.setAdapter(mAdapter);
+                                } else {
+                                    mAdapter.movies.addAll(moviesResponse.results);
+                                }
+
+                                hideProgress();
+                                mAdapter.notifyDataSetChanged();
+                                mAdapter.nextPageToLoad += 1;
+                            }
+                        }
+                    };
+
+            new AsyncTaskUtils.RequestTask<>(listener, MoviesResponse.class).execute(url);
         } else {
             hideProgress();
             if (mAdapter.movies == null || mAdapter.movies.isEmpty()) {
@@ -162,6 +181,31 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    private void displaySearchResult(String query) {
+        HttpUrl httpUrl = NetworkUtils.movieSearchUrl(query);
+        AsyncTaskUtils.RequestTaskListener<MoviesResponse> listener = new AsyncTaskUtils.RequestTaskListener<MoviesResponse>() {
+            @Override
+            public void onTaskStarting() {
+                showProgress();
+            }
+
+            @Override
+            public void onTaskComplete(MoviesResponse moviesResponse) {
+                if (moviesResponse != null) {
+                    mCoverRecyclerView.setAdapter(null);
+
+                    CoverAdapter adapter = new CoverAdapter(MainActivity.this, moviesResponse.results);
+                    mCoverRecyclerView.setAdapter(adapter);
+                    hideProgress();
+                    adapter.notifyDataSetChanged();
+                    adapter.nextPageToLoad += 1;
+                }
+            }
+        };
+
+        new AsyncTaskUtils.RequestTask<>(listener, MoviesResponse.class).execute(httpUrl);
+    }
+
     private void showProgress() {
         isLoading = true;
         mProgressBar.setVisibility(View.VISIBLE);
@@ -170,5 +214,26 @@ public class MainActivity extends AppCompatActivity implements
     private void hideProgress() {
         isLoading = false;
         mProgressBar.setVisibility(View.GONE);
+    }
+
+    private void prepareSearchMenuItem(Menu menu) {
+        final MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+        searchMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                onNewIntent(null);
+                return true;
+            }
+        });
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) searchMenuItem.getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
     }
 }
