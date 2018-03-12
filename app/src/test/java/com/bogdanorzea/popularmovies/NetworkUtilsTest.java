@@ -37,4 +37,10 @@ public class NetworkUtilsTest {
     public void movieVideosUrl() throws Exception {
         Assert.assertEquals(NetworkUtils.movieVideosUrl(550).toString(), "https://api.themoviedb.org/3/movie/550/videos?api_key=" + BuildConfig.TheMovieDBApiKey);
     }
+
+    @Test
+    public void movieSearchUrl() throws Exception {
+        Assert.assertEquals(NetworkUtils.movieSearchUrl("Jack").toString(), "https://api.themoviedb.org/3/search/movie?query=Jack&api_key=" + BuildConfig.TheMovieDBApiKey);
+        Assert.assertEquals(NetworkUtils.movieSearchUrl("Jack Reacher").toString(), "https://api.themoviedb.org/3/search/movie?query=Jack%20Reacher&api_key=" + BuildConfig.TheMovieDBApiKey);
+    }
 }
