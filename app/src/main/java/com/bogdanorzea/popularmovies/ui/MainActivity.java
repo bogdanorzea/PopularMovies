@@ -138,9 +138,9 @@ public class MainActivity extends AppCompatActivity implements
 
             HttpUrl url;
             if (preferredSortRule.equals(getString(R.string.pref_sort_by_popularity))) {
-                url = NetworkUtils.moviePopularUrl(mAdapter.nextPageToLoad);
+                url = NetworkUtils.moviePopularUrl(mAdapter.getNextPageToLoad());
             } else if (preferredSortRule.equals(getString(R.string.pref_sort_by_top_rated))) {
-                url = NetworkUtils.movieTopRatedUrl(mAdapter.nextPageToLoad);
+                url = NetworkUtils.movieTopRatedUrl(mAdapter.getNextPageToLoad());
             } else {
                 return;
             }
@@ -156,16 +156,15 @@ public class MainActivity extends AppCompatActivity implements
                         @Override
                         public void onTaskComplete(MoviesResponse moviesResponse) {
                             if (moviesResponse != null) {
-                                if (null == mAdapter.movies) {
-                                    mAdapter.movies = moviesResponse.results;
+                                if (0 == mAdapter.getItemCount()) {
+                                    mAdapter.setMovies(moviesResponse.results);
                                     mCoverRecyclerView.setAdapter(mAdapter);
                                 } else {
-                                    mAdapter.movies.addAll(moviesResponse.results);
+                                    mAdapter.addMovies(moviesResponse.results);
                                 }
 
                                 hideProgress();
                                 mAdapter.notifyDataSetChanged();
-                                mAdapter.nextPageToLoad += 1;
                             }
                         }
                     };
@@ -173,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements
             new AsyncTaskUtils.RequestTask<>(listener, MoviesResponse.class).execute(url);
         } else {
             hideProgress();
-            if (mAdapter.movies == null || mAdapter.movies.isEmpty()) {
+            if (mAdapter.getItemCount() == 0) {
                 showNoInternetWarning();
             } else {
                 Toast.makeText(this, getString(R.string.warning_no_internet), Toast.LENGTH_SHORT).show();
@@ -192,13 +191,13 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onTaskComplete(MoviesResponse moviesResponse) {
                 if (moviesResponse != null) {
-                    mCoverRecyclerView.setAdapter(null);
-
                     CoverAdapter adapter = new CoverAdapter(MainActivity.this, moviesResponse.results);
+
+                    mCoverRecyclerView.setAdapter(null);
                     mCoverRecyclerView.setAdapter(adapter);
-                    hideProgress();
+
                     adapter.notifyDataSetChanged();
-                    adapter.nextPageToLoad += 1;
+                    hideProgress();
                 }
             }
         };

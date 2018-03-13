@@ -2,41 +2,56 @@ package com.bogdanorzea.popularmovies.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bogdanorzea.popularmovies.ui.DetailsActivity;
 import com.bogdanorzea.popularmovies.R;
-import com.bogdanorzea.popularmovies.model.object.TruncatedMovie;
+import com.bogdanorzea.popularmovies.model.object.Movie;
+import com.bogdanorzea.popularmovies.ui.DetailsActivity;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 
 import java.util.List;
 
 public class CoverAdapter extends RecyclerView.Adapter<CoverAdapter.ViewHolder> {
     private final Context context;
-    public int nextPageToLoad = 1;
-    public List<TruncatedMovie> movies;
-    private LayoutInflater inflater;
+    private int nextPageToLoad = 1;
+    private List<Movie> mMovies;
 
-    public CoverAdapter(Context context, List<TruncatedMovie> movies) {
-        this.movies = movies;
+    public CoverAdapter(Context context, List<Movie> movies) {
+        this.mMovies = movies;
         this.context = context;
-        this.inflater = LayoutInflater.from(context);
     }
 
+    public int getNextPageToLoad() {
+        return nextPageToLoad;
+    }
+
+    public void setMovies(List<Movie> movies) {
+        nextPageToLoad = 1;
+        this.mMovies = movies;
+        nextPageToLoad++;
+    }
+
+    public void addMovies(List<Movie> movies) {
+        this.mMovies.addAll(movies);
+        nextPageToLoad++;
+    }
+
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View linearLayout = inflater.inflate(R.layout.movie_cover_layout, parent, false);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View linearLayout = LayoutInflater.from(context).inflate(R.layout.movie_cover_layout, parent, false);
 
         return new ViewHolder(linearLayout);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        TruncatedMovie currentMovie = movies.get(position);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Movie currentMovie = mMovies.get(position);
 
         holder.itemView.setTag(currentMovie);
         NetworkUtils.loadPoster(context, holder.coverImage, currentMovie.posterPath);
@@ -44,7 +59,10 @@ public class CoverAdapter extends RecyclerView.Adapter<CoverAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return movies.size();
+        if (mMovies != null)
+            return mMovies.size();
+
+        return 0;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -62,7 +80,7 @@ public class CoverAdapter extends RecyclerView.Adapter<CoverAdapter.ViewHolder> 
         public void onClick(View view) {
             Context context = view.getContext();
 
-            TruncatedMovie currentMovie = (TruncatedMovie) itemView.getTag();
+            Movie currentMovie = (Movie) itemView.getTag();
 
             Intent intent = new Intent(context, DetailsActivity.class);
             intent.putExtra(DetailsActivity.MOVIE_ID_INTENT_KEY, currentMovie.id);
