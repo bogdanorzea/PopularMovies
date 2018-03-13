@@ -39,8 +39,10 @@ public class MovieVideos extends Fragment {
         if (getArguments() != null) {
             int movieId = getArguments().getInt("movie_id");
 
-            new AsyncTaskUtils.RequestTask<>(mRequestTaskListener, VideosResponse.class)
-                    .execute(NetworkUtils.movieVideosUrl(movieId));
+            if (NetworkUtils.hasInternetConnection(getContext())) {
+                new AsyncTaskUtils.RequestTask<>(mRequestTaskListener, VideosResponse.class)
+                        .execute(NetworkUtils.movieVideosUrl(movieId));
+            }
         }
 
         return view;

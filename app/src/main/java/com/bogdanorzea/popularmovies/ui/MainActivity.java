@@ -19,10 +19,15 @@ import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.adapter.CoverAdapter;
+import com.bogdanorzea.popularmovies.data.MovieRepository;
+import com.bogdanorzea.popularmovies.data.MovieSQLiteRepository;
+import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.model.response.MoviesResponse;
 import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
 import com.bogdanorzea.popularmovies.utility.DataUtils;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
+
+import java.util.List;
 
 import okhttp3.HttpUrl;
 
@@ -156,7 +161,10 @@ public class MainActivity extends AppCompatActivity implements
                         @Override
                         public void onTaskComplete(MoviesResponse moviesResponse) {
                             if (moviesResponse != null) {
+                                saveMovies(moviesResponse.results);
+
                                 if (0 == mAdapter.getItemCount()) {
+
                                     mAdapter.setMovies(moviesResponse.results);
                                     mCoverRecyclerView.setAdapter(mAdapter);
                                 } else {
@@ -178,6 +186,17 @@ public class MainActivity extends AppCompatActivity implements
                 Toast.makeText(this, getString(R.string.warning_no_internet), Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void saveMovies(List<Movie> results) {
+        MovieRepository<Movie> repository = new MovieSQLiteRepository(this);
+
+        for (Movie movie : results) {
+            if (repository.get(movie.id) == null) {
+                repository.insert(movie);
+            }
+        }
+
     }
 
     private void displaySearchResult(String query) {

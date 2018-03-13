@@ -37,8 +37,10 @@ public class MovieCast extends Fragment {
         if (getArguments() != null) {
             int movieId = getArguments().getInt("movie_id");
 
-            new AsyncTaskUtils.RequestTask<>(mRequestTaskListener, CreditsResponse.class)
-                    .execute(NetworkUtils.movieCreditsUrl(movieId));
+            if (NetworkUtils.hasInternetConnection(getContext())) {
+                new AsyncTaskUtils.RequestTask<>(mRequestTaskListener, CreditsResponse.class)
+                        .execute(NetworkUtils.movieCreditsUrl(movieId));
+            }
         }
 
         return view;
