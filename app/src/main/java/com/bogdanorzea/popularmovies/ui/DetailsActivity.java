@@ -96,11 +96,53 @@ public class DetailsActivity extends AppCompatActivity {
         menuItemFavorite.setIcon(imageResource);
     }
 
+    private static Movie getMovie(Context context, int movieId) {
+        Uri movieUri = Uri.withAppendedPath(MoviesContract.CONTENT_URI, String.valueOf(movieId));
+
+        Cursor cursor = null;
+        Movie movie = new Movie();
+        try {
+            cursor = context.getContentResolver().query(movieUri, null, null, null, null);
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                int idColumnIndex = cursor.getColumnIndex(MovieEntry._ID);
+                int titleColumnIndex = cursor.getColumnIndex(MovieEntry.COLUMN_NAME_TITLE);
+                int releaseDateColumnIndex = cursor.getColumnIndex(MovieEntry.COLUMN_NAME_RELEASE_DATE);
+                int taglineColumnIndex = cursor.getColumnIndex(MovieEntry.COLUMN_NAME_TAGLINE);
+                int overviewColumnIndex = cursor.getColumnIndex(MovieEntry.COLUMN_NAME_OVERVIEW);
+                int runtimeColumnIndex = cursor.getColumnIndex(MovieEntry.COLUMN_NAME_RUNTIME);
+                int voteAverageColumnIndex = cursor.getColumnIndex(MovieEntry.COLUMN_NAME_VOTE_AVERAGE);
+                int voteCountColumnIndex = cursor.getColumnIndex(MovieEntry.COLUMN_NAME_VOTE_COUNT);
+                int homepageColumnIndex = cursor.getColumnIndex(MovieEntry.COLUMN_NAME_HOMEPAGE);
+                int backdropPathColumnIndex = cursor.getColumnIndex(MovieEntry.COLUMN_NAME_BACKDROP_PATH);
+                int posterPathColumnIndex = cursor.getColumnIndex(MovieEntry.COLUMN_NAME_POSTER_PATH);
+
+                movie.id = cursor.getInt(idColumnIndex);
+                movie.title = cursor.getString(titleColumnIndex);
+                movie.releaseDate = cursor.getString(releaseDateColumnIndex);
+                movie.tagline = cursor.getString(taglineColumnIndex);
+                movie.overview = cursor.getString(overviewColumnIndex);
+                movie.runtime = cursor.getInt(runtimeColumnIndex);
+                movie.voteAverage = cursor.getDouble(voteAverageColumnIndex);
+                movie.voteCount = cursor.getInt(voteCountColumnIndex);
+                movie.homepage = cursor.getString(homepageColumnIndex);
+                movie.backdropPath = cursor.getString(backdropPathColumnIndex);
+                movie.posterPath = cursor.getString(posterPathColumnIndex);
+
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+
+        return movie;
+
+    }
+
     private static Uri saveMovie(Context context, Movie movie) {
         ContentValues values = new ContentValues();
         values.put(MovieEntry._ID, movie.id);
         values.put(MovieEntry.COLUMN_NAME_TITLE, movie.title);
-        values.put(MovieEntry.COLUMN_NAME_FAVORITE, 1);
         values.put(MovieEntry.COLUMN_NAME_RELEASE_DATE, movie.releaseDate);
         values.put(MovieEntry.COLUMN_NAME_TAGLINE, movie.tagline);
         values.put(MovieEntry.COLUMN_NAME_OVERVIEW, movie.overview);
@@ -108,11 +150,21 @@ public class DetailsActivity extends AppCompatActivity {
         values.put(MovieEntry.COLUMN_NAME_VOTE_AVERAGE, movie.voteAverage);
         values.put(MovieEntry.COLUMN_NAME_VOTE_COUNT, movie.voteCount);
         values.put(MovieEntry.COLUMN_NAME_BACKDROP_PATH, movie.backdropPath);
+        values.put(MovieEntry.COLUMN_NAME_HOMEPAGE, movie.homepage);
         values.put(MovieEntry.COLUMN_NAME_POSTER_PATH, movie.posterPath);
         values.put(MovieEntry.COLUMN_NAME_POSTER_IMAGE,
                 NetworkUtils.getImageBytes(context, posterFullPath(movie.posterPath)));
 
         return context.getContentResolver().insert(MoviesContract.CONTENT_URI, values);
+    }
+
+    private static int setFavoriteStatus(Context context, Movie movie, boolean isFavorite) {
+        ContentValues values = new ContentValues();
+        values.put(MovieEntry._ID, movie.id);
+        values.put(MovieEntry.COLUMN_NAME_FAVORITE, isFavorite ? 1 : 0);
+
+        Uri movieUri = Uri.withAppendedPath(MoviesContract.CONTENT_URI, String.valueOf(movie.id));
+        return context.getContentResolver().update(movieUri, values, null, null);
     }
 
     private static int removeMovie(Context context, int movieId) {
@@ -178,6 +230,10 @@ public class DetailsActivity extends AppCompatActivity {
             case R.id.action_favorite:
                 toggleMovieFavoriteStatus(mMovie);
                 return true;
+            case R.id.action_cache:
+                mMovie = getMovie(this, mMovieId);
+                populateTabs();
+                return true;
             case R.id.action_homepage:
                 openMovieHomepage();
                 return true;
@@ -191,7 +247,7 @@ public class DetailsActivity extends AppCompatActivity {
         int movieId = movie.id;
 
         if (isMovieFavorite(context, movieId)) {
-            int rowsAffected = removeMovie(context, movieId);
+            int rowsAffected = setFavoriteStatus(this, movie, false);
 
             if (1 == rowsAffected) {
                 changeFavoriteMenuItemResource(mMenu, R.drawable.ic_favorite_border_white_24dp);
@@ -203,7 +259,10 @@ public class DetailsActivity extends AppCompatActivity {
             Uri newRowID = saveMovie(context, movie);
 
             if (newRowID != null) {
-                changeFavoriteMenuItemResource(mMenu, R.drawable.ic_favorite_white_24dp);
+                int movieUri = setFavoriteStatus(this, movie, true);
+                if (movieUri == 1) {
+                    changeFavoriteMenuItemResource(mMenu, R.drawable.ic_favorite_white_24dp);
+                }
             } else {
                 Timber.e("Failed to add to favorites the movie with id %s", movieId);
             }
