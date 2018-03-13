@@ -72,6 +72,7 @@ public class Movie implements Parcelable {
     public double voteAverage;
     @Json(name = "vote_count")
     public int voteCount;
+    public byte[] image;
 
     protected Movie(Parcel in) {
         this.adult = ((boolean) in.readValue((boolean.class.getClassLoader())));

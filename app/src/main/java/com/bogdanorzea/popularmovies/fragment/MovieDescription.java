@@ -1,5 +1,6 @@
 package com.bogdanorzea.popularmovies.fragment;
 
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
@@ -12,9 +13,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bogdanorzea.popularmovies.R;
+import com.bogdanorzea.popularmovies.data.MovieRepository;
+import com.bogdanorzea.popularmovies.data.MovieSQLiteRepository;
 import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.utility.DataUtils;
-import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 
 import static com.bogdanorzea.popularmovies.utility.DataUtils.formatDuration;
 import static com.bogdanorzea.popularmovies.utility.DataUtils.formatMoney;
@@ -30,11 +32,15 @@ public class MovieDescription extends Fragment {
             ScrollView scrollView = view.findViewById(R.id.scroll_view);
             ViewCompat.setNestedScrollingEnabled(scrollView, true);
 
-            Movie movie = getArguments().getParcelable("movie");
+            MovieRepository<Movie> repository = new MovieSQLiteRepository(getContext());
+            int movieId = getArguments().getInt("movie_id");
+            Movie movie = repository.get(movieId);
+
             if (movie != null) {
                 // Poster
                 ImageView poster = view.findViewById(R.id.movie_cover);
-                NetworkUtils.loadPoster(getActivity(), poster, movie.posterPath);
+                byte[] image = movie.image;
+                poster.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
 
                 // Release date
                 ((TextView) view.findViewById(R.id.movie_release_date))
@@ -46,6 +52,7 @@ public class MovieDescription extends Fragment {
                 // Tagline
                 ((TextView) view.findViewById(R.id.movie_tagline)).setText(
                         DataUtils.quoteString(movie.tagline));
+
                 // Overview
                 ((TextView) view.findViewById(R.id.movie_overview)).setText(movie.overview);
 

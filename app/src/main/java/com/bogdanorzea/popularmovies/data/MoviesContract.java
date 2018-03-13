@@ -41,6 +41,8 @@ public class MoviesContract {
                     MovieEntry.COLUMN_NAME_RUNTIME + INTEGER + SEPARATOR +
                     MovieEntry.COLUMN_NAME_VOTE_AVERAGE + REAL + SEPARATOR +
                     MovieEntry.COLUMN_NAME_VOTE_COUNT + INTEGER + SEPARATOR +
+                    MovieEntry.COLUMN_NAME_BUDGET + INTEGER + SEPARATOR +
+                    MovieEntry.COLUMN_NAME_REVENUE + INTEGER + SEPARATOR +
                     MovieEntry.COLUMN_NAME_HOMEPAGE + TEXT + SEPARATOR +
                     MovieEntry.COLUMN_NAME_BACKDROP_PATH + TEXT + SEPARATOR +
                     MovieEntry.COLUMN_NAME_POSTER_PATH + TEXT + SEPARATOR +
@@ -51,7 +53,7 @@ public class MoviesContract {
     }
 
     public static class MovieEntry implements BaseColumns {
-        static final String TABLE_NAME = "favorites";
+        static final String TABLE_NAME = "movies";
 
         // Column names
         public static final String COLUMN_NAME_TITLE = "title";
@@ -62,6 +64,8 @@ public class MoviesContract {
         public static final String COLUMN_NAME_RUNTIME = "runtime";
         public static final String COLUMN_NAME_VOTE_AVERAGE = "vote_average";
         public static final String COLUMN_NAME_VOTE_COUNT = "vote_count";
+        public static final String COLUMN_NAME_BUDGET = "budget";
+        public static final String COLUMN_NAME_REVENUE = "revenue";
         public static final String COLUMN_NAME_HOMEPAGE = "homepage";
         public static final String COLUMN_NAME_BACKDROP_PATH = "backdrop_path";
         public static final String COLUMN_NAME_POSTER_PATH = "poster_path";
