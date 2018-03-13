@@ -11,6 +11,12 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/action_cache"
+        android:orderInCategory="200"
+        android:title="Display from cache"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_homepage"
         android:icon="@drawable/ic_public_white_24dp"
         android:orderInCategory="300"
