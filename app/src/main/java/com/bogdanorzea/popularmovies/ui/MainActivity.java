@@ -1,291 +1,36 @@
 package com.bogdanorzea.popularmovies.ui;
 
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceManager;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import com.bogdanorzea.popularmovies.R;
-import com.bogdanorzea.popularmovies.adapter.CoverAdapter;
-import com.bogdanorzea.popularmovies.data.MovieRepository;
-import com.bogdanorzea.popularmovies.data.MovieSQLiteRepository;
-import com.bogdanorzea.popularmovies.data.MoviesContract;
-import com.bogdanorzea.popularmovies.model.object.Movie;
-import com.bogdanorzea.popularmovies.model.response.MoviesResponse;
-import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
-import com.bogdanorzea.popularmovies.utility.DataUtils;
-import com.bogdanorzea.popularmovies.utility.NetworkUtils;
+import com.bogdanorzea.popularmovies.adapter.MovieCategoryPagerAdapter;
+import com.bogdanorzea.popularmovies.fragment.MoviesFavorites;
+import com.bogdanorzea.popularmovies.fragment.MoviesPopular;
+import com.bogdanorzea.popularmovies.fragment.MoviesTopRated;
 
-import java.util.List;
-
-import okhttp3.HttpUrl;
-
-public class MainActivity extends AppCompatActivity implements
-        SharedPreferences.OnSharedPreferenceChangeListener {
-
-    private ProgressBar mProgressBar;
-    private RecyclerView mCoverRecyclerView;
-    private CoverAdapter mAdapter;
-    private boolean isLoading = false;
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mProgressBar = findViewById(R.id.progressBar);
-        mCoverRecyclerView = findViewById(R.id.cover_rv);
-        mCoverRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        mCoverRecyclerView.setHasFixedSize(true);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        mAdapter = new CoverAdapter(MainActivity.this, null);
+        MovieCategoryPagerAdapter pagerAdapter = new MovieCategoryPagerAdapter(getSupportFragmentManager());
+        pagerAdapter.addFragment(new MoviesFavorites(), "Favorites");
+        pagerAdapter.addFragment(new MoviesPopular(), "Popular");
+        pagerAdapter.addFragment(new MoviesTopRated(), "Top rated");
 
-        mCoverRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
+        ViewPager viewPager = findViewById(R.id.pager);
+        viewPager.setAdapter(pagerAdapter);
 
-                if (!recyclerView.canScrollVertically(1) && !isLoading) {
-                    loadData();
-                }
-            }
-        });
-
-        handleIntent(getIntent());
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        setIntent(intent);
-        handleIntent(intent);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
-
-        prepareSearchMenuItem(menu);
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_refresh:
-                reloadData();
-                return true;
-            case R.id.action_show_favorites:
-                showFavorites();
-                return true;
-            case R.id.action_settings:
-                Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
-                startActivity(startSettingsActivity);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void showFavorites() {
-        mAdapter = new CoverAdapter(MainActivity.this, null);
-        mCoverRecyclerView.setAdapter(null);
-        loadSQLData();
-
-        mAdapter = new CoverAdapter(MainActivity.this, loadSQLData());
-        mCoverRecyclerView.setAdapter(mAdapter);
-    }
-
-    private List<Movie> loadSQLData() {
-        MovieRepository<Movie> repository = new MovieSQLiteRepository(this);
-
-        String preferredSortRule = DataUtils.getPreferredSortRule(this);
-        String sortOrder= null;
-        if (preferredSortRule.equals(getString(R.string.pref_sort_by_popularity))) {
-            sortOrder = MoviesContract.MovieEntry.COLUMN_NAME_POPULARITY + " DESC";
-        } else if (preferredSortRule.equals(getString(R.string.pref_sort_by_top_rated))) {
-            sortOrder = MoviesContract.MovieEntry.COLUMN_NAME_VOTE_AVERAGE + " DESC";
-
-        }
-
-        return repository.getFavorites(sortOrder);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        reloadData();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        PreferenceManager.getDefaultSharedPreferences(this)
-                .unregisterOnSharedPreferenceChangeListener(this);
-    }
-
-    private void handleIntent(Intent intent) {
-        if (intent != null && Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            displaySearchResult(intent.getStringExtra(SearchManager.QUERY));
-        } else {
-            reloadData();
-        }
-    }
-
-    private void showNoInternetWarning() {
-        findViewById(R.id.warning_message).setVisibility(View.VISIBLE);
-    }
-
-    private void hideNoInternetWarning() {
-        findViewById(R.id.warning_message).setVisibility(View.GONE);
-    }
-
-    private void reloadData() {
-        mAdapter = new CoverAdapter(MainActivity.this, null);
-        mCoverRecyclerView.setAdapter(null);
-        loadData();
-    }
-
-    private void loadData() {
-        if (NetworkUtils.hasInternetConnection(this)) {
-            HttpUrl url = getRequestUrl();
-            if (url == null) return;
-
-            AsyncTaskUtils.RequestTaskListener<MoviesResponse> listener =
-                    new AsyncTaskUtils.RequestTaskListener<MoviesResponse>() {
-
-                        @Override
-                        public void onTaskStarting() {
-                            hideNoInternetWarning();
-                            showProgress();
-                        }
-
-                        @Override
-                        public void onTaskComplete(MoviesResponse moviesResponse) {
-                            if (moviesResponse != null) {
-                                saveMovies(moviesResponse.results);
-
-                                if (0 == mAdapter.getItemCount()) {
-                                    mAdapter.setMovies(moviesResponse.results);
-                                    mCoverRecyclerView.setAdapter(mAdapter);
-                                } else {
-                                    mAdapter.addMovies(moviesResponse.results);
-                                }
-
-                                hideProgress();
-                                mAdapter.notifyDataSetChanged();
-                            }
-                        }
-                    };
-
-            new AsyncTaskUtils.RequestTask<>(listener, MoviesResponse.class).execute(url);
-        } else {
-            hideProgress();
-            if (mAdapter.getItemCount() == 0) {
-                showNoInternetWarning();
-            } else {
-                Toast.makeText(this, getString(R.string.warning_no_internet), Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private HttpUrl getRequestUrl() {
-        String preferredSortRule = DataUtils.getPreferredSortRule(this);
-
-        HttpUrl url;
-        if (preferredSortRule.equals(getString(R.string.pref_sort_by_popularity))) {
-            url = NetworkUtils.moviePopularUrl(mAdapter.getNextPageToLoad());
-        } else if (preferredSortRule.equals(getString(R.string.pref_sort_by_top_rated))) {
-            url = NetworkUtils.movieTopRatedUrl(mAdapter.getNextPageToLoad());
-        } else {
-            return null;
-        }
-
-        return url;
-    }
-
-    private void saveMovies(List<Movie> results) {
-        MovieRepository<Movie> repository = new MovieSQLiteRepository(this);
-
-        for (Movie movie : results) {
-            if (repository.get(movie.id) == null) {
-                repository.insert(movie);
-            }
-        }
-
-    }
-
-    private void displaySearchResult(String query) {
-        HttpUrl httpUrl = NetworkUtils.movieSearchUrl(query);
-        AsyncTaskUtils.RequestTaskListener<MoviesResponse> listener = new AsyncTaskUtils.RequestTaskListener<MoviesResponse>() {
-            @Override
-            public void onTaskStarting() {
-                showProgress();
-            }
-
-            @Override
-            public void onTaskComplete(MoviesResponse moviesResponse) {
-                if (moviesResponse != null) {
-                    CoverAdapter adapter = new CoverAdapter(MainActivity.this, moviesResponse.results);
-
-                    mCoverRecyclerView.setAdapter(null);
-                    mCoverRecyclerView.setAdapter(adapter);
-
-                    adapter.notifyDataSetChanged();
-                    hideProgress();
-                }
-            }
-        };
-
-        new AsyncTaskUtils.RequestTask<>(listener, MoviesResponse.class).execute(httpUrl);
-    }
-
-    private void showProgress() {
-        isLoading = true;
-        mProgressBar.setVisibility(View.VISIBLE);
-    }
-
-    private void hideProgress() {
-        isLoading = false;
-        mProgressBar.setVisibility(View.GONE);
-    }
-
-    private void prepareSearchMenuItem(Menu menu) {
-        final MenuItem searchMenuItem = menu.findItem(R.id.action_search);
-        searchMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem menuItem) {
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                onNewIntent(null);
-                return true;
-            }
-        });
-
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) searchMenuItem.getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        TabLayout tabLayout = findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
     }
 }
