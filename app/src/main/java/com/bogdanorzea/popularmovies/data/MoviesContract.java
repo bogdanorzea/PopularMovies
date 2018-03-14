@@ -39,6 +39,7 @@ public class MoviesContract {
                     MovieEntry.COLUMN_NAME_TAGLINE + TEXT + SEPARATOR +
                     MovieEntry.COLUMN_NAME_OVERVIEW + TEXT + SEPARATOR +
                     MovieEntry.COLUMN_NAME_RUNTIME + INTEGER + SEPARATOR +
+                    MovieEntry.COLUMN_NAME_POPULARITY + REAL + SEPARATOR +
                     MovieEntry.COLUMN_NAME_VOTE_AVERAGE + REAL + SEPARATOR +
                     MovieEntry.COLUMN_NAME_VOTE_COUNT + INTEGER + SEPARATOR +
                     MovieEntry.COLUMN_NAME_BUDGET + INTEGER + SEPARATOR +
@@ -62,6 +63,7 @@ public class MoviesContract {
         public static final String COLUMN_NAME_TAGLINE = "tagline";
         public static final String COLUMN_NAME_OVERVIEW = "overview";
         public static final String COLUMN_NAME_RUNTIME = "runtime";
+        public static final String COLUMN_NAME_POPULARITY = "popularity";
         public static final String COLUMN_NAME_VOTE_AVERAGE = "vote_average";
         public static final String COLUMN_NAME_VOTE_COUNT = "vote_count";
         public static final String COLUMN_NAME_BUDGET = "budget";
