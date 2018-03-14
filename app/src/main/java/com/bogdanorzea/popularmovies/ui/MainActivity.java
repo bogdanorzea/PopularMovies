@@ -21,6 +21,7 @@ import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.adapter.CoverAdapter;
 import com.bogdanorzea.popularmovies.data.MovieRepository;
 import com.bogdanorzea.popularmovies.data.MovieSQLiteRepository;
+import com.bogdanorzea.popularmovies.data.MoviesContract;
 import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.model.response.MoviesResponse;
 import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
@@ -87,6 +88,9 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.action_refresh:
                 reloadData();
                 return true;
+            case R.id.action_show_favorites:
+                showFavorites();
+                return true;
             case R.id.action_settings:
                 Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
                 startActivity(startSettingsActivity);
@@ -94,6 +98,30 @@ public class MainActivity extends AppCompatActivity implements
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void showFavorites() {
+        mAdapter = new CoverAdapter(MainActivity.this, null);
+        mCoverRecyclerView.setAdapter(null);
+        loadSQLData();
+
+        mAdapter = new CoverAdapter(MainActivity.this, loadSQLData());
+        mCoverRecyclerView.setAdapter(mAdapter);
+    }
+
+    private List<Movie> loadSQLData() {
+        MovieRepository<Movie> repository = new MovieSQLiteRepository(this);
+
+        String preferredSortRule = DataUtils.getPreferredSortRule(this);
+        String sortOrder= null;
+        if (preferredSortRule.equals(getString(R.string.pref_sort_by_popularity))) {
+            sortOrder = MoviesContract.MovieEntry.COLUMN_NAME_POPULARITY + " DESC";
+        } else if (preferredSortRule.equals(getString(R.string.pref_sort_by_top_rated))) {
+            sortOrder = MoviesContract.MovieEntry.COLUMN_NAME_VOTE_AVERAGE + " DESC";
+
+        }
+
+        return repository.getFavorites(sortOrder);
     }
 
     @Override
@@ -138,23 +166,15 @@ public class MainActivity extends AppCompatActivity implements
 
     private void loadData() {
         if (NetworkUtils.hasInternetConnection(this)) {
-            hideNoInternetWarning();
-            String preferredSortRule = DataUtils.getPreferredSortRule(this);
-
-            HttpUrl url;
-            if (preferredSortRule.equals(getString(R.string.pref_sort_by_popularity))) {
-                url = NetworkUtils.moviePopularUrl(mAdapter.getNextPageToLoad());
-            } else if (preferredSortRule.equals(getString(R.string.pref_sort_by_top_rated))) {
-                url = NetworkUtils.movieTopRatedUrl(mAdapter.getNextPageToLoad());
-            } else {
-                return;
-            }
+            HttpUrl url = getRequestUrl();
+            if (url == null) return;
 
             AsyncTaskUtils.RequestTaskListener<MoviesResponse> listener =
                     new AsyncTaskUtils.RequestTaskListener<MoviesResponse>() {
 
                         @Override
                         public void onTaskStarting() {
+                            hideNoInternetWarning();
                             showProgress();
                         }
 
@@ -164,7 +184,6 @@ public class MainActivity extends AppCompatActivity implements
                                 saveMovies(moviesResponse.results);
 
                                 if (0 == mAdapter.getItemCount()) {
-
                                     mAdapter.setMovies(moviesResponse.results);
                                     mCoverRecyclerView.setAdapter(mAdapter);
                                 } else {
@@ -186,6 +205,21 @@ public class MainActivity extends AppCompatActivity implements
                 Toast.makeText(this, getString(R.string.warning_no_internet), Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private HttpUrl getRequestUrl() {
+        String preferredSortRule = DataUtils.getPreferredSortRule(this);
+
+        HttpUrl url;
+        if (preferredSortRule.equals(getString(R.string.pref_sort_by_popularity))) {
+            url = NetworkUtils.moviePopularUrl(mAdapter.getNextPageToLoad());
+        } else if (preferredSortRule.equals(getString(R.string.pref_sort_by_top_rated))) {
+            url = NetworkUtils.movieTopRatedUrl(mAdapter.getNextPageToLoad());
+        } else {
+            return null;
+        }
+
+        return url;
     }
 
     private void saveMovies(List<Movie> results) {

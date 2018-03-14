@@ -15,5 +15,7 @@ public interface MovieRepository<T> {
 
     List<T> getAll();
 
+    List<T> getFavorites(String sortOrder);
+
     T get(int movieId);
 }

@@ -106,6 +106,27 @@ public class MovieSQLiteRepository implements MovieRepository<Movie> {
     }
 
     @Override
+    public List<Movie> getFavorites(String sortOrder) {
+        final List<Movie> movies = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            cursor = context.getContentResolver().query(MoviesContract.CONTENT_URI, null, MovieEntry.COLUMN_NAME_FAVORITE + " = ?", new String[]{"1"}, sortOrder);
+            if (cursor != null) {
+                for (int i = 0, size = cursor.getCount(); i < size; i++) {
+                    cursor.moveToPosition(i);
+
+                    movies.add(toMovieMapper.map(cursor));
+                }
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+
+        return movies;
+    }
+
+    @Override
     public Movie get(int movieId) {
         Uri movieUri = Uri.withAppendedPath(MoviesContract.CONTENT_URI, String.valueOf(movieId));
 
@@ -137,6 +158,7 @@ public class MovieSQLiteRepository implements MovieRepository<Movie> {
             int taglineColumnIndex = cursor.getColumnIndex(MovieEntry.COLUMN_NAME_TAGLINE);
             int overviewColumnIndex = cursor.getColumnIndex(MovieEntry.COLUMN_NAME_OVERVIEW);
             int runtimeColumnIndex = cursor.getColumnIndex(MovieEntry.COLUMN_NAME_RUNTIME);
+            int popularityColumnIndex = cursor.getColumnIndex(MovieEntry.COLUMN_NAME_POPULARITY);
             int voteAverageColumnIndex = cursor.getColumnIndex(MovieEntry.COLUMN_NAME_VOTE_AVERAGE);
             int voteCountColumnIndex = cursor.getColumnIndex(MovieEntry.COLUMN_NAME_VOTE_COUNT);
             int budgetColumnIndex = cursor.getColumnIndex(MovieEntry.COLUMN_NAME_BUDGET);
@@ -152,6 +174,7 @@ public class MovieSQLiteRepository implements MovieRepository<Movie> {
             movie.tagline = cursor.getString(taglineColumnIndex);
             movie.overview = cursor.getString(overviewColumnIndex);
             movie.runtime = cursor.getInt(runtimeColumnIndex);
+            movie.popularity = cursor.getDouble(popularityColumnIndex);
             movie.voteAverage = cursor.getDouble(voteAverageColumnIndex);
             movie.voteCount = cursor.getInt(voteCountColumnIndex);
             movie.budget = cursor.getInt(budgetColumnIndex);
@@ -181,6 +204,7 @@ public class MovieSQLiteRepository implements MovieRepository<Movie> {
             values.put(MovieEntry.COLUMN_NAME_TAGLINE, movie.tagline);
             values.put(MovieEntry.COLUMN_NAME_OVERVIEW, movie.overview);
             values.put(MovieEntry.COLUMN_NAME_RUNTIME, movie.runtime);
+            values.put(MovieEntry.COLUMN_NAME_POPULARITY, movie.popularity);
             values.put(MovieEntry.COLUMN_NAME_VOTE_AVERAGE, movie.voteAverage);
             values.put(MovieEntry.COLUMN_NAME_VOTE_COUNT, movie.voteCount);
             values.put(MovieEntry.COLUMN_NAME_BUDGET, movie.budget);
