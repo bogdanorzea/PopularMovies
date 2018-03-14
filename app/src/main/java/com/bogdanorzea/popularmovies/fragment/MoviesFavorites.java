@@ -21,8 +21,10 @@ import com.bogdanorzea.popularmovies.utility.DataUtils;
 
 import java.util.List;
 
-
 public class MoviesFavorites extends Fragment {
+
+    private RecyclerView mRecyclerView;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -32,10 +34,10 @@ public class MoviesFavorites extends Fragment {
 
         CoverAdapter mAdapter = new CoverAdapter(context, loadSQLData(context));
 
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(mAdapter);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setAdapter(mAdapter);
 
         return view;
     }
@@ -55,4 +57,14 @@ public class MoviesFavorites extends Fragment {
         return repository.getFavorites(sortOrder);
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        Context context = getContext();
+        if (context != null && isVisibleToUser) {
+            CoverAdapter mAdapter = new CoverAdapter(context, loadSQLData(context));
+            mRecyclerView.setAdapter(mAdapter);
+        }
+
+        super.setUserVisibleHint(isVisibleToUser);
+    }
 }
