@@ -186,7 +186,9 @@ public class DetailsActivity extends AppCompatActivity {
     private void loadBackdropImage() {
         Movie movie = repository.get(mMovieId);
 
-        ImageView backdrop = findViewById(R.id.movie_backdrop);
-        NetworkUtils.loadBackdrop(this, backdrop, movie.backdropPath);
+        if (movie != null) {
+            ImageView backdrop = findViewById(R.id.movie_backdrop);
+            NetworkUtils.loadBackdrop(this, backdrop, movie.backdropPath);
+        }
     }
 }
