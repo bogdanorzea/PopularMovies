@@ -85,6 +85,11 @@ public class MovieSQLiteRepository implements MovieRepository<Movie> {
     }
 
     @Override
+    public void deleteAll() {
+        context.getContentResolver().delete(MoviesContract.CONTENT_URI, null, null);
+    }
+
+    @Override
     public List<Movie> getAll() {
         final List<Movie> movies = new ArrayList<>();
         Cursor cursor = null;

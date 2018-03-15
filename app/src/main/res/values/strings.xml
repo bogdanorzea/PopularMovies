@@ -10,14 +10,14 @@
 
     <!--Strings used in SettingsActivity-->
     <string name="title_activity_settings">Settings</string>
-
-    <!--Order by-->
     <string name="pref_sort_by_label">Sort by</string>
     <string name="pref_sort_by">sort_by</string>
     <string name="pref_sort_by_popularity_label">Popularity</string>
     <string name="pref_sort_by_popularity">popularity</string>
     <string name="pref_sort_by_top_rated_label">Top rated</string>
     <string name="pref_sort_by_top_rated">top_rated</string>
+    <string name="pref_clear_favorites_label">Clear all favorite movies</string>
+    <string name="pref_clear_favorites_key">pref_clear_favorites</string>
 
     <!--Strings used in DetailsActivity-->
     <string name="action_favorite">Add to favorites</string>
