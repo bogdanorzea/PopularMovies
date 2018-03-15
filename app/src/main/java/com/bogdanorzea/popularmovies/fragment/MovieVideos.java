@@ -1,7 +1,6 @@
 package com.bogdanorzea.popularmovies.fragment;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -17,6 +16,8 @@ import com.bogdanorzea.popularmovies.model.object.Video;
 import com.bogdanorzea.popularmovies.model.response.VideosResponse;
 import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
+
+import static com.bogdanorzea.popularmovies.utility.NetworkUtils.getYoutubeVideoUri;
 
 public class MovieVideos extends Fragment {
 
@@ -65,9 +66,7 @@ public class MovieVideos extends Fragment {
             Video video = (Video) adapterView.getItemAtPosition(position);
 
             if (video.site.equalsIgnoreCase("YouTube")) {
-                String youtubeLink = "https://www.youtube.com/watch?v=" + video.key;
-
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(youtubeLink));
+                Intent intent = new Intent(Intent.ACTION_VIEW, getYoutubeVideoUri(video.key));
                 startActivity(intent);
             }
         });
