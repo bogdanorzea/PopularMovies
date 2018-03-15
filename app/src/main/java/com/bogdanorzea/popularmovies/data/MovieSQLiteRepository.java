@@ -152,7 +152,7 @@ public class MovieSQLiteRepository implements MovieRepository<Movie> {
         return movie;
     }
 
-    private static class CursorToMovieMapper implements Mapper<Cursor, Movie> {
+    static class CursorToMovieMapper implements Mapper<Cursor, Movie> {
         @Override
         public Movie map(Cursor cursor) {
             Movie movie = new Movie();
@@ -214,6 +214,7 @@ public class MovieSQLiteRepository implements MovieRepository<Movie> {
             values.put(MovieEntry.COLUMN_NAME_VOTE_COUNT, movie.voteCount);
             values.put(MovieEntry.COLUMN_NAME_BUDGET, movie.budget);
             values.put(MovieEntry.COLUMN_NAME_REVENUE, movie.revenue);
+            values.put(MovieEntry.COLUMN_NAME_HOMEPAGE, movie.homepage);
             values.put(MovieEntry.COLUMN_NAME_BACKDROP_PATH, movie.backdropPath);
             values.put(MovieEntry.COLUMN_NAME_POSTER_PATH, movie.posterPath);
             values.put(MovieEntry.COLUMN_NAME_POSTER_IMAGE,

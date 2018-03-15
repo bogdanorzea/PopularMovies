@@ -24,6 +24,7 @@ import java.util.List;
 public class MoviesFavorites extends Fragment {
 
     private RecyclerView mRecyclerView;
+    private CoverAdapter mAdapter;
 
     @Nullable
     @Override
@@ -32,7 +33,7 @@ public class MoviesFavorites extends Fragment {
 
         View view = inflater.inflate(R.layout.layout_reviclerview, container, false);
 
-        CoverAdapter mAdapter = new CoverAdapter(context, loadSQLData(context));
+        mAdapter = new CoverAdapter(context, null);
 
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
@@ -40,6 +41,13 @@ public class MoviesFavorites extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAdapter.setMovies(loadSQLData(getContext()));
+        mAdapter.notifyDataSetChanged();
     }
 
     private List<Movie> loadSQLData(Context context) {
@@ -55,16 +63,5 @@ public class MoviesFavorites extends Fragment {
         }
 
         return repository.getFavorites(sortOrder);
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        Context context = getContext();
-        if (context != null && isVisibleToUser) {
-            CoverAdapter mAdapter = new CoverAdapter(context, loadSQLData(context));
-            mRecyclerView.setAdapter(mAdapter);
-        }
-
-        super.setUserVisibleHint(isVisibleToUser);
     }
 }
