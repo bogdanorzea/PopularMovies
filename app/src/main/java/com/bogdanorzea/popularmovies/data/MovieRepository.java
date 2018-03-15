@@ -13,6 +13,8 @@ public interface MovieRepository<T> {
 
     void delete(int movieId);
 
+    void deleteAll();
+
     List<T> getAll();
 
     List<T> getFavorites(String sortOrder);
