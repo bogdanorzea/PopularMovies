@@ -38,39 +38,39 @@ public class MovieDescription extends Fragment {
 
             if (movie != null) {
                 // Poster
-                ImageView poster = view.findViewById(R.id.movie_cover);
+                ImageView poster = view.findViewById(R.id.poster);
                 byte[] image = movie.image;
                 poster.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
 
                 // Release date
-                ((TextView) view.findViewById(R.id.movie_release_date))
+                ((TextView) view.findViewById(R.id.release_date))
                         .setText(DataUtils.getYear(movie.releaseDate));
 
                 // Title
-                ((TextView) view.findViewById(R.id.movie_title)).setText(movie.title);
+                ((TextView) view.findViewById(R.id.title)).setText(movie.title);
 
                 // Tagline
-                ((TextView) view.findViewById(R.id.movie_tagline)).setText(
+                ((TextView) view.findViewById(R.id.tagline)).setText(
                         DataUtils.quoteString(movie.tagline));
 
                 // Overview
-                ((TextView) view.findViewById(R.id.movie_overview)).setText(movie.overview);
+                ((TextView) view.findViewById(R.id.overview)).setText(movie.overview);
 
                 // Score
-                ((RatingBar) view.findViewById(R.id.movie_score))
+                ((RatingBar) view.findViewById(R.id.score))
                         .setRating((float) movie.voteAverage / 2);
 
                 // Runtime
-                ((TextView) view.findViewById(R.id.movie_runtime)).setText(formatDuration(movie.runtime));
+                ((TextView) view.findViewById(R.id.runtime)).setText(formatDuration(movie.runtime));
 
                 // Budget
-                ((TextView) view.findViewById(R.id.movie_budget)).setText(formatMoney(movie.budget));
+                ((TextView) view.findViewById(R.id.budget)).setText(formatMoney(movie.budget));
 
                 // Revenue
-                ((TextView) view.findViewById(R.id.movie_revenue)).setText(formatMoney(movie.revenue));
+                ((TextView) view.findViewById(R.id.revenue)).setText(formatMoney(movie.revenue));
 
                 // Genre
-                ((TextView) view.findViewById(R.id.movie_genre)).setText(DataUtils.printGenres(movie.genres));
+                ((TextView) view.findViewById(R.id.genre)).setText(DataUtils.printGenres(movie.genres));
 
             }
         }

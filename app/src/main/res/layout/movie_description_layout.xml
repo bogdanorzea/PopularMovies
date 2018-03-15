@@ -11,20 +11,30 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <ImageView
-            android:id="@+id/movie_cover"
+        <android.support.v7.widget.CardView
+            android:id="@+id/card"
             android:layout_width="144dp"
             android:layout_height="218dp"
             android:layout_marginLeft="0dp"
             android:layout_marginStart="0dp"
             android:layout_marginTop="0dp"
-            android:scaleType="centerInside"
+            app:cardBackgroundColor="@color/cardview_light_background"
+            app:cardCornerRadius="2dp"
+            app:cardElevation="2dp"
+            app:cardUseCompatPadding="true"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/missing_cover" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/poster"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/missing_cover" />
+        </android.support.v7.widget.CardView>
 
         <TextView
-            android:id="@+id/movie_title"
+            android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="1dp"
@@ -37,11 +47,11 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/movie_cover"
+            app:layout_constraintStart_toEndOf="@+id/card"
             tools:text="Title line 1\nTitle line 2" />
 
         <TextView
-            android:id="@+id/movie_release_date"
+            android:id="@+id/release_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
@@ -50,13 +60,13 @@
             android:gravity="start"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/movie_title"
+            app:layout_constraintBottom_toTopOf="@+id/title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/movie_cover"
+            app:layout_constraintStart_toEndOf="@+id/card"
             tools:text="(1999)" />
 
         <TextView
-            android:id="@+id/movie_tagline"
+            android:id="@+id/tagline"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -67,12 +77,12 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textStyle="italic"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/movie_cover"
+            app:layout_constraintStart_toEndOf="@+id/card"
             app:layout_constraintTop_toTopOf="@+id/guideline"
             tools:text="Tagline 1\nTagline \nTagline 3" />
 
         <RatingBar
-            android:id="@+id/movie_score"
+            android:id="@+id/score"
             style="@style/Widget.AppCompat.RatingBar.Indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -81,8 +91,8 @@
             android:layout_marginTop="2dp"
             android:isIndicator="true"
             android:numStars="5"
-            app:layout_constraintStart_toEndOf="@+id/movie_cover"
-            app:layout_constraintTop_toBottomOf="@+id/movie_tagline" />
+            app:layout_constraintStart_toEndOf="@+id/card"
+            app:layout_constraintTop_toBottomOf="@+id/tagline" />
 
         <TextView
             android:id="@+id/label_overview"
@@ -93,10 +103,10 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/movie_cover" />
+            app:layout_constraintTop_toBottomOf="@+id/card" />
 
         <TextView
-            android:id="@+id/movie_overview"
+            android:id="@+id/overview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -122,10 +132,10 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/movie_overview" />
+            app:layout_constraintTop_toBottomOf="@+id/overview" />
 
         <TextView
-            android:id="@+id/movie_genre"
+            android:id="@+id/genre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAllCaps="false"
@@ -142,11 +152,11 @@
             android:text="@string/runtime_label"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/movie_genre"
-            app:layout_constraintTop_toBottomOf="@+id/movie_genre" />
+            app:layout_constraintStart_toStartOf="@+id/genre"
+            app:layout_constraintTop_toBottomOf="@+id/genre" />
 
         <TextView
-            android:id="@+id/movie_runtime"
+            android:id="@+id/runtime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAllCaps="false"
@@ -163,11 +173,11 @@
             android:text="@string/budget_label"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/movie_runtime"
-            app:layout_constraintTop_toBottomOf="@+id/movie_runtime" />
+            app:layout_constraintStart_toStartOf="@+id/runtime"
+            app:layout_constraintTop_toBottomOf="@+id/runtime" />
 
         <TextView
-            android:id="@+id/movie_budget"
+            android:id="@+id/budget"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -182,16 +192,18 @@
             android:text="@string/revenue_label"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/movie_budget"
-            app:layout_constraintTop_toBottomOf="@+id/movie_budget" />
+            app:layout_constraintStart_toStartOf="@+id/budget"
+            app:layout_constraintTop_toBottomOf="@+id/budget" />
 
         <TextView
-            android:id="@+id/movie_revenue"
+            android:id="@+id/revenue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintStart_toStartOf="@+id/label_revenue"
             app:layout_constraintTop_toBottomOf="@+id/label_revenue"
             tools:text="$987,483,777.00" />
+
     </android.support.constraint.ConstraintLayout>
+
 </ScrollView>

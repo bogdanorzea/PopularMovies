@@ -71,7 +71,7 @@ public class CoverAdapter extends RecyclerView.Adapter<CoverAdapter.ViewHolder> 
         ViewHolder(View view) {
             super(view);
 
-            coverImage = view.findViewById(R.id.cover_image);
+            coverImage = view.findViewById(R.id.poster);
 
             view.setOnClickListener(this);
         }
