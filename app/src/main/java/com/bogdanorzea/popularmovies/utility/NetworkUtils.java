@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.widget.ImageView;
 
 import com.bogdanorzea.popularmovies.BuildConfig;
@@ -21,6 +22,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class NetworkUtils {
+    public static final String SEARCH = "search";
+    public static final String QUERY = "query";
     private static final String VIDEOS = "videos";
     private static final String PAGE = "page";
     private static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
@@ -35,8 +38,6 @@ public class NetworkUtils {
     private static final String TOP_RATED = "top_rated";
     private static final String REVIEWS = "reviews";
     private static final String CREDITS = "credits";
-    public static final String SEARCH = "search";
-    public static final String QUERY = "query";
 
     /**
      * Returns the response string from the HttpUrl address
@@ -128,6 +129,7 @@ public class NetworkUtils {
 
     /**
      * Builds the HttpUrl for the movie review list
+     *
      * @param movieId
      * @param pageNumber
      * @return
@@ -147,6 +149,7 @@ public class NetworkUtils {
 
     /**
      * Builds the HttpUrl for the movie credit list
+     *
      * @param movieId
      * @return
      */
@@ -253,5 +256,15 @@ public class NetworkUtils {
                 .addQueryParameter(QUERY, queryString)
                 .addQueryParameter(API_KEY, BuildConfig.TheMovieDBApiKey)
                 .build();
+    }
+
+    public static Uri getYoutubeVideoUri(String key) {
+        String url = String.format("https://www.youtube.com/watch?v=%s", key);
+
+        return Uri.parse(url);
+    }
+
+    public static String getYoutubeThumbnailLink(String key) {
+        return String.format("https://img.youtube.com/vi/%s/hqdefault.jpg", key);
     }
 }
