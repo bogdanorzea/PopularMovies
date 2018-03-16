@@ -84,7 +84,7 @@ public class DescriptionTab extends Fragment {
 
             // Release date
             ((TextView) view.findViewById(R.id.release_date))
-                    .setText(DataUtils.getYear(movie.releaseDate));
+                    .setText(DataUtils.addParenthesis(movie.getYear()));
 
             // Title
             ((TextView) view.findViewById(R.id.title)).setText(movie.title);
@@ -110,7 +110,7 @@ public class DescriptionTab extends Fragment {
             ((TextView) view.findViewById(R.id.revenue)).setText(formatMoney(movie.revenue));
 
             // Genre
-            ((TextView) view.findViewById(R.id.genre)).setText(DataUtils.printGenres(movie.genres));
+            ((TextView) view.findViewById(R.id.genre)).setText(movie.printGenres());
 
         }
     }

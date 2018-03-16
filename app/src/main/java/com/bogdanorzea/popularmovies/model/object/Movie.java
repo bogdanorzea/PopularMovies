@@ -58,4 +58,24 @@ public class Movie {
 
     public byte[] image;
 
+    public String printGenres() {
+        if (genres != null && genres.size() > 0) {
+            StringBuilder result = new StringBuilder();
+            for (Genre genre : genres) {
+                result.append(genre.name).append(", ");
+            }
+
+            return result.substring(0, result.length() - 2);
+        } else {
+            return "Unknown";
+        }
+    }
+
+    public String getYear() {
+        if (releaseDate != null && releaseDate.length() > 3) {
+            return releaseDate.substring(0, 4);
+        }
+
+        return "";
+    }
 }

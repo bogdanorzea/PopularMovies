@@ -5,10 +5,8 @@ import android.content.SharedPreferences;
 import android.support.v7.preference.PreferenceManager;
 
 import com.bogdanorzea.popularmovies.R;
-import com.bogdanorzea.popularmovies.model.object.Genre;
 
 import java.text.DecimalFormat;
-import java.util.List;
 
 public class DataUtils {
     public static String getPreferredSortRule(Context context) {
@@ -50,19 +48,6 @@ public class DataUtils {
     }
 
 
-    public static String printGenres(List<Genre> genres) {
-        if (genres != null && genres.size() > 0) {
-            StringBuilder result = new StringBuilder();
-            for (Genre genre : genres) {
-                result.append(genre.name).append(", ");
-            }
-
-            return result.substring(0, result.length() - 2);
-        } else {
-            return "Unknown";
-        }
-    }
-
     public static String quoteString(String string) {
         if (string != null && string.length() > 0) {
             return String.format("\"%s\"", string);
@@ -71,12 +56,13 @@ public class DataUtils {
         return "";
     }
 
-    public static String getYear(String releaseDate) {
-        if (releaseDate != null && releaseDate.length() > 3) {
-            return String.format("(%s)", releaseDate.substring(0, 4));
+    public static String addParenthesis(String string) {
+        if (string != null && string.length() > 0) {
+            return String.format("(%s)", string);
         }
 
         return "";
     }
+
 
 }
