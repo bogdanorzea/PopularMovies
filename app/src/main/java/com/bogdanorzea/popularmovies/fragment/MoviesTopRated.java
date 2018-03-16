@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.adapter.CoverAdapter;
@@ -30,6 +32,7 @@ public class MoviesTopRated extends Fragment {
     private CoverAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private AVLoadingIndicatorView mAvi;
+    private TextView warningTextView;
     private boolean isLoading = false;
 
     @Nullable
@@ -38,8 +41,8 @@ public class MoviesTopRated extends Fragment {
         Context context = getContext();
 
         View view = inflater.inflate(R.layout.layout_recycler_view, container, false);
-
         mAvi = view.findViewById(R.id.avi);
+        warningTextView = view.findViewById(R.id.warning);
 
         mAdapter = new CoverAdapter(context, null);
         mRecyclerView = view.findViewById(R.id.recycler_view);
@@ -71,7 +74,6 @@ public class MoviesTopRated extends Fragment {
 
                         @Override
                         public void onTaskStarting() {
-                            hideNoInternetWarning();
                             showProgress();
                         }
 
@@ -95,11 +97,10 @@ public class MoviesTopRated extends Fragment {
 
             new AsyncTaskUtils.RequestTask<>(listener, MoviesResponse.class).execute(url);
         } else {
-            hideProgress();
             if (mAdapter.getItemCount() == 0) {
-                showNoInternetWarning();
+                displayWarning(getString(R.string.warning_no_internet));
             } else {
-                //Toast.makeText(this, getString(R.string.warning_no_internet), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.warning_no_internet), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -117,18 +118,21 @@ public class MoviesTopRated extends Fragment {
 
     private void showProgress() {
         mAvi.smoothToShow();
+        hideWarning();
     }
 
     private void hideProgress() {
         mAvi.smoothToHide();
     }
 
-    private void showNoInternetWarning() {
-
+    private void displayWarning(String message) {
+        hideProgress();
+        warningTextView.setVisibility(View.VISIBLE);
+        warningTextView.setText(message);
     }
 
-    private void hideNoInternetWarning() {
-
+    private void hideWarning() {
+        warningTextView.setVisibility(View.GONE);
     }
 
 }

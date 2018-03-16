@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.adapter.VideosAdapter;
@@ -21,8 +22,9 @@ import com.wang.avi.AVLoadingIndicatorView;
 import static com.bogdanorzea.popularmovies.utility.NetworkUtils.getYoutubeVideoUri;
 
 public class VideosTab extends Fragment {
+    private int mMovieId = -1;
     private AVLoadingIndicatorView mAvi;
-
+    private TextView warningTextView;
     private AsyncTaskUtils.RequestTaskListener<VideosResponse> mRequestTaskListener =
             new AsyncTaskUtils.RequestTaskListener<VideosResponse>() {
                 @Override
@@ -41,23 +43,36 @@ public class VideosTab extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.layout_list_view, container, false);
         mAvi = view.findViewById(R.id.avi);
+        warningTextView = view.findViewById(R.id.warning);
 
         if (getArguments() != null) {
-            int movieId = getArguments().getInt("movie_id");
-
-            if (NetworkUtils.hasInternetConnection(getContext())) {
-                new AsyncTaskUtils.RequestTask<>(mRequestTaskListener, VideosResponse.class)
-                        .execute(NetworkUtils.movieVideosUrl(movieId));
-            }
+            mMovieId = getArguments().getInt("movie_id");
         }
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mMovieId != -1) {
+            if (NetworkUtils.hasInternetConnection(getContext())) {
+                new AsyncTaskUtils.RequestTask<>(mRequestTaskListener, VideosResponse.class)
+                        .execute(NetworkUtils.movieVideosUrl(mMovieId));
+            } else {
+                displayWarning(getString(R.string.warning_no_internet));
+            }
+        }
     }
 
     private void displayVideos(VideosResponse result) {
         View view = getView();
         if (view == null) {
             return;
+        }
+
+        if (result.results.isEmpty()){
+            displayWarning(getString(R.string.warning_no_data));
         }
 
         ListView reviewsListView = view.findViewById(R.id.list);
@@ -83,5 +98,10 @@ public class VideosTab extends Fragment {
 
     private void hideProgress() {
         mAvi.smoothToHide();
+    }
+
+    private void displayWarning(String message) {
+        warningTextView.setVisibility(View.VISIBLE);
+        warningTextView.setText(message);
     }
 }
