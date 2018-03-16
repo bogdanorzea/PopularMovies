@@ -1,8 +1,5 @@
 package com.bogdanorzea.popularmovies.model.object;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.serjltt.moshi.adapters.FallbackOnNull;
 import com.squareup.moshi.Json;
 
@@ -56,7 +53,8 @@ public class Movie {
     @Json(name = "vote_count")
     public int voteCount;
 
-    public byte[] image;
+    public byte[] backdropImage;
+    public byte[] posterImage;
 
     public String printGenres() {
         if (genres != null && genres.size() > 0) {

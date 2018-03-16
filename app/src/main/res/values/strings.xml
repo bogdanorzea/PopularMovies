@@ -4,9 +4,7 @@
     <!--Strings used in MainActivity-->
     <string name="warning_no_internet">No internet connection. Make sure Wi-Fi or cellular data is turned on, then try again.</string>
     <string name="warning_no_data">No data to display</string>
-    <string name="action_search">Search</string>
     <string name="search_hint">Search movie</string>
-    <string name="action_refresh">Refresh</string>
     <string name="action_settings">Settings</string>
 
     <!--Strings used in SettingsActivity-->
@@ -28,5 +26,4 @@
     <string name="runtime_label">Runtime</string>
     <string name="budget_label">Budget</string>
     <string name="revenue_label">Revenue</string>
-    <string name="reviews_label">Reviews</string>
 </resources>

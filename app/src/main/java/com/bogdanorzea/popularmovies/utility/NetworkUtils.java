@@ -231,7 +231,6 @@ public class NetworkUtils {
                     @Override
                     public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
                         bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
-                        ;
                     }
 
                     @Override

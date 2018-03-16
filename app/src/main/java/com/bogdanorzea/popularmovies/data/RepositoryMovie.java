@@ -2,7 +2,7 @@ package com.bogdanorzea.popularmovies.data;
 
 import java.util.List;
 
-interface MovieRepository<T> {
+public interface RepositoryMovie<T> {
     void insert(T movie);
 
     void update(T movie);
@@ -21,3 +21,4 @@ interface MovieRepository<T> {
 
     T get(int movieId);
 }
+

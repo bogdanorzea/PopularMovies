@@ -11,21 +11,18 @@ import com.bogdanorzea.popularmovies.model.object.Movie;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.bogdanorzea.popularmovies.data.MoviesContract.MovieEntry;
-
-
-public class MovieSQLiteRepository implements MovieRepository<Movie> {
+public class RepositoryMovieSQLite implements RepositoryMovie<Movie> {
     private final Mapper<Cursor, Movie> toMovieMapper;
     private final Mapper<Movie, ContentValues> toContentValuesMapper;
 
 
     private final Context context;
 
-    public MovieSQLiteRepository(Context context) {
+    public RepositoryMovieSQLite(Context context) {
         this.context = context;
 
-        this.toMovieMapper = new MapperCursorToMovie();
         this.toContentValuesMapper = new MapperMovieToContentValues(context);
+        this.toMovieMapper = new MapperCursorToMovie();
     }
 
     @Override
@@ -44,8 +41,8 @@ public class MovieSQLiteRepository implements MovieRepository<Movie> {
     @Override
     public void setFavorite(int movieId, boolean isFavorite) {
         ContentValues values = new ContentValues();
-        values.put(MovieEntry._ID, movieId);
-        values.put(MovieEntry.COLUMN_NAME_FAVORITE, isFavorite ? 1 : 0);
+        values.put(MoviesContract.MovieEntry._ID, movieId);
+        values.put(MoviesContract.MovieEntry.COLUMN_NAME_FAVORITE, isFavorite ? 1 : 0);
 
         Uri movieUri = Uri.withAppendedPath(MoviesContract.CONTENT_URI, String.valueOf(movieId));
         context.getContentResolver().update(movieUri, values, null, null);
@@ -61,7 +58,7 @@ public class MovieSQLiteRepository implements MovieRepository<Movie> {
             cursor = context.getContentResolver().query(movieUri, null, null, null, null);
             if (cursor != null && cursor.getCount() > 0) {
                 cursor.moveToFirst();
-                int favoriteColumnIndex = cursor.getColumnIndex(MovieEntry.COLUMN_NAME_FAVORITE);
+                int favoriteColumnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_NAME_FAVORITE);
                 int favoriteValue = cursor.getInt(favoriteColumnIndex);
 
                 if (favoriteValue == 1) {
@@ -113,7 +110,7 @@ public class MovieSQLiteRepository implements MovieRepository<Movie> {
         final List<Movie> movies = new ArrayList<>();
         Cursor cursor = null;
         try {
-            cursor = context.getContentResolver().query(MoviesContract.CONTENT_URI, null, MovieEntry.COLUMN_NAME_FAVORITE + " = ?", new String[]{"1"}, sortOrder);
+            cursor = context.getContentResolver().query(MoviesContract.CONTENT_URI, null, MoviesContract.MovieEntry.COLUMN_NAME_FAVORITE + " = ?", new String[]{"1"}, sortOrder);
             if (cursor != null) {
                 for (int i = 0, size = cursor.getCount(); i < size; i++) {
                     cursor.moveToPosition(i);
