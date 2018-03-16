@@ -19,19 +19,17 @@ import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
 import com.bogdanorzea.popularmovies.utility.DataUtils;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
-import com.wang.avi.AVLoadingIndicatorView;
 
 import static com.bogdanorzea.popularmovies.utility.DataUtils.formatDuration;
 import static com.bogdanorzea.popularmovies.utility.DataUtils.formatMoney;
 
 
 public class DescriptionTab extends Fragment {
-    private AVLoadingIndicatorView mAvi;
+    private int mMovieId = -1;
     private AsyncTaskUtils.RequestTaskListener<Movie> mRequestTaskListener =
             new AsyncTaskUtils.RequestTaskListener<Movie>() {
                 @Override
                 public void onTaskStarting() {
-                    showProgress();
                 }
 
                 @Override
@@ -39,7 +37,6 @@ public class DescriptionTab extends Fragment {
                     MovieRepository<Movie> repository = new MovieSQLiteRepository(getContext());
                     repository.update(movie);
 
-                    hideProgress();
                     displayDescription(movie.id);
                 }
             };
@@ -47,23 +44,27 @@ public class DescriptionTab extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.layout_description, container, false);
-        mAvi = view.findViewById(R.id.avi);
+        ScrollView scrollView = view.findViewById(R.id.scroll_view);
+        ViewCompat.setNestedScrollingEnabled(scrollView, true);
 
         if (getArguments() != null) {
-            ScrollView scrollView = view.findViewById(R.id.scroll_view);
-            ViewCompat.setNestedScrollingEnabled(scrollView, true);
-
-            int movieId = getArguments().getInt("movie_id");
-
-            if (NetworkUtils.hasInternetConnection(getContext())) {
-                new AsyncTaskUtils.RequestTask<>(mRequestTaskListener, Movie.class)
-                        .execute(NetworkUtils.movieDetailsUrl(movieId));
-            } else {
-                displayDescription(movieId);
-            }
+            mMovieId = getArguments().getInt("movie_id");
         }
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mMovieId != -1) {
+            displayDescription(mMovieId);
+
+            if (NetworkUtils.hasInternetConnection(getContext())) {
+                new AsyncTaskUtils.RequestTask<>(mRequestTaskListener, Movie.class)
+                        .execute(NetworkUtils.movieDetailsUrl(mMovieId));
+            }
+        }
     }
 
     private void displayDescription(int movieId) {
@@ -112,13 +113,5 @@ public class DescriptionTab extends Fragment {
             ((TextView) view.findViewById(R.id.genre)).setText(DataUtils.printGenres(movie.genres));
 
         }
-    }
-
-    private void showProgress() {
-        mAvi.smoothToShow();
-    }
-
-    private void hideProgress() {
-        mAvi.smoothToHide();
     }
 }
