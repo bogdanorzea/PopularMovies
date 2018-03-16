@@ -26,4 +26,15 @@
     <string name="runtime_label">Runtime</string>
     <string name="budget_label">Budget</string>
     <string name="revenue_label">Revenue</string>
+    <string name="description_tab_name">DESCRIPTION</string>
+    <string name="videos_tab_name">VIDEOS</string>
+    <string name="cast_tab_name">CAST</string>
+    <string name="reviews_tab_name">REVIEWS</string>
+    <string name="offline_limitation_warning">In offline mode, there is limited information available.</string>
+    <string name="favorites_tab_name">FAVORITES</string>
+    <string name="popular_tab_name">POPULAR</string>
+    <string name="top_rated_tab_name">TOP RATED</string>
+    <string name="button_yes">Yes</string>
+    <string name="button_no">No</string>
+    <string name="confirm_clear_favorites">Are you sure you want to clear favorites?</string>
 </resources>

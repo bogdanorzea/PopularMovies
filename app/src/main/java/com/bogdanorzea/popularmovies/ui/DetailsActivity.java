@@ -81,10 +81,10 @@ public class DetailsActivity extends AppCompatActivity {
         ViewPager viewPager = findViewById(R.id.tab_viewpager);
         MovieCategoryPagerAdapter pagerAdapter = new MovieCategoryPagerAdapter(getSupportFragmentManager());
 
-        pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovieId, DescriptionTab.class), "DESCRIPTION");
-        pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovieId, VideosTab.class), "VIDEOS");
-        pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovieId, CastTab.class), "CAST");
-        pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovieId, ReviewsTab.class), "REVIEWS");
+        pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovieId, DescriptionTab.class), getString(R.string.description_tab_name));
+        pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovieId, VideosTab.class), getString(R.string.videos_tab_name));
+        pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovieId, CastTab.class), getString(R.string.cast_tab_name));
+        pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovieId, ReviewsTab.class), getString(R.string.reviews_tab_name));
 
         viewPager.setAdapter(pagerAdapter);
 
@@ -147,7 +147,7 @@ public class DetailsActivity extends AppCompatActivity {
                             .execute(NetworkUtils.movieDetailsUrl(mMovieId));
                 }
             } else {
-                Toast.makeText(this, "In offline mode, there is limited information available.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.offline_limitation_warning, Toast.LENGTH_SHORT).show();
                 populateTabs();
             }
         }
