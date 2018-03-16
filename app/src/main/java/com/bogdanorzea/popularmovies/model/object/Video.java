@@ -3,6 +3,7 @@ package com.bogdanorzea.popularmovies.model.object;
 import com.squareup.moshi.Json;
 
 public class Video {
+    private static final String YOUTUBE_DEFAULT_HQ_JPG_URL = "https://img.youtube.com/vi/%s/hqdefault.jpg";
 
     @Json(name = "id")
     public String id;
@@ -20,4 +21,9 @@ public class Video {
     public int size;
     @Json(name = "type")
     public String type;
+
+    public String getYoutubeThumbnailLink() {
+        return String.format(YOUTUBE_DEFAULT_HQ_JPG_URL, key);
+    }
+
 }

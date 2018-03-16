@@ -37,7 +37,7 @@ public class MoviesTopRated extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Context context = getContext();
 
-        View view = inflater.inflate(R.layout.layout_reviclerview, container, false);
+        View view = inflater.inflate(R.layout.layout_recycler_view, container, false);
 
         mAvi = view.findViewById(R.id.avi);
 

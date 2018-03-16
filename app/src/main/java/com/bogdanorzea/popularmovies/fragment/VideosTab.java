@@ -16,26 +16,31 @@ import com.bogdanorzea.popularmovies.model.object.Video;
 import com.bogdanorzea.popularmovies.model.response.VideosResponse;
 import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import static com.bogdanorzea.popularmovies.utility.NetworkUtils.getYoutubeVideoUri;
 
-public class MovieVideos extends Fragment {
+public class VideosTab extends Fragment {
+    private AVLoadingIndicatorView mAvi;
 
     private AsyncTaskUtils.RequestTaskListener<VideosResponse> mRequestTaskListener =
             new AsyncTaskUtils.RequestTaskListener<VideosResponse>() {
                 @Override
                 public void onTaskStarting() {
+                    showProgress();
                 }
 
                 @Override
                 public void onTaskComplete(VideosResponse result) {
+                    hideProgress();
                     displayVideos(result);
                 }
             };
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.movie_reviews_layout, container, false);
+        View view = inflater.inflate(R.layout.layout_list_view, container, false);
+        mAvi = view.findViewById(R.id.avi);
 
         if (getArguments() != null) {
             int movieId = getArguments().getInt("movie_id");
@@ -70,5 +75,13 @@ public class MovieVideos extends Fragment {
                 startActivity(intent);
             }
         });
+    }
+
+    private void showProgress() {
+        mAvi.smoothToShow();
+    }
+
+    private void hideProgress() {
+        mAvi.smoothToHide();
     }
 }

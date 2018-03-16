@@ -14,25 +14,30 @@ import com.bogdanorzea.popularmovies.adapter.ReviewsAdapter;
 import com.bogdanorzea.popularmovies.model.response.ReviewsResponse;
 import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
+import com.wang.avi.AVLoadingIndicatorView;
 
 
-public class MovieReviews extends Fragment {
+public class ReviewsTab extends Fragment {
+    private AVLoadingIndicatorView mAvi;
+
     private AsyncTaskUtils.RequestTaskListener<ReviewsResponse> mMovieReviewsAsyncTaskListener =
             new AsyncTaskUtils.RequestTaskListener<ReviewsResponse>() {
                 @Override
                 public void onTaskStarting() {
-
+                    showProgress();
                 }
 
                 @Override
                 public void onTaskComplete(ReviewsResponse result) {
+                    hideProgress();
                     displayReviews(result);
                 }
             };
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.movie_reviews_layout, container, false);
+        View view = inflater.inflate(R.layout.layout_list_view, container, false);
+        mAvi = view.findViewById(R.id.avi);
 
         if (getArguments() != null) {
             int movieId = getArguments().getInt("movie_id");
@@ -60,4 +65,11 @@ public class MovieReviews extends Fragment {
         reviewsListView.setAdapter(reviewsAdapter);
     }
 
+    private void showProgress() {
+        mAvi.smoothToShow();
+    }
+
+    private void hideProgress() {
+        mAvi.smoothToHide();
+    }
 }
