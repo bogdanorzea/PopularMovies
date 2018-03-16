@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.model.object.Cast;
 
 import java.util.List;
@@ -43,14 +44,14 @@ public class CastAdapter extends ArrayAdapter<Cast> {
     @Override
     public View getView(int i, View view, @NonNull ViewGroup viewGroup) {
         if (view == null) {
-            view = LayoutInflater.from(getContext()).inflate(android.R.layout.simple_list_item_2, viewGroup, false);
+            view = LayoutInflater.from(getContext()).inflate(R.layout.item_cast, viewGroup, false);
         }
 
         Cast castMember = mCast.get(i);
-        TextView author = view.findViewById(android.R.id.text1);
-        TextView description = view.findViewById(android.R.id.text2);
+        TextView name = view.findViewById(R.id.name);
+        name.setText(castMember.name);
 
-        author.setText(castMember.name);
+        TextView description = view.findViewById(R.id.character);
         description.setText(castMember.character);
 
         return view;

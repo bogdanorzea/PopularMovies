@@ -21,6 +21,6 @@ public class Cast {
     @Json(name = "order")
     public int order;
     @Json(name = "profile_path")
-    public Object profilePath;
+    public String profilePath;
 
 }

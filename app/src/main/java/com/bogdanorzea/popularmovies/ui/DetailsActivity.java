@@ -15,19 +15,17 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.adapter.MovieCategoryPagerAdapter;
 import com.bogdanorzea.popularmovies.data.MovieRepository;
 import com.bogdanorzea.popularmovies.data.MovieSQLiteRepository;
-import com.bogdanorzea.popularmovies.fragment.MovieCast;
-import com.bogdanorzea.popularmovies.fragment.MovieDescription;
-import com.bogdanorzea.popularmovies.fragment.MovieReviews;
-import com.bogdanorzea.popularmovies.fragment.MovieVideos;
+import com.bogdanorzea.popularmovies.fragment.CastTab;
+import com.bogdanorzea.popularmovies.fragment.DescriptionTab;
+import com.bogdanorzea.popularmovies.fragment.ReviewsTab;
+import com.bogdanorzea.popularmovies.fragment.VideosTab;
 import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
 import com.bogdanorzea.popularmovies.utility.FragmentUtils;
@@ -38,7 +36,6 @@ public class DetailsActivity extends AppCompatActivity {
     public static final String MOVIE_ID_INTENT_KEY = "movie_id";
     private final MovieRepository<Movie> repository = new MovieSQLiteRepository(this);
     private int mMovieId;
-    private ProgressBar mProgressBar;
     private AppBarLayout mAppBarLayout;
     private AsyncTaskUtils.RequestTaskListener<Movie> mRequestTaskListener =
             new AsyncTaskUtils.RequestTaskListener<Movie>() {
@@ -74,9 +71,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         setBackdropColorFilter();
 
-        mProgressBar = findViewById(R.id.progressBar);
         mAppBarLayout = findViewById(R.id.app_bar);
-
         handleIntent();
 
     }
@@ -85,10 +80,10 @@ public class DetailsActivity extends AppCompatActivity {
         ViewPager viewPager = findViewById(R.id.tab_viewpager);
         MovieCategoryPagerAdapter pagerAdapter = new MovieCategoryPagerAdapter(getSupportFragmentManager());
 
-        pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovieId, MovieDescription.class), "DESCRIPTION");
-        pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovieId, MovieVideos.class), "VIDEOS");
-        pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovieId, MovieCast.class), "CAST");
-        pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovieId, MovieReviews.class), "REVIEWS");
+        pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovieId, DescriptionTab.class), "DESCRIPTION");
+        pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovieId, VideosTab.class), "VIDEOS");
+        pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovieId, CastTab.class), "CAST");
+        pagerAdapter.addFragment(FragmentUtils.buildFragment(mMovieId, ReviewsTab.class), "REVIEWS");
 
         viewPager.setAdapter(pagerAdapter);
 
@@ -143,15 +138,16 @@ public class DetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             mMovieId = intent.getIntExtra(MOVIE_ID_INTENT_KEY, -1);
-            if (NetworkUtils.hasInternetConnection(this)) {
-                if (mMovieId != -1) {
-                    new AsyncTaskUtils.RequestTask<>(mRequestTaskListener, Movie.class)
-                            .execute(NetworkUtils.movieDetailsUrl(mMovieId));
-                }
-            } else {
-                Toast.makeText(this, "In offline mode, there is limited information available.", Toast.LENGTH_SHORT).show();
-                populateTabs();
-            }
+//            if (NetworkUtils.hasInternetConnection(this)) {
+//                if (mMovieId != -1) {
+//                    new AsyncTaskUtils.RequestTask<>(mRequestTaskListener, Movie.class)
+//                            .execute(NetworkUtils.movieDetailsUrl(mMovieId));
+//                }
+//            } else {
+//                Toast.makeText(this, "In offline mode, there is limited information available.", Toast.LENGTH_SHORT).show();
+//                populateTabs();
+//            }
+            populateTabs();
         }
     }
 
@@ -163,12 +159,12 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void showProgress() {
-        mProgressBar.setVisibility(View.VISIBLE);
+        //mProgressBar.setVisibility(View.VISIBLE);
         mAppBarLayout.setExpanded(false);
     }
 
     private void hideProgress() {
-        mProgressBar.setVisibility(View.GONE);
+        //mProgressBar.setVisibility(View.GONE);
         mAppBarLayout.setExpanded(true);
     }
 

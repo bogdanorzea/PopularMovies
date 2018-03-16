@@ -15,8 +15,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import static com.bogdanorzea.popularmovies.utility.NetworkUtils.getYoutubeThumbnailLink;
-
 public class VideosAdapter extends ArrayAdapter<Video> {
 
     private List<Video> mVideos;
@@ -48,7 +46,7 @@ public class VideosAdapter extends ArrayAdapter<Video> {
     @Override
     public View getView(int i, View view, @NonNull ViewGroup viewGroup) {
         if (view == null) {
-            view = LayoutInflater.from(getContext()).inflate(R.layout.video_item, viewGroup, false);
+            view = LayoutInflater.from(getContext()).inflate(R.layout.item_video, viewGroup, false);
         }
 
         Video video = mVideos.get(i);
@@ -57,7 +55,7 @@ public class VideosAdapter extends ArrayAdapter<Video> {
 
         ImageView thumbnail = view.findViewById(R.id.image);
         Picasso.with(view.getContext())
-                .load(getYoutubeThumbnailLink(video.key))
+                .load(video.getYoutubeThumbnailLink())
                 .into(thumbnail);
 
         return view;

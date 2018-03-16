@@ -14,25 +14,31 @@ import com.bogdanorzea.popularmovies.adapter.CastAdapter;
 import com.bogdanorzea.popularmovies.model.response.CreditsResponse;
 import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
+import com.wang.avi.AVLoadingIndicatorView;
 
 
-public class MovieCast extends Fragment {
+public class CastTab extends Fragment {
+    private AVLoadingIndicatorView mAvi;
+
     private AsyncTaskUtils.RequestTaskListener<CreditsResponse> mRequestTaskListener =
             new AsyncTaskUtils.RequestTaskListener<CreditsResponse>() {
                 @Override
                 public void onTaskStarting() {
-
+                    showProgress();
                 }
 
                 @Override
                 public void onTaskComplete(CreditsResponse result) {
-                    displayReviews(result);
+                    hideProgress();
+                    displayCredits(result);
+
                 }
             };
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.movie_reviews_layout, container, false);
+        View view = inflater.inflate(R.layout.layout_list_view, container, false);
+        mAvi = view.findViewById(R.id.avi);
 
         if (getArguments() != null) {
             int movieId = getArguments().getInt("movie_id");
@@ -46,18 +52,26 @@ public class MovieCast extends Fragment {
         return view;
     }
 
-    private void displayReviews(CreditsResponse result) {
+    private void displayCredits(CreditsResponse result) {
         View view = getView();
         if (view == null) {
             return;
         }
 
-        ListView reviewsListView = view.findViewById(R.id.list);
-        ViewCompat.setNestedScrollingEnabled(reviewsListView, true);
+        ListView castListView = view.findViewById(R.id.list);
+        ViewCompat.setNestedScrollingEnabled(castListView, true);
 
-        CastAdapter reviewsAdapter = new CastAdapter(getActivity(), result.cast);
+        CastAdapter castAdapter = new CastAdapter(getActivity(), result.cast);
 
-        reviewsListView.setAdapter(reviewsAdapter);
+        castListView.setAdapter(castAdapter);
+        castAdapter.notifyDataSetChanged();
     }
 
+    private void showProgress() {
+        mAvi.smoothToShow();
+    }
+
+    private void hideProgress() {
+        mAvi.smoothToHide();
+    }
 }

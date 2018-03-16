@@ -44,7 +44,7 @@ public class CoverAdapter extends RecyclerView.Adapter<CoverAdapter.ViewHolder> 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View linearLayout = LayoutInflater.from(context).inflate(R.layout.movie_cover_layout, parent, false);
+        View linearLayout = LayoutInflater.from(context).inflate(R.layout.item_poster, parent, false);
 
         return new ViewHolder(linearLayout);
     }
