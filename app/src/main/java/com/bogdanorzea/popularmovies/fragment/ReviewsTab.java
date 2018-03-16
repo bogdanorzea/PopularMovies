@@ -93,7 +93,7 @@ public class ReviewsTab extends Fragment {
         warningTextView.setText(message);
     }
 
-    private void hideWarning(String message) {
+    private void hideWarning() {
         warningTextView.setVisibility(View.GONE);
     }
 }

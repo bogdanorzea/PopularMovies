@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 
 import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.adapter.CoverAdapter;
-import com.bogdanorzea.popularmovies.data.RepositoryMovie;
 import com.bogdanorzea.popularmovies.data.MoviesContract;
+import com.bogdanorzea.popularmovies.data.RepositoryMovie;
 import com.bogdanorzea.popularmovies.data.RepositoryMovieSQLite;
 import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.utility.DataUtils;
@@ -23,6 +23,7 @@ import java.util.List;
 
 public class MoviesFavorites extends Fragment {
 
+    private static final String DESC = " DESC";
     private CoverAdapter mAdapter;
 
     @Nullable
@@ -55,9 +56,9 @@ public class MoviesFavorites extends Fragment {
         String preferredSortRule = DataUtils.getPreferredSortRule(context);
         String sortOrder = null;
         if (preferredSortRule.equals(getString(R.string.pref_sort_by_popularity))) {
-            sortOrder = MoviesContract.MovieEntry.COLUMN_NAME_POPULARITY + " DESC";
+            sortOrder = MoviesContract.MovieEntry.COLUMN_NAME_POPULARITY + DESC;
         } else if (preferredSortRule.equals(getString(R.string.pref_sort_by_top_rated))) {
-            sortOrder = MoviesContract.MovieEntry.COLUMN_NAME_VOTE_AVERAGE + " DESC";
+            sortOrder = MoviesContract.MovieEntry.COLUMN_NAME_VOTE_AVERAGE + DESC;
 
         }
 

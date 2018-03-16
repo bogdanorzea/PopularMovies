@@ -50,9 +50,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setMessage("Are you sure you want to clear favorites?")
-                        .setPositiveButton("Yes", dialogClickListener)
-                        .setNegativeButton("No", dialogClickListener)
+                builder.setMessage(R.string.confirm_clear_favorites)
+                        .setPositiveButton(R.string.button_yes, dialogClickListener)
+                        .setNegativeButton(R.string.button_no, dialogClickListener)
                         .show();
 
                 return true;

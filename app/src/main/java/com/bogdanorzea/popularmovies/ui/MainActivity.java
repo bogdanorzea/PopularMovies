@@ -27,9 +27,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         MovieCategoryPagerAdapter pagerAdapter = new MovieCategoryPagerAdapter(getSupportFragmentManager());
-        pagerAdapter.addFragment(new MoviesFavorites(), "Favorites");
-        pagerAdapter.addFragment(new MoviesPopular(), "Popular");
-        pagerAdapter.addFragment(new MoviesTopRated(), "Top rated");
+        pagerAdapter.addFragment(new MoviesFavorites(), getString(R.string.favorites_tab_name));
+        pagerAdapter.addFragment(new MoviesPopular(), getString(R.string.popular_tab_name));
+        pagerAdapter.addFragment(new MoviesTopRated(), getString(R.string.top_rated_tab_name));
 
         ViewPager viewPager = findViewById(R.id.pager);
         viewPager.setAdapter(pagerAdapter);
