@@ -13,11 +13,9 @@ public class DataUtils {
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
 
-        String sortOrder = sharedPreferences.getString(
+        return sharedPreferences.getString(
                 context.getString(R.string.pref_sort_by),
                 context.getString(R.string.pref_sort_by_popularity));
-
-        return sortOrder;
     }
 
     public static String formatMoney(long sum) {

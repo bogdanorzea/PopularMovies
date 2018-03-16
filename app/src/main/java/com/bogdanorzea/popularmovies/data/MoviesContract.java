@@ -47,6 +47,7 @@ public class MoviesContract {
                     MovieEntry.COLUMN_NAME_HOMEPAGE + TEXT + SEPARATOR +
                     MovieEntry.COLUMN_NAME_BACKDROP_PATH + TEXT + SEPARATOR +
                     MovieEntry.COLUMN_NAME_POSTER_PATH + TEXT + SEPARATOR +
+                    MovieEntry.COLUMN_NAME_BACKDROP_IMAGE + BLOB + SEPARATOR +
                     MovieEntry.COLUMN_NAME_POSTER_IMAGE + BLOB +
                     ");";
 
@@ -71,6 +72,7 @@ public class MoviesContract {
         public static final String COLUMN_NAME_HOMEPAGE = "homepage";
         public static final String COLUMN_NAME_BACKDROP_PATH = "backdrop_path";
         public static final String COLUMN_NAME_POSTER_PATH = "poster_path";
+        public static final String COLUMN_NAME_BACKDROP_IMAGE = "backdrop_image";
         public static final String COLUMN_NAME_POSTER_IMAGE = "poster_image";
     }
 

@@ -15,8 +15,8 @@ import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.adapter.CoverAdapter;
-import com.bogdanorzea.popularmovies.data.MovieRepository;
-import com.bogdanorzea.popularmovies.data.MovieSQLiteRepository;
+import com.bogdanorzea.popularmovies.data.RepositoryMovie;
+import com.bogdanorzea.popularmovies.data.RepositoryMovieSQLite;
 import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.model.response.MoviesResponse;
 import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
@@ -110,7 +110,7 @@ public class MoviesPopular extends Fragment {
     }
 
     private void saveMovies(List<Movie> results) {
-        MovieRepository<Movie> repository = new MovieSQLiteRepository(getContext());
+        RepositoryMovie<Movie> repository = new RepositoryMovieSQLite(getContext());
 
         for (Movie movie : results) {
             if (repository.get(movie.id) == null) {

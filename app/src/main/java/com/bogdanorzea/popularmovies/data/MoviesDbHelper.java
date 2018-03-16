@@ -11,7 +11,7 @@ import static com.bogdanorzea.popularmovies.data.MoviesContract.SQL_CREATE_MOVIE
 import static com.bogdanorzea.popularmovies.data.MoviesContract.SQL_DELETE_MOVIES_TABLE;
 
 
-public class MoviesDbHelper extends SQLiteOpenHelper {
+class MoviesDbHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "movies.db";
     public static final int DATABASE_VERSION = 1;

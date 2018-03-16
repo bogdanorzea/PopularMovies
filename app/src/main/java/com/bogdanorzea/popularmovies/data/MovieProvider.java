@@ -153,7 +153,7 @@ public class MovieProvider extends ContentProvider {
 
     }
 
-    public int updateMovie(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgument) {
+    private int updateMovie(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgument) {
         if (values.containsKey(MovieEntry._ID)) {
             int movieId = values.getAsInteger(MovieEntry._ID);
             if (movieId < 0) {

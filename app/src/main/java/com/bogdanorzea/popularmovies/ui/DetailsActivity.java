@@ -1,6 +1,8 @@
 package com.bogdanorzea.popularmovies.ui;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.net.Uri;
@@ -20,8 +22,8 @@ import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.adapter.MovieCategoryPagerAdapter;
-import com.bogdanorzea.popularmovies.data.MovieRepository;
-import com.bogdanorzea.popularmovies.data.MovieSQLiteRepository;
+import com.bogdanorzea.popularmovies.data.RepositoryMovie;
+import com.bogdanorzea.popularmovies.data.RepositoryMovieSQLite;
 import com.bogdanorzea.popularmovies.fragment.CastTab;
 import com.bogdanorzea.popularmovies.fragment.DescriptionTab;
 import com.bogdanorzea.popularmovies.fragment.ReviewsTab;
@@ -34,7 +36,7 @@ import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 public class DetailsActivity extends AppCompatActivity {
 
     public static final String MOVIE_ID_INTENT_KEY = "movie_id";
-    private final MovieRepository<Movie> repository = new MovieSQLiteRepository(this);
+    private final RepositoryMovie<Movie> repository = new RepositoryMovieSQLite(this);
     private int mMovieId;
     private AppBarLayout mAppBarLayout;
     private AsyncTaskUtils.RequestTaskListener<Movie> mRequestTaskListener =
@@ -49,13 +51,12 @@ public class DetailsActivity extends AppCompatActivity {
                     repository.update(movie);
 
                     hideProgress();
-                    loadBackdropImage();
                     populateTabs();
                 }
             };
     private Menu mMenu;
 
-    public static void changeFavoriteMenuItemResource(Menu menu, int imageResource) {
+    private static void changeFavoriteMenuItemResource(Menu menu, int imageResource) {
         MenuItem menuItemFavorite = menu.findItem(R.id.action_favorite);
         menuItemFavorite.setIcon(imageResource);
     }
@@ -89,6 +90,8 @@ public class DetailsActivity extends AppCompatActivity {
 
         TabLayout tabLayout = findViewById(R.id.movie_tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        loadBackdropImage();
     }
 
     @Override
@@ -138,16 +141,15 @@ public class DetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             mMovieId = intent.getIntExtra(MOVIE_ID_INTENT_KEY, -1);
-//            if (NetworkUtils.hasInternetConnection(this)) {
-//                if (mMovieId != -1) {
-//                    new AsyncTaskUtils.RequestTask<>(mRequestTaskListener, Movie.class)
-//                            .execute(NetworkUtils.movieDetailsUrl(mMovieId));
-//                }
-//            } else {
-//                Toast.makeText(this, "In offline mode, there is limited information available.", Toast.LENGTH_SHORT).show();
-//                populateTabs();
-//            }
-            populateTabs();
+            if (NetworkUtils.hasInternetConnection(this)) {
+                if (mMovieId != -1) {
+                    new AsyncTaskUtils.RequestTask<>(mRequestTaskListener, Movie.class)
+                            .execute(NetworkUtils.movieDetailsUrl(mMovieId));
+                }
+            } else {
+                Toast.makeText(this, "In offline mode, there is limited information available.", Toast.LENGTH_SHORT).show();
+                populateTabs();
+            }
         }
     }
 
@@ -159,12 +161,10 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void showProgress() {
-        //mProgressBar.setVisibility(View.VISIBLE);
         mAppBarLayout.setExpanded(false);
     }
 
     private void hideProgress() {
-        //mProgressBar.setVisibility(View.GONE);
         mAppBarLayout.setExpanded(true);
     }
 
@@ -184,7 +184,9 @@ public class DetailsActivity extends AppCompatActivity {
 
         if (movie != null) {
             ImageView backdrop = findViewById(R.id.movie_backdrop);
-            NetworkUtils.loadBackdrop(this, backdrop, movie.backdropPath);
+            byte[] image = movie.backdropImage;
+            Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
+            backdrop.setImageBitmap(bitmap);
         }
     }
 }

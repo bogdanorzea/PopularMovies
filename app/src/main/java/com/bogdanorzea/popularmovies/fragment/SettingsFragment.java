@@ -11,8 +11,8 @@ import android.support.v7.preference.PreferenceGroup;
 import android.support.v7.preference.PreferenceScreen;
 
 import com.bogdanorzea.popularmovies.R;
-import com.bogdanorzea.popularmovies.data.MovieRepository;
-import com.bogdanorzea.popularmovies.data.MovieSQLiteRepository;
+import com.bogdanorzea.popularmovies.data.RepositoryMovie;
+import com.bogdanorzea.popularmovies.data.RepositoryMovieSQLite;
 import com.bogdanorzea.popularmovies.model.object.Movie;
 
 public class SettingsFragment extends PreferenceFragmentCompat
@@ -39,7 +39,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == DialogInterface.BUTTON_POSITIVE){
-                            MovieRepository<Movie> repository = new MovieSQLiteRepository(getContext());
+                            RepositoryMovie<Movie> repository = new RepositoryMovieSQLite(getContext());
 
                             repository.deleteAll();
                         }

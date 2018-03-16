@@ -13,9 +13,9 @@ import android.view.ViewGroup;
 
 import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.adapter.CoverAdapter;
-import com.bogdanorzea.popularmovies.data.MovieRepository;
-import com.bogdanorzea.popularmovies.data.MovieSQLiteRepository;
+import com.bogdanorzea.popularmovies.data.RepositoryMovie;
 import com.bogdanorzea.popularmovies.data.MoviesContract;
+import com.bogdanorzea.popularmovies.data.RepositoryMovieSQLite;
 import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.utility.DataUtils;
 
@@ -23,7 +23,6 @@ import java.util.List;
 
 public class MoviesFavorites extends Fragment {
 
-    private RecyclerView mRecyclerView;
     private CoverAdapter mAdapter;
 
     @Nullable
@@ -35,7 +34,7 @@ public class MoviesFavorites extends Fragment {
 
         mAdapter = new CoverAdapter(context, null);
 
-        mRecyclerView = view.findViewById(R.id.recycler_view);
+        RecyclerView mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
@@ -51,7 +50,7 @@ public class MoviesFavorites extends Fragment {
     }
 
     private List<Movie> loadSQLData(Context context) {
-        MovieRepository<Movie> repository = new MovieSQLiteRepository(context);
+        RepositoryMovie<Movie> repository = new RepositoryMovieSQLite(context);
 
         String preferredSortRule = DataUtils.getPreferredSortRule(context);
         String sortOrder = null;
