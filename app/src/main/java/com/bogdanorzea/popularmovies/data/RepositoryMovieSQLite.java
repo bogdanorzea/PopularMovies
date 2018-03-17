@@ -16,10 +16,14 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bogdanorzea.popularmovies.data.MovieMapper.toContentValues;
+
 public class RepositoryMovieSQLite implements RepositoryMovie<Movie> {
-    private final Mapper<Cursor, Movie> toMovieMapper;
-    private final Mapper<Movie, ContentValues> toContentValuesMapper;
     private final Context context;
+
+    public RepositoryMovieSQLite(Context context) {
+        this.context = context;
+    }
 
     private void storeMovieImages(@NonNull Movie movie) {
         Uri movieUri = Uri.withAppendedPath(MoviesContract.CONTENT_URI, String.valueOf(movie.id));
@@ -52,16 +56,9 @@ public class RepositoryMovieSQLite implements RepositoryMovie<Movie> {
                 });
     }
 
-    public RepositoryMovieSQLite(Context context) {
-        this.context = context;
-
-        this.toContentValuesMapper = new MapperMovieToContentValues(context);
-        this.toMovieMapper = new MapperCursorToMovie();
-    }
-
     @Override
     public void insert(@NonNull Movie movie) {
-        ContentValues values = toContentValuesMapper.map(movie);
+        ContentValues values = toContentValues(movie);
         context.getContentResolver().insert(MoviesContract.CONTENT_URI, values);
 
         storeMovieImages(movie);
@@ -69,7 +66,7 @@ public class RepositoryMovieSQLite implements RepositoryMovie<Movie> {
 
     @Override
     public void update(@NonNull Movie movie) {
-        ContentValues values = toContentValuesMapper.map(movie);
+        ContentValues values = toContentValues(movie);
 
         Uri movieUri = Uri.withAppendedPath(MoviesContract.CONTENT_URI, String.valueOf(movie.id));
         context.getContentResolver().update(movieUri, values, null, null);
@@ -133,7 +130,7 @@ public class RepositoryMovieSQLite implements RepositoryMovie<Movie> {
                 for (int i = 0, size = cursor.getCount(); i < size; i++) {
                     cursor.moveToPosition(i);
 
-                    movies.add(toMovieMapper.map(cursor));
+                    movies.add(MovieMapper.fromCursor(cursor));
                 }
             }
         } finally {
@@ -154,7 +151,7 @@ public class RepositoryMovieSQLite implements RepositoryMovie<Movie> {
                 for (int i = 0, size = cursor.getCount(); i < size; i++) {
                     cursor.moveToPosition(i);
 
-                    movies.add(toMovieMapper.map(cursor));
+                    movies.add(MovieMapper.fromCursor(cursor));
                 }
             }
         } finally {
@@ -176,7 +173,7 @@ public class RepositoryMovieSQLite implements RepositoryMovie<Movie> {
             if (cursor != null && cursor.getCount() > 0) {
                 cursor.moveToFirst();
 
-                movie = toMovieMapper.map(cursor);
+                movie = MovieMapper.fromCursor(cursor);
             }
         } finally {
             if (cursor != null)

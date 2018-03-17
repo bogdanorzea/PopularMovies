@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bogdanorzea.popularmovies.R;
-import com.bogdanorzea.popularmovies.data.MapperCursorToMovie;
+import com.bogdanorzea.popularmovies.data.MovieMapper;
 import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.ui.DetailsActivity;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
@@ -36,7 +36,7 @@ public class PosterCursorAdapter extends RecyclerView.Adapter<PosterCursorAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if (mCursor.moveToPosition(position)) {
-            Movie currentMovie = new MapperCursorToMovie().map(mCursor);
+            Movie currentMovie = MovieMapper.fromCursor(mCursor);
 
             holder.itemView.setTag(currentMovie);
             NetworkUtils.loadPoster(context, holder.coverImage, currentMovie.posterPath);

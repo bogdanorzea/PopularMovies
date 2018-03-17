@@ -28,7 +28,7 @@ import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.adapter.MovieCategoryPagerAdapter;
-import com.bogdanorzea.popularmovies.data.MapperCursorToMovie;
+import com.bogdanorzea.popularmovies.data.MovieMapper;
 import com.bogdanorzea.popularmovies.data.MoviesContract;
 import com.bogdanorzea.popularmovies.data.RepositoryMovie;
 import com.bogdanorzea.popularmovies.data.RepositoryMovieSQLite;
@@ -190,7 +190,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
     private void loadBackdropImage(Cursor cursor) {
         if (cursor.moveToFirst()) {
-            Movie movie = new MapperCursorToMovie().map(cursor);
+            Movie movie = MovieMapper.fromCursor(cursor);
 
             ImageView backdrop = findViewById(R.id.movie_backdrop);
             byte[] image = movie.backdropImage;
