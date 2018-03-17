@@ -4,6 +4,7 @@ import com.squareup.moshi.Json;
 
 public class Video {
     private static final String YOUTUBE_DEFAULT_HQ_JPG_URL = "https://img.youtube.com/vi/%s/hqdefault.jpg";
+    private static final String YOUTUBE = "youtube";
 
     @Json(name = "id")
     public String id;
@@ -24,6 +25,10 @@ public class Video {
 
     public String getYoutubeThumbnailLink() {
         return String.format(YOUTUBE_DEFAULT_HQ_JPG_URL, key);
+    }
+
+    public boolean isVideoOnYoutube(){
+        return site.equalsIgnoreCase(YOUTUBE);
     }
 
 }

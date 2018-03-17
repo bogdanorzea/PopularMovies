@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.adapter.VideosAdapter;
@@ -71,7 +72,7 @@ public class VideosTab extends Fragment {
             return;
         }
 
-        if (result.results.isEmpty()){
+        if (result.results.isEmpty()) {
             displayWarning(getString(R.string.warning_no_data));
         }
 
@@ -85,9 +86,14 @@ public class VideosTab extends Fragment {
         reviewsListView.setOnItemClickListener((adapterView, view1, position, id) -> {
             Video video = (Video) adapterView.getItemAtPosition(position);
 
-            if (video.site.equalsIgnoreCase("YouTube")) {
+            if (video.isVideoOnYoutube()) {
                 Intent intent = new Intent(Intent.ACTION_VIEW, getYoutubeVideoUri(video.key));
-                startActivity(intent);
+
+                if (intent.resolveActivity(getContext().getPackageManager()) != null) {
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getContext(), R.string.failed_launch_video, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
