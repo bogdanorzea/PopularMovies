@@ -16,12 +16,12 @@ import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.ui.DetailsActivity;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 
-public class CursorMovieAdapter extends RecyclerView.Adapter<CursorMovieAdapter.ViewHolder> {
+public class PosterCursorAdapter extends RecyclerView.Adapter<PosterCursorAdapter.ViewHolder> {
     private final Context context;
 
     private Cursor mCursor;
 
-    public CursorMovieAdapter(Context context) {
+    public PosterCursorAdapter(Context context) {
         this.context = context;
     }
 

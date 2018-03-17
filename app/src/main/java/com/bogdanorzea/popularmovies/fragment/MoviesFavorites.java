@@ -16,7 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bogdanorzea.popularmovies.R;
-import com.bogdanorzea.popularmovies.adapter.CursorMovieAdapter;
+import com.bogdanorzea.popularmovies.adapter.PosterCursorAdapter;
 import com.bogdanorzea.popularmovies.data.MoviesContract;
 import com.bogdanorzea.popularmovies.utility.DataUtils;
 
@@ -24,7 +24,7 @@ public class MoviesFavorites extends Fragment implements LoaderManager.LoaderCal
 
     private static final String DESC = " DESC";
     private static final int LOADER_ID = 0;
-    private CursorMovieAdapter mAdapter;
+    private PosterCursorAdapter mAdapter;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class MoviesFavorites extends Fragment implements LoaderManager.LoaderCal
 
         View view = inflater.inflate(R.layout.layout_recycler_view, container, false);
 
-        mAdapter = new CursorMovieAdapter(context);
+        mAdapter = new PosterCursorAdapter(context);
 
         RecyclerView mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
@@ -71,6 +71,6 @@ public class MoviesFavorites extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-
+        mAdapter.swapData(null);
     }
 }
