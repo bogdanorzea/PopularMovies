@@ -1,6 +1,7 @@
 package com.bogdanorzea.popularmovies.fragment;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -19,8 +20,6 @@ import com.bogdanorzea.popularmovies.model.response.VideosResponse;
 import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 import com.wang.avi.AVLoadingIndicatorView;
-
-import static com.bogdanorzea.popularmovies.utility.NetworkUtils.getYoutubeVideoUri;
 
 public class VideosTab extends Fragment {
     private int mMovieId = -1;
@@ -87,7 +86,7 @@ public class VideosTab extends Fragment {
             Video video = (Video) adapterView.getItemAtPosition(position);
 
             if (video.isVideoOnYoutube()) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, getYoutubeVideoUri(video.key));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(video.getYoutubeVideoUrl()));
 
                 if (intent.resolveActivity(getContext().getPackageManager()) != null) {
                     startActivity(intent);

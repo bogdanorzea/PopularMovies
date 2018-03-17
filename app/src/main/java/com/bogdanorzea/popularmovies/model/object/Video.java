@@ -27,8 +27,12 @@ public class Video {
         return String.format(YOUTUBE_DEFAULT_HQ_JPG_URL, key);
     }
 
-    public boolean isVideoOnYoutube(){
+    public boolean isVideoOnYoutube() {
         return site.equalsIgnoreCase(YOUTUBE);
+    }
+
+    public String getYoutubeVideoUrl() {
+        return String.format("https://www.youtube.com/watch?v=%s", key);
     }
 
 }

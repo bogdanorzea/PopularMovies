@@ -5,6 +5,10 @@ import com.squareup.moshi.Json;
 
 import java.util.List;
 
+import static com.bogdanorzea.popularmovies.utility.NetworkUtils.BACKDROP_SIZE;
+import static com.bogdanorzea.popularmovies.utility.NetworkUtils.IMAGE_BASE_URL;
+import static com.bogdanorzea.popularmovies.utility.NetworkUtils.POSTER_SIZE;
+
 public class Movie {
 
     @Json(name = "adult")
@@ -75,5 +79,13 @@ public class Movie {
         }
 
         return "";
+    }
+
+    public String getBackdropUrl() {
+        return IMAGE_BASE_URL + BACKDROP_SIZE + backdropPath;
+    }
+
+    public String getPosterUrl() {
+        return IMAGE_BASE_URL + POSTER_SIZE + posterPath;
     }
 }

@@ -3,20 +3,54 @@ package com.bogdanorzea.popularmovies.data;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.bogdanorzea.popularmovies.model.object.Movie;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RepositoryMovieSQLite implements RepositoryMovie<Movie> {
     private final Mapper<Cursor, Movie> toMovieMapper;
     private final Mapper<Movie, ContentValues> toContentValuesMapper;
-
-
     private final Context context;
+
+    private void storeMovieImages(@NonNull Movie movie) {
+        Uri movieUri = Uri.withAppendedPath(MoviesContract.CONTENT_URI, String.valueOf(movie.id));
+        storeImage(movieUri, movie.getBackdropUrl(), MoviesContract.MovieEntry.COLUMN_NAME_BACKDROP_IMAGE);
+        storeImage(movieUri, movie.getPosterUrl(), MoviesContract.MovieEntry.COLUMN_NAME_POSTER_IMAGE);
+    }
+
+    private void storeImage(Uri movieUri, String imageUrl, final String destinationColumnName) {
+        Picasso.with(context)
+                .load(imageUrl)
+                .into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
+
+                        ContentValues values = new ContentValues();
+                        values.put(destinationColumnName, outputStream.toByteArray());
+
+                        context.getContentResolver().update(movieUri, values, null, null);
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Drawable errorDrawable) {
+                    }
+                });
+    }
 
     public RepositoryMovieSQLite(Context context) {
         this.context = context;
@@ -27,7 +61,10 @@ public class RepositoryMovieSQLite implements RepositoryMovie<Movie> {
 
     @Override
     public void insert(@NonNull Movie movie) {
-        context.getContentResolver().insert(MoviesContract.CONTENT_URI, toContentValuesMapper.map(movie));
+        ContentValues values = toContentValuesMapper.map(movie);
+        context.getContentResolver().insert(MoviesContract.CONTENT_URI, values);
+
+        storeMovieImages(movie);
     }
 
     @Override
@@ -36,6 +73,8 @@ public class RepositoryMovieSQLite implements RepositoryMovie<Movie> {
 
         Uri movieUri = Uri.withAppendedPath(MoviesContract.CONTENT_URI, String.valueOf(movie.id));
         context.getContentResolver().update(movieUri, values, null, null);
+
+        storeMovieImages(movie);
     }
 
     @Override

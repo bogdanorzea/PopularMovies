@@ -5,10 +5,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.bogdanorzea.popularmovies.model.object.Movie;
-import com.bogdanorzea.popularmovies.utility.NetworkUtils;
-
-import static com.bogdanorzea.popularmovies.utility.NetworkUtils.backdropFullPath;
-import static com.bogdanorzea.popularmovies.utility.NetworkUtils.posterFullPath;
 
 class MapperMovieToContentValues implements Mapper<Movie, ContentValues> {
     private final Context context;
@@ -34,10 +30,6 @@ class MapperMovieToContentValues implements Mapper<Movie, ContentValues> {
         values.put(MoviesContract.MovieEntry.COLUMN_NAME_HOMEPAGE, movie.homepage);
         values.put(MoviesContract.MovieEntry.COLUMN_NAME_BACKDROP_PATH, movie.backdropPath);
         values.put(MoviesContract.MovieEntry.COLUMN_NAME_POSTER_PATH, movie.posterPath);
-        values.put(MoviesContract.MovieEntry.COLUMN_NAME_BACKDROP_IMAGE,
-                NetworkUtils.getImageBytes(context, backdropFullPath(movie.backdropPath)));
-        values.put(MoviesContract.MovieEntry.COLUMN_NAME_POSTER_IMAGE,
-                NetworkUtils.getImageBytes(context, posterFullPath(movie.posterPath)));
 
         return values;
     }

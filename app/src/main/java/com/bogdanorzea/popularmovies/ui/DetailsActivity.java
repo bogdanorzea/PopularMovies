@@ -1,15 +1,21 @@
 package com.bogdanorzea.popularmovies.ui;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +28,8 @@ import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.adapter.MovieCategoryPagerAdapter;
+import com.bogdanorzea.popularmovies.data.MapperCursorToMovie;
+import com.bogdanorzea.popularmovies.data.MoviesContract;
 import com.bogdanorzea.popularmovies.data.RepositoryMovie;
 import com.bogdanorzea.popularmovies.data.RepositoryMovieSQLite;
 import com.bogdanorzea.popularmovies.fragment.CastTab;
@@ -33,9 +41,10 @@ import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
 import com.bogdanorzea.popularmovies.utility.FragmentUtils;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 
-public class DetailsActivity extends AppCompatActivity {
+public class DetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String MOVIE_ID_INTENT_KEY = "movie_id";
+    private static final int LOADER_ID = 2;
     private final RepositoryMovie<Movie> repository = new RepositoryMovieSQLite(this);
     private int mMovieId;
     private AppBarLayout mAppBarLayout;
@@ -51,7 +60,6 @@ public class DetailsActivity extends AppCompatActivity {
                     repository.update(movie);
 
                     hideProgress();
-                    populateTabs();
                 }
             };
     private Menu mMenu;
@@ -75,6 +83,8 @@ public class DetailsActivity extends AppCompatActivity {
         mAppBarLayout = findViewById(R.id.app_bar);
         handleIntent();
 
+
+        getSupportLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
     private void populateTabs() {
@@ -90,8 +100,6 @@ public class DetailsActivity extends AppCompatActivity {
 
         TabLayout tabLayout = findViewById(R.id.movie_tabs);
         tabLayout.setupWithViewPager(viewPager);
-
-        loadBackdropImage();
     }
 
     @Override
@@ -148,8 +156,9 @@ public class DetailsActivity extends AppCompatActivity {
                 }
             } else {
                 Toast.makeText(this, R.string.offline_limitation_warning, Toast.LENGTH_SHORT).show();
-                populateTabs();
             }
+
+            populateTabs();
         }
     }
 
@@ -179,14 +188,32 @@ public class DetailsActivity extends AppCompatActivity {
         }
     }
 
-    private void loadBackdropImage() {
-        Movie movie = repository.get(mMovieId);
+    private void loadBackdropImage(Cursor cursor) {
+        if (cursor.moveToFirst()) {
+            Movie movie = new MapperCursorToMovie().map(cursor);
 
-        if (movie != null) {
             ImageView backdrop = findViewById(R.id.movie_backdrop);
             byte[] image = movie.backdropImage;
             Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
             backdrop.setImageBitmap(bitmap);
         }
+    }
+
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+        Uri movieUri = Uri.withAppendedPath(MoviesContract.CONTENT_URI, String.valueOf(mMovieId));
+
+        return new CursorLoader(this, movieUri, null, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+        loadBackdropImage(data);
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+        loader = null;
     }
 }
