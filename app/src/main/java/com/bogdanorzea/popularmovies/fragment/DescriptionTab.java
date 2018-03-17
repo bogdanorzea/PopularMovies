@@ -1,9 +1,15 @@
 package com.bogdanorzea.popularmovies.fragment;
 
+import android.database.Cursor;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +20,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bogdanorzea.popularmovies.R;
-import com.bogdanorzea.popularmovies.data.RepositoryMovie;
-import com.bogdanorzea.popularmovies.data.RepositoryMovieSQLite;
+import com.bogdanorzea.popularmovies.data.MapperCursorToMovie;
+import com.bogdanorzea.popularmovies.data.MoviesContract;
 import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.utility.DataUtils;
 
@@ -23,7 +29,8 @@ import static com.bogdanorzea.popularmovies.utility.DataUtils.formatDuration;
 import static com.bogdanorzea.popularmovies.utility.DataUtils.formatMoney;
 
 
-public class DescriptionTab extends Fragment {
+public class DescriptionTab extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+    private static final int LOADER_ID = 2;
     private int mMovieId = -1;
 
     @Override
@@ -39,24 +46,15 @@ public class DescriptionTab extends Fragment {
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mMovieId != -1) {
-            displayDescription(mMovieId);
-        }
-    }
-
-    private void displayDescription(int movieId) {
-        RepositoryMovie<Movie> repository = new RepositoryMovieSQLite(getContext());
+    private void displayDescription(Cursor cursor) {
         View view = getView();
         if (view == null) {
             return;
         }
 
-        Movie movie = repository.get(movieId);
+        if (cursor.moveToFirst()) {
+            Movie movie = new MapperCursorToMovie().map(cursor);
 
-        if (movie != null) {
             // Poster
             ImageView poster = view.findViewById(R.id.poster);
             byte[] image = movie.posterImage;
@@ -91,7 +89,30 @@ public class DescriptionTab extends Fragment {
 
             // Genre
             ((TextView) view.findViewById(R.id.genre)).setText(movie.printGenres());
-
         }
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        getLoaderManager().initLoader(LOADER_ID, null, this);
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+        Uri movieUri = Uri.withAppendedPath(MoviesContract.CONTENT_URI, String.valueOf(mMovieId));
+
+        return new CursorLoader(getActivity(), movieUri, null, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+        displayDescription(data);
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+        loader = null;
     }
 }
