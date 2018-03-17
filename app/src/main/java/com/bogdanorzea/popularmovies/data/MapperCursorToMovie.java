@@ -4,7 +4,7 @@ import android.database.Cursor;
 
 import com.bogdanorzea.popularmovies.model.object.Movie;
 
-class MapperCursorToMovie implements Mapper<Cursor, Movie> {
+public class MapperCursorToMovie implements Mapper<Cursor, Movie> {
     @Override
     public Movie map(Cursor cursor) {
         Movie movie = new Movie();
