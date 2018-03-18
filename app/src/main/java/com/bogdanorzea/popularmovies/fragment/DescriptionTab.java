@@ -24,6 +24,7 @@ import com.bogdanorzea.popularmovies.data.MovieMapper;
 import com.bogdanorzea.popularmovies.data.MoviesContract;
 import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.utility.DataUtils;
+import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 
 import static com.bogdanorzea.popularmovies.utility.DataUtils.formatDuration;
 import static com.bogdanorzea.popularmovies.utility.DataUtils.formatMoney;
@@ -58,7 +59,11 @@ public class DescriptionTab extends Fragment implements LoaderManager.LoaderCall
             // Poster
             ImageView poster = view.findViewById(R.id.poster);
             byte[] image = movie.posterImage;
-            poster.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
+            if (image != null) {
+                poster.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
+            } else {
+                NetworkUtils.loadPoster(getContext(), poster, movie.posterPath);
+            }
 
             // Release date
             ((TextView) view.findViewById(R.id.release_date))

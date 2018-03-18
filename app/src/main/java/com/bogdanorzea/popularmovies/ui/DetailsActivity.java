@@ -2,7 +2,6 @@ package com.bogdanorzea.popularmovies.ui;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
@@ -194,8 +193,11 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
             ImageView backdrop = findViewById(R.id.movie_backdrop);
             byte[] image = movie.backdropImage;
-            Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
-            backdrop.setImageBitmap(bitmap);
+            if (image != null) {
+                backdrop.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
+            } else {
+                NetworkUtils.loadPoster(this, backdrop, movie.backdropPath);
+            }
         }
     }
 
