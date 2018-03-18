@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.R;
-import com.bogdanorzea.popularmovies.adapter.NetworkPosterCursorAdapter;
+import com.bogdanorzea.popularmovies.adapter.PosterAdapter;
 import com.bogdanorzea.popularmovies.data.MovieMapper;
 import com.bogdanorzea.popularmovies.data.MoviesContract;
 import com.bogdanorzea.popularmovies.data.RepositoryMovie;
@@ -39,7 +39,7 @@ public class PopularTab extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int NETWORK_LOADER_ID = 4;
-    private NetworkPosterCursorAdapter mAdapter;
+    private PosterAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private AVLoadingIndicatorView mAvi;
     private TextView warningTextView;
@@ -58,7 +58,7 @@ public class PopularTab extends Fragment
         mAvi = view.findViewById(R.id.avi);
         warningTextView = view.findViewById(R.id.warning);
 
-        mAdapter = new NetworkPosterCursorAdapter(context);
+        mAdapter = new PosterAdapter(context);
 
         if (savedInstanceState != null) {
             loadedIds = savedInstanceState.getIntegerArrayList("loaded_ids");
