@@ -20,7 +20,7 @@ import com.bogdanorzea.popularmovies.adapter.PosterCursorAdapter;
 import com.bogdanorzea.popularmovies.data.MoviesContract;
 import com.bogdanorzea.popularmovies.utility.DataUtils;
 
-public class MoviesFavorites extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class FavoritesTab extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String DESC = " DESC";
     private static final int LOADER_ID = 0;

@@ -27,7 +27,7 @@ import java.util.List;
 
 import okhttp3.HttpUrl;
 
-public class MoviesTopRated extends Fragment {
+public class TopRatedTab extends Fragment {
 
     private CoverAdapter mAdapter;
     private RecyclerView mRecyclerView;

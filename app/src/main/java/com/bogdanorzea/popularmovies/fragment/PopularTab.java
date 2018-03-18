@@ -35,7 +35,7 @@ import java.util.List;
 
 import okhttp3.HttpUrl;
 
-public class MoviesPopular extends Fragment
+public class PopularTab extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int NETWORK_LOADER_ID = 4;
@@ -124,7 +124,7 @@ public class MoviesPopular extends Fragment
                                 }
                                 amountIdsAdded = moviesResponse.results.size();
 
-                                getLoaderManager().restartLoader(NETWORK_LOADER_ID, null, MoviesPopular.this);
+                                getLoaderManager().restartLoader(NETWORK_LOADER_ID, null, PopularTab.this);
                                 isLoading = false;
                                 hideProgress();
                             }

@@ -12,9 +12,9 @@ import android.view.MenuItem;
 
 import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.adapter.MovieCategoryPagerAdapter;
-import com.bogdanorzea.popularmovies.fragment.MoviesFavorites;
-import com.bogdanorzea.popularmovies.fragment.MoviesPopular;
-import com.bogdanorzea.popularmovies.fragment.MoviesTopRated;
+import com.bogdanorzea.popularmovies.fragment.FavoritesTab;
+import com.bogdanorzea.popularmovies.fragment.PopularTab;
+import com.bogdanorzea.popularmovies.fragment.TopRatedTab;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,9 +27,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         MovieCategoryPagerAdapter pagerAdapter = new MovieCategoryPagerAdapter(getSupportFragmentManager());
-        pagerAdapter.addFragment(new MoviesFavorites(), getString(R.string.favorites_tab_name));
-        pagerAdapter.addFragment(new MoviesPopular(), getString(R.string.popular_tab_name));
-        pagerAdapter.addFragment(new MoviesTopRated(), getString(R.string.top_rated_tab_name));
+        pagerAdapter.addFragment(new FavoritesTab(), getString(R.string.favorites_tab_name));
+        pagerAdapter.addFragment(new PopularTab(), getString(R.string.popular_tab_name));
+        pagerAdapter.addFragment(new TopRatedTab(), getString(R.string.top_rated_tab_name));
 
         ViewPager viewPager = findViewById(R.id.pager);
         viewPager.setAdapter(pagerAdapter);
