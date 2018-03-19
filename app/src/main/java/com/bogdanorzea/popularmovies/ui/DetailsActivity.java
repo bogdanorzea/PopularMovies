@@ -185,6 +185,8 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
             new AsyncTaskUtils.RequestTask<>(mRequestTaskListener, Movie.class)
                     .execute(NetworkUtils.movieDetailsUrl(movieId));
+        } else {
+            Toast.makeText(this, getString(R.string.offline_limitation_warning), Toast.LENGTH_SHORT).show();
         }
     }
 

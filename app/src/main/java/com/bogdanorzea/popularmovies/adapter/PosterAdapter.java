@@ -2,7 +2,6 @@ package com.bogdanorzea.popularmovies.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,6 +26,14 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.ViewHolder
         mMovies = new ArrayList<>();
     }
 
+    public List<Movie> getMovies() {
+        return mMovies;
+    }
+
+    public boolean isEmpty() {
+        return mMovies.size() < 1;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -41,12 +48,7 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.ViewHolder
 
         holder.itemView.setTag(movie);
 
-        byte[] image = movie.posterImage;
-        if (image != null) {
-            holder.coverImage.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
-        } else {
-            NetworkUtils.loadImage(context, holder.coverImage, movie.getPosterUrl());
-        }
+        NetworkUtils.loadImage(context, holder.coverImage, movie.getPosterUrl());
     }
 
     @Override

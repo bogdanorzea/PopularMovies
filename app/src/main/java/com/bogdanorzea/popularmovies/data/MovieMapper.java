@@ -25,8 +25,6 @@ public abstract class MovieMapper {
         int homepageColumnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_NAME_HOMEPAGE);
         int backdropPathColumnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_NAME_BACKDROP_PATH);
         int posterPathColumnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_NAME_POSTER_PATH);
-        int backdropImageColumnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_NAME_BACKDROP_IMAGE);
-        int posterImageColumnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_NAME_POSTER_IMAGE);
 
         movie.id = cursor.getInt(idColumnIndex);
         movie.title = cursor.getString(titleColumnIndex);
@@ -43,8 +41,6 @@ public abstract class MovieMapper {
         movie.homepage = cursor.getString(homepageColumnIndex);
         movie.backdropPath = cursor.getString(backdropPathColumnIndex);
         movie.posterPath = cursor.getString(posterPathColumnIndex);
-        movie.backdropImage = cursor.getBlob(backdropImageColumnIndex);
-        movie.posterImage = cursor.getBlob(posterImageColumnIndex);
 
         return movie;
     }

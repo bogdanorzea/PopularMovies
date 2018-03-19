@@ -1,7 +1,6 @@
 package com.bogdanorzea.popularmovies.fragment;
 
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -58,12 +57,7 @@ public class DescriptionTab extends Fragment implements LoaderManager.LoaderCall
 
             // Poster
             ImageView poster = view.findViewById(R.id.poster);
-            byte[] image = movie.posterImage;
-            if (image != null) {
-                poster.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
-            } else {
-                NetworkUtils.loadImage(getContext(), poster, movie.getPosterUrl());
-            }
+            NetworkUtils.loadImage(getContext(), poster, movie.getPosterUrl());
 
             // Release date
             ((TextView) view.findViewById(R.id.release_date))
