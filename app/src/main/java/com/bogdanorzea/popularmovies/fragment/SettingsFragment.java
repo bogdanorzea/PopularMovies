@@ -1,5 +1,6 @@
 package com.bogdanorzea.popularmovies.fragment;
 
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,9 +12,7 @@ import android.support.v7.preference.PreferenceGroup;
 import android.support.v7.preference.PreferenceScreen;
 
 import com.bogdanorzea.popularmovies.R;
-import com.bogdanorzea.popularmovies.data.RepositoryMovie;
-import com.bogdanorzea.popularmovies.data.RepositoryMovieSQLite;
-import com.bogdanorzea.popularmovies.model.object.Movie;
+import com.bogdanorzea.popularmovies.data.MoviesContract;
 
 public class SettingsFragment extends PreferenceFragmentCompat
         implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -38,10 +37,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (which == DialogInterface.BUTTON_POSITIVE){
-                            RepositoryMovie<Movie> repository = new RepositoryMovieSQLite(getContext());
+                        if (which == DialogInterface.BUTTON_POSITIVE) {
+                            ContentValues values = new ContentValues();
+                            values.put(MoviesContract.MovieEntry.COLUMN_NAME_FAVORITE, 0);
 
-                            repository.deleteAll();
+                            getContext().getContentResolver().update(MoviesContract.CONTENT_URI, values, null, null);
                         }
 
                         dialog.dismiss();
