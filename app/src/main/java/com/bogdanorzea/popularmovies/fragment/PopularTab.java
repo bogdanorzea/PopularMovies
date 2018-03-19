@@ -147,9 +147,7 @@ public class PopularTab extends Fragment
         RepositoryMovie<Movie> repository = new RepositoryMovieSQLite(getContext());
 
         for (Movie movie : results) {
-            if (repository.get(movie.id) == null) {
-                repository.insert(movie);
-            }
+            repository.insert(movie);
         }
 
     }
@@ -240,4 +238,5 @@ public class PopularTab extends Fragment
 
         return ret;
     }
+
 }
