@@ -27,8 +27,8 @@ public class RepositoryMovieSQLite implements RepositoryMovie<Movie> {
 
     private void storeMovieImages(@NonNull Movie movie) {
         Uri movieUri = Uri.withAppendedPath(MoviesContract.CONTENT_URI, String.valueOf(movie.id));
-        storeImage(movieUri, movie.getBackdropUrl(), MoviesContract.MovieEntry.COLUMN_NAME_BACKDROP_IMAGE);
-        storeImage(movieUri, movie.getPosterUrl(), MoviesContract.MovieEntry.COLUMN_NAME_POSTER_IMAGE);
+        //storeImage(movieUri, movie.getBackdropUrl(), MoviesContract.MovieEntry.COLUMN_NAME_BACKDROP_IMAGE);
+        //storeImage(movieUri, movie.getPosterUrl(), MoviesContract.MovieEntry.COLUMN_NAME_POSTER_IMAGE);
     }
 
     private void storeImage(Uri movieUri, String imageUrl, final String destinationColumnName) {

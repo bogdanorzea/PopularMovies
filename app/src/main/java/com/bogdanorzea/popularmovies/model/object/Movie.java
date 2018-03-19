@@ -13,6 +13,7 @@ import static com.bogdanorzea.popularmovies.utility.NetworkUtils.IMAGE_BASE_URL;
 import static com.bogdanorzea.popularmovies.utility.NetworkUtils.POSTER_SIZE;
 
 public class Movie implements Parcelable {
+
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
         @Override
         public Movie createFromParcel(Parcel in) {
@@ -64,6 +65,7 @@ public class Movie implements Parcelable {
     protected Movie(Parcel in) {
         backdropPath = in.readString();
         budget = in.readInt();
+        genres = in.createTypedArrayList(Genre.CREATOR);
         homepage = in.readString();
         id = in.readInt();
         overview = in.readString();
@@ -121,6 +123,7 @@ public class Movie implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(backdropPath);
         parcel.writeInt(budget);
+        parcel.writeTypedList(genres);
         parcel.writeString(homepage);
         parcel.writeInt(id);
         parcel.writeString(overview);
@@ -135,4 +138,5 @@ public class Movie implements Parcelable {
         parcel.writeInt(voteCount);
         parcel.writeInt(favorite);
     }
+
 }

@@ -38,6 +38,7 @@ public class MoviesContract {
                     MovieEntry.COLUMN_NAME_RELEASE_DATE + TEXT + SEPARATOR +
                     MovieEntry.COLUMN_NAME_TAGLINE + TEXT + SEPARATOR +
                     MovieEntry.COLUMN_NAME_OVERVIEW + TEXT + SEPARATOR +
+                    MovieEntry.COLUMN_NAME_GENDERS + TEXT + SEPARATOR +
                     MovieEntry.COLUMN_NAME_RUNTIME + INTEGER + SEPARATOR +
                     MovieEntry.COLUMN_NAME_POPULARITY + REAL + SEPARATOR +
                     MovieEntry.COLUMN_NAME_VOTE_AVERAGE + REAL + SEPARATOR +
@@ -46,9 +47,7 @@ public class MoviesContract {
                     MovieEntry.COLUMN_NAME_REVENUE + INTEGER + SEPARATOR +
                     MovieEntry.COLUMN_NAME_HOMEPAGE + TEXT + SEPARATOR +
                     MovieEntry.COLUMN_NAME_BACKDROP_PATH + TEXT + SEPARATOR +
-                    MovieEntry.COLUMN_NAME_POSTER_PATH + TEXT + SEPARATOR +
-                    MovieEntry.COLUMN_NAME_BACKDROP_IMAGE + BLOB + SEPARATOR +
-                    MovieEntry.COLUMN_NAME_POSTER_IMAGE + BLOB +
+                    MovieEntry.COLUMN_NAME_POSTER_PATH + TEXT +
                     ");";
 
     private MoviesContract() {
@@ -63,6 +62,7 @@ public class MoviesContract {
         public static final String COLUMN_NAME_RELEASE_DATE = "release_date";
         public static final String COLUMN_NAME_TAGLINE = "tagline";
         public static final String COLUMN_NAME_OVERVIEW = "overview";
+        public static final String COLUMN_NAME_GENDERS = "genders";
         public static final String COLUMN_NAME_RUNTIME = "runtime";
         public static final String COLUMN_NAME_POPULARITY = "popularity";
         public static final String COLUMN_NAME_VOTE_AVERAGE = "vote_average";
@@ -72,8 +72,6 @@ public class MoviesContract {
         public static final String COLUMN_NAME_HOMEPAGE = "homepage";
         public static final String COLUMN_NAME_BACKDROP_PATH = "backdrop_path";
         public static final String COLUMN_NAME_POSTER_PATH = "poster_path";
-        public static final String COLUMN_NAME_BACKDROP_IMAGE = "backdrop_image";
-        public static final String COLUMN_NAME_POSTER_IMAGE = "poster_image";
     }
 
 }

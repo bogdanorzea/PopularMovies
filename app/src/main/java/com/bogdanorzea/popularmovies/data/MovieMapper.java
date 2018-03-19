@@ -2,8 +2,12 @@ package com.bogdanorzea.popularmovies.data;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.text.TextUtils;
 
+import com.bogdanorzea.popularmovies.model.object.Genre;
 import com.bogdanorzea.popularmovies.model.object.Movie;
+
+import java.util.ArrayList;
 
 public abstract class MovieMapper {
 
@@ -16,6 +20,7 @@ public abstract class MovieMapper {
         int releaseDateColumnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_NAME_RELEASE_DATE);
         int taglineColumnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_NAME_TAGLINE);
         int overviewColumnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_NAME_OVERVIEW);
+        int gendersColumnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_NAME_GENDERS);
         int runtimeColumnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_NAME_RUNTIME);
         int popularityColumnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_NAME_POPULARITY);
         int voteAverageColumnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_NAME_VOTE_AVERAGE);
@@ -42,6 +47,20 @@ public abstract class MovieMapper {
         movie.backdropPath = cursor.getString(backdropPathColumnIndex);
         movie.posterPath = cursor.getString(posterPathColumnIndex);
 
+        String genderStrings = cursor.getString(gendersColumnIndex);
+        if (!TextUtils.isEmpty(genderStrings)) {
+            movie.genres = new ArrayList<>();
+            if (genderStrings.contains(",")) {
+                String[] items = genderStrings.split(",");
+
+                for (String item : items) {
+                    movie.genres.add(new Genre(item));
+                }
+            } else {
+                movie.genres.add(new Genre(genderStrings));
+            }
+        }
+
         return movie;
     }
 
@@ -52,6 +71,7 @@ public abstract class MovieMapper {
         values.put(MoviesContract.MovieEntry.COLUMN_NAME_RELEASE_DATE, movie.releaseDate);
         values.put(MoviesContract.MovieEntry.COLUMN_NAME_TAGLINE, movie.tagline);
         values.put(MoviesContract.MovieEntry.COLUMN_NAME_OVERVIEW, movie.overview);
+        values.put(MoviesContract.MovieEntry.COLUMN_NAME_GENDERS, movie.printGenres());
         values.put(MoviesContract.MovieEntry.COLUMN_NAME_RUNTIME, movie.runtime);
         values.put(MoviesContract.MovieEntry.COLUMN_NAME_POPULARITY, movie.popularity);
         values.put(MoviesContract.MovieEntry.COLUMN_NAME_VOTE_AVERAGE, movie.voteAverage);
