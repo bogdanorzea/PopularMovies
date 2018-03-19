@@ -1,5 +1,6 @@
 package com.bogdanorzea.popularmovies.fragment;
 
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,7 +26,8 @@ import com.bogdanorzea.popularmovies.utility.DataUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavoritesTab extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class FavoritesTab extends Fragment
+        implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String DESC = " DESC";
     private static final int LOADER_ID = 0;
@@ -81,5 +84,24 @@ public class FavoritesTab extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        PreferenceManager.getDefaultSharedPreferences(getContext())
+                .registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        getLoaderManager().restartLoader(LOADER_ID, null, this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(getContext())
+                .unregisterOnSharedPreferenceChangeListener(this);
     }
 }
