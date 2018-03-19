@@ -12,6 +12,7 @@ public abstract class MovieMapper {
 
         int idColumnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry._ID);
         int titleColumnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_NAME_TITLE);
+        int favoriteColumnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_NAME_FAVORITE);
         int releaseDateColumnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_NAME_RELEASE_DATE);
         int taglineColumnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_NAME_TAGLINE);
         int overviewColumnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_NAME_OVERVIEW);
@@ -29,6 +30,7 @@ public abstract class MovieMapper {
 
         movie.id = cursor.getInt(idColumnIndex);
         movie.title = cursor.getString(titleColumnIndex);
+        movie.favorite = cursor.getInt(favoriteColumnIndex);
         movie.releaseDate = cursor.getString(releaseDateColumnIndex);
         movie.tagline = cursor.getString(taglineColumnIndex);
         movie.overview = cursor.getString(overviewColumnIndex);

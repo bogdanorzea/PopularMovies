@@ -83,7 +83,7 @@ public class CoverAdapter extends RecyclerView.Adapter<CoverAdapter.ViewHolder> 
             Movie currentMovie = (Movie) itemView.getTag();
 
             Intent intent = new Intent(context, DetailsActivity.class);
-            intent.putExtra(DetailsActivity.MOVIE_ID_INTENT_KEY, currentMovie.id);
+            intent.putExtra(DetailsActivity.MOVIE_ID, currentMovie.id);
             context.startActivity(intent);
         }
     }

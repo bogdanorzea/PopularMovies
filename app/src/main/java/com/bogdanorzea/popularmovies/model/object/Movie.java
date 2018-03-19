@@ -59,6 +59,7 @@ public class Movie {
 
     public byte[] backdropImage;
     public byte[] posterImage;
+    public int favorite;
 
     public String printGenres() {
         if (genres != null && genres.size() > 0) {
@@ -87,5 +88,9 @@ public class Movie {
 
     public String getPosterUrl() {
         return IMAGE_BASE_URL + POSTER_SIZE + posterPath;
+    }
+
+    public boolean isFavorite() {
+        return favorite == 1;
     }
 }
