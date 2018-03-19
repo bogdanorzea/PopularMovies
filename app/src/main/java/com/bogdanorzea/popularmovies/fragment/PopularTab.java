@@ -38,7 +38,7 @@ import okhttp3.HttpUrl;
 public class PopularTab extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final int NETWORK_LOADER_ID = 4;
+    private static final int MOVIE_LOADER_ID = 4;
     private PosterAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private AVLoadingIndicatorView mAvi;
@@ -90,7 +90,7 @@ public class PopularTab extends Fragment
         if (loadedIds.isEmpty()) {
             loadNextPage();
         } else {
-            getLoaderManager().restartLoader(NETWORK_LOADER_ID, null, this);
+            getLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
         }
     }
 
@@ -100,6 +100,8 @@ public class PopularTab extends Fragment
         outState.putIntegerArrayList("loaded_ids", (ArrayList<Integer>) loadedIds);
         outState.putInt("page_number", pageNumber);
         outState.putParcelable("recycler_view_state", mRecyclerView.getLayoutManager().onSaveInstanceState());
+
+        getLoaderManager().destroyLoader(MOVIE_LOADER_ID);
     }
 
     private void loadNextPage() {
@@ -124,7 +126,7 @@ public class PopularTab extends Fragment
                                 }
                                 amountIdsAdded = moviesResponse.results.size();
 
-                                getLoaderManager().restartLoader(NETWORK_LOADER_ID, null, PopularTab.this);
+                                getLoaderManager().restartLoader(MOVIE_LOADER_ID, null, PopularTab.this);
                                 isLoading = false;
                                 hideProgress();
                             }

@@ -39,6 +39,7 @@ import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
 import com.bogdanorzea.popularmovies.utility.FragmentUtils;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
+import com.squareup.picasso.Picasso;
 
 public class DetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -196,7 +197,9 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
             if (image != null) {
                 backdrop.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
             } else {
-                NetworkUtils.loadImage(this, backdrop, movie.getBackdropUrl());
+                Picasso.with(this)
+                        .load(movie.getBackdropUrl())
+                        .into(backdrop);
             }
         }
     }

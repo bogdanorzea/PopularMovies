@@ -60,8 +60,6 @@ public class RepositoryMovieSQLite implements RepositoryMovie<Movie> {
     public void insert(@NonNull Movie movie) {
         ContentValues values = toContentValues(movie);
         context.getContentResolver().insert(MoviesContract.CONTENT_URI, values);
-
-        storeMovieImages(movie);
     }
 
     @Override
