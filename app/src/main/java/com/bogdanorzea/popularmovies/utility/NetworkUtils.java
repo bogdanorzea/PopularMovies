@@ -19,6 +19,7 @@ public abstract class NetworkUtils {
     public static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
     public static final String POSTER_SIZE = "w500";
     public static final String BACKDROP_SIZE = "w500";
+    public static final String PROFILE_SIZE = "w500";
     private static final String VIDEOS = "videos";
     private static final String PAGE = "page";
     private static final String HTTPS = "https";

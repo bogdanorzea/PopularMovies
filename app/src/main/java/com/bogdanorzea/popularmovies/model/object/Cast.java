@@ -3,6 +3,9 @@ package com.bogdanorzea.popularmovies.model.object;
 import com.serjltt.moshi.adapters.FallbackOnNull;
 import com.squareup.moshi.Json;
 
+import static com.bogdanorzea.popularmovies.utility.NetworkUtils.IMAGE_BASE_URL;
+import static com.bogdanorzea.popularmovies.utility.NetworkUtils.PROFILE_SIZE;
+
 public class Cast {
 
     @Json(name = "cast_id")
@@ -23,4 +26,7 @@ public class Cast {
     @Json(name = "profile_path")
     public String profilePath;
 
+    public String getProfileUrl() {
+        return IMAGE_BASE_URL + PROFILE_SIZE + profilePath;
+    }
 }

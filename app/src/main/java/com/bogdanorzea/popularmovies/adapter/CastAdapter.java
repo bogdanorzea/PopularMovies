@@ -6,10 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.model.object.Cast;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -53,6 +55,12 @@ public class CastAdapter extends ArrayAdapter<Cast> {
 
         TextView description = view.findViewById(R.id.character);
         description.setText(castMember.character);
+
+        ImageView profile = view.findViewById(R.id.profile);
+        Picasso.with(getContext())
+                .load(castMember.getProfileUrl())
+                .error(R.drawable.missing_cover)
+                .into(profile);
 
         return view;
     }
