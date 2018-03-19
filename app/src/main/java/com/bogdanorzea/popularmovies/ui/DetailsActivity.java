@@ -26,7 +26,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.R;
-import com.bogdanorzea.popularmovies.adapter.MovieCategoryPagerAdapter;
+import com.bogdanorzea.popularmovies.adapter.PagerAdapter;
 import com.bogdanorzea.popularmovies.data.MovieMapper;
 import com.bogdanorzea.popularmovies.data.MoviesContract;
 import com.bogdanorzea.popularmovies.fragment.CastTab;
@@ -132,7 +132,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
     private void populateTabs(int movieId) {
         ViewPager viewPager = findViewById(R.id.tab_viewpager);
-        MovieCategoryPagerAdapter pagerAdapter = new MovieCategoryPagerAdapter(getSupportFragmentManager());
+        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
 
         pagerAdapter.addFragment(FragmentUtils.buildFragment(movieId, DescriptionTab.class), getString(R.string.description_tab_name));
         pagerAdapter.addFragment(FragmentUtils.buildFragment(movieId, VideosTab.class), getString(R.string.videos_tab_name));

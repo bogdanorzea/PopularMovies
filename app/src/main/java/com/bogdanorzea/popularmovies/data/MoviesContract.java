@@ -25,7 +25,6 @@ public class MoviesContract {
     private static final String INTEGER = " INTEGER";
     private static final String REAL = " REAL";
     private static final String DEFAULT_0 = " DEFAULT 0";
-    private static final String BLOB = " BLOB";
 
     // SQL statements
     static final String SQL_DELETE_MOVIES_TABLE =

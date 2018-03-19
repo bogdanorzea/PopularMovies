@@ -3,11 +3,8 @@ package com.bogdanorzea.popularmovies.utility;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.widget.ImageView;
 
 import com.bogdanorzea.popularmovies.BuildConfig;
-import com.bogdanorzea.popularmovies.R;
-import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 
@@ -16,7 +13,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class NetworkUtils {
+public abstract class NetworkUtils {
     public static final String SEARCH = "search";
     public static final String QUERY = "query";
     public static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
@@ -158,24 +155,6 @@ public class NetworkUtils {
                 .addPathSegment(CREDITS)
                 .addQueryParameter(API_KEY, BuildConfig.TheMovieDBApiKey)
                 .build();
-    }
-
-    /**
-     * Loads the imageUrl into the ImageView
-     *
-     * @param context
-     * @param imageView
-     * @param imageUrl
-     */
-    public static void loadImage(Context context, ImageView imageView, String imageUrl) {
-        Picasso.with(context)
-                .load(imageUrl)
-                .error(R.drawable.missing_cover)
-                .into(imageView);
-    }
-
-    public static String posterFullPath(String relativeImagePath) {
-        return IMAGE_BASE_URL + POSTER_SIZE + relativeImagePath;
     }
 
     /**

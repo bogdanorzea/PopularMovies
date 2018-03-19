@@ -58,17 +58,14 @@ public class ReviewsAdapter extends ArrayAdapter<Review> {
         author.setText(currentReview.author);
         description.setText(currentReview.content);
 
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Context context = view.getContext();
-                if (!TextUtils.isEmpty(currentReview.url)) {
-                    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                    CustomTabsIntent customTabsIntent = builder.build();
-                    customTabsIntent.launchUrl(context, Uri.parse(currentReview.url));
-                } else {
-                    Toast.makeText(context, "Couldn't find the review url", Toast.LENGTH_SHORT).show();
-                }
+        view.setOnClickListener(v -> {
+            Context context = v.getContext();
+            if (!TextUtils.isEmpty(currentReview.url)) {
+                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                CustomTabsIntent customTabsIntent = builder.build();
+                customTabsIntent.launchUrl(context, Uri.parse(currentReview.url));
+            } else {
+                Toast.makeText(context, "Couldn't find the review url", Toast.LENGTH_SHORT).show();
             }
         });
 

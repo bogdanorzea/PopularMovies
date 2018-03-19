@@ -23,7 +23,7 @@ import com.bogdanorzea.popularmovies.data.MovieMapper;
 import com.bogdanorzea.popularmovies.data.MoviesContract;
 import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.utility.DataUtils;
-import com.bogdanorzea.popularmovies.utility.NetworkUtils;
+import com.squareup.picasso.Picasso;
 
 import static com.bogdanorzea.popularmovies.utility.DataUtils.formatDuration;
 import static com.bogdanorzea.popularmovies.utility.DataUtils.formatMoney;
@@ -57,7 +57,10 @@ public class DescriptionTab extends Fragment implements LoaderManager.LoaderCall
 
             // Poster
             ImageView poster = view.findViewById(R.id.poster);
-            NetworkUtils.loadImage(getContext(), poster, movie.getPosterUrl());
+            Picasso.with(getContext())
+                    .load(movie.getPosterUrl())
+                    .error(R.drawable.missing_cover)
+                    .into(poster);
 
             // Release date
             ((TextView) view.findViewById(R.id.release_date))

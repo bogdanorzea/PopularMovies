@@ -13,6 +13,7 @@ import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.ui.DetailsActivity;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,10 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.ViewHolder
 
         holder.itemView.setTag(movie);
 
-        NetworkUtils.loadImage(context, holder.coverImage, movie.getPosterUrl());
+        Picasso.with(context)
+                .load(movie.getPosterUrl())
+                .error(R.drawable.missing_cover)
+                .into(holder.coverImage);
     }
 
     @Override

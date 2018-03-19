@@ -31,32 +31,26 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
 
         Preference button = findPreference(getString(R.string.pref_clear_favorites_key));
-        button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == DialogInterface.BUTTON_POSITIVE) {
-                            ContentValues values = new ContentValues();
-                            values.put(MoviesContract.MovieEntry.COLUMN_NAME_FAVORITE, 0);
+        button.setOnPreferenceClickListener(preference -> {
+            DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+                if (which == DialogInterface.BUTTON_POSITIVE) {
+                    ContentValues values = new ContentValues();
+                    values.put(MoviesContract.MovieEntry.COLUMN_NAME_FAVORITE, 0);
 
-                            getContext().getContentResolver().update(MoviesContract.CONTENT_URI, values, null, null);
-                        }
+                    getContext().getContentResolver().update(MoviesContract.CONTENT_URI, values, null, null);
+                }
 
-                        dialog.dismiss();
-                    }
-                };
+                dialog.dismiss();
+            };
 
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setMessage(R.string.confirm_clear_favorites)
-                        .setPositiveButton(R.string.button_yes, dialogClickListener)
-                        .setNegativeButton(R.string.button_no, dialogClickListener)
-                        .show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setMessage(R.string.confirm_clear_favorites)
+                    .setPositiveButton(R.string.button_yes, dialogClickListener)
+                    .setNegativeButton(R.string.button_no, dialogClickListener)
+                    .show();
 
-                return true;
-            }
+            return true;
         });
     }
 
