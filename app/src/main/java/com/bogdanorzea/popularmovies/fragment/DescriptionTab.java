@@ -62,7 +62,7 @@ public class DescriptionTab extends Fragment implements LoaderManager.LoaderCall
             if (image != null) {
                 poster.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
             } else {
-                NetworkUtils.loadPoster(getContext(), poster, movie.posterPath);
+                NetworkUtils.loadImage(getContext(), poster, movie.getPosterUrl());
             }
 
             // Release date

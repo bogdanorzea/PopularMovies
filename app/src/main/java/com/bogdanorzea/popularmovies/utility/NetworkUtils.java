@@ -161,18 +161,15 @@ public class NetworkUtils {
     }
 
     /**
-     * Builds the full path from a relative image and loads it in the ImageView
+     * Loads the imageUrl into the ImageView
      *
      * @param context
      * @param imageView
-     * @param relativeImagePath
+     * @param imageUrl
      */
-    // TODO Refactor this method to have as input full image path
-    public static void loadPoster(Context context, ImageView imageView, String relativeImagePath) {
-        String completeImagePath = posterFullPath(relativeImagePath);
-
+    public static void loadImage(Context context, ImageView imageView, String imageUrl) {
         Picasso.with(context)
-                .load(completeImagePath)
+                .load(imageUrl)
                 .error(R.drawable.missing_cover)
                 .into(imageView);
     }

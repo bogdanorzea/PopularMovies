@@ -196,7 +196,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
             if (image != null) {
                 backdrop.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
             } else {
-                NetworkUtils.loadPoster(this, backdrop, movie.backdropPath);
+                NetworkUtils.loadImage(this, backdrop, movie.getBackdropUrl());
             }
         }
     }

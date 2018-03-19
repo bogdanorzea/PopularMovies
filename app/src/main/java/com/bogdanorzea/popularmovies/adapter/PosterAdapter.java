@@ -45,7 +45,7 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.ViewHolder
         if (image != null) {
             holder.coverImage.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.length));
         } else {
-            NetworkUtils.loadPoster(context, holder.coverImage, movie.posterPath);
+            NetworkUtils.loadImage(context, holder.coverImage, movie.getPosterUrl());
         }
     }
 
