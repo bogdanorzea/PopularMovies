@@ -24,6 +24,10 @@ public class CastAdapter extends ArrayAdapter<Cast> {
         this.mCast = cast;
     }
 
+    public List<Cast> getCast() {
+        return mCast;
+    }
+
     @Override
     public int getCount() {
         if (mCast == null) {
@@ -63,5 +67,13 @@ public class CastAdapter extends ArrayAdapter<Cast> {
                 .into(profile);
 
         return view;
+    }
+
+    public void addCast(@NonNull List<Cast> data) {
+        int size = getCount();
+        mCast.addAll(data);
+
+        notifyDataSetChanged();
+
     }
 }
