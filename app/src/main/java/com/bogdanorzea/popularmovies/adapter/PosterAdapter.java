@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.ui.DetailsActivity;
-import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

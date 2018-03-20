@@ -1,7 +1,6 @@
 package com.bogdanorzea.popularmovies.utility;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 
 

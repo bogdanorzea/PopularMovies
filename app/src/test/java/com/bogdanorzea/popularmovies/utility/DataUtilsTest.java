@@ -34,13 +34,11 @@ public class DataUtilsTest {
     public void printGenres() throws Exception {
         Movie movie = new Movie();
         assertEquals(movie.printGenres(), "Unknown");
-        Genre g = new Genre();
-        g.name = "First";
+        Genre g = new Genre("First");
         movie.genres = new ArrayList<>();
         movie.genres.add(g);
         assertEquals(movie.printGenres(), "First");
-        Genre g2 = new Genre();
-        g2.name = "Second";
+        Genre g2 = new Genre("Second");
         movie.genres.add(g2);
         assertEquals(movie.printGenres(), "First, Second");
     }
