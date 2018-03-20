@@ -1,18 +1,32 @@
 package com.bogdanorzea.popularmovies.model.object;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.serjltt.moshi.adapters.FallbackOnNull;
 import com.squareup.moshi.Json;
 
 import java.util.List;
 
-public class Movie {
+import static com.bogdanorzea.popularmovies.utility.NetworkUtils.BACKDROP_SIZE;
+import static com.bogdanorzea.popularmovies.utility.NetworkUtils.IMAGE_BASE_URL;
+import static com.bogdanorzea.popularmovies.utility.NetworkUtils.POSTER_SIZE;
 
-    @Json(name = "adult")
-    public boolean adult;
+public class Movie implements Parcelable {
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
     @Json(name = "backdrop_path")
     public String backdropPath;
-    @Json(name = "belongs_to_collection")
-    public Object belongsToCollection;
     @Json(name = "budget")
     public int budget;
     @Json(name = "genres")
@@ -21,12 +35,6 @@ public class Movie {
     public String homepage;
     @Json(name = "id")
     public int id;
-    @Json(name = "imdb_id")
-    public String imdbId;
-    @Json(name = "original_language")
-    public String originalLanguage;
-    @Json(name = "original_title")
-    public String originalTitle;
     @Json(name = "overview")
     public String overview;
     @Json(name = "popularity")
@@ -40,21 +48,38 @@ public class Movie {
     @Json(name = "runtime")
     @FallbackOnNull(fallbackInt = -1)
     public int runtime;
-    @Json(name = "status")
-    public String status;
     @Json(name = "tagline")
     public String tagline;
     @Json(name = "title")
     public String title;
-    @Json(name = "video")
-    public boolean video;
     @Json(name = "vote_average")
     public double voteAverage;
     @Json(name = "vote_count")
     public int voteCount;
 
-    public byte[] backdropImage;
-    public byte[] posterImage;
+    public int favorite;
+
+    public Movie() {
+    }
+
+    protected Movie(Parcel in) {
+        backdropPath = in.readString();
+        budget = in.readInt();
+        genres = in.createTypedArrayList(Genre.CREATOR);
+        homepage = in.readString();
+        id = in.readInt();
+        overview = in.readString();
+        popularity = in.readDouble();
+        posterPath = in.readString();
+        releaseDate = in.readString();
+        revenue = in.readLong();
+        runtime = in.readInt();
+        tagline = in.readString();
+        title = in.readString();
+        voteAverage = in.readDouble();
+        voteCount = in.readInt();
+        favorite = in.readInt();
+    }
 
     public String printGenres() {
         if (genres != null && genres.size() > 0) {
@@ -76,4 +101,42 @@ public class Movie {
 
         return "";
     }
+
+    public String getBackdropUrl() {
+        return IMAGE_BASE_URL + BACKDROP_SIZE + backdropPath;
+    }
+
+    public String getPosterUrl() {
+        return IMAGE_BASE_URL + POSTER_SIZE + posterPath;
+    }
+
+    public boolean isFavorite() {
+        return favorite == 1;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(backdropPath);
+        parcel.writeInt(budget);
+        parcel.writeTypedList(genres);
+        parcel.writeString(homepage);
+        parcel.writeInt(id);
+        parcel.writeString(overview);
+        parcel.writeDouble(popularity);
+        parcel.writeString(posterPath);
+        parcel.writeString(releaseDate);
+        parcel.writeLong(revenue);
+        parcel.writeInt(runtime);
+        parcel.writeString(tagline);
+        parcel.writeString(title);
+        parcel.writeDouble(voteAverage);
+        parcel.writeInt(voteCount);
+        parcel.writeInt(favorite);
+    }
+
 }

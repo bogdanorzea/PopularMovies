@@ -97,7 +97,7 @@ public class MovieProvider extends ContentProvider {
         }
 
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        long newRowId = db.insert(MovieEntry.TABLE_NAME, null, contentValues);
+        long newRowId = db.insertWithOnConflict(MovieEntry.TABLE_NAME, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
 
         if (newRowId < 0) {
             Timber.e("Failed to insert %s for Uri %s", movieId, uri);

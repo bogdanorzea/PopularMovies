@@ -1,5 +1,6 @@
 package com.bogdanorzea.popularmovies.fragment;
 
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,9 +12,7 @@ import android.support.v7.preference.PreferenceGroup;
 import android.support.v7.preference.PreferenceScreen;
 
 import com.bogdanorzea.popularmovies.R;
-import com.bogdanorzea.popularmovies.data.RepositoryMovie;
-import com.bogdanorzea.popularmovies.data.RepositoryMovieSQLite;
-import com.bogdanorzea.popularmovies.model.object.Movie;
+import com.bogdanorzea.popularmovies.data.MoviesContract;
 
 public class SettingsFragment extends PreferenceFragmentCompat
         implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -32,31 +31,26 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
 
         Preference button = findPreference(getString(R.string.pref_clear_favorites_key));
-        button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == DialogInterface.BUTTON_POSITIVE){
-                            RepositoryMovie<Movie> repository = new RepositoryMovieSQLite(getContext());
+        button.setOnPreferenceClickListener(preference -> {
+            DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+                if (which == DialogInterface.BUTTON_POSITIVE) {
+                    ContentValues values = new ContentValues();
+                    values.put(MoviesContract.MovieEntry.COLUMN_NAME_FAVORITE, 0);
 
-                            repository.deleteAll();
-                        }
+                    getContext().getContentResolver().update(MoviesContract.CONTENT_URI, values, null, null);
+                }
 
-                        dialog.dismiss();
-                    }
-                };
+                dialog.dismiss();
+            };
 
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setMessage(R.string.confirm_clear_favorites)
-                        .setPositiveButton(R.string.button_yes, dialogClickListener)
-                        .setNegativeButton(R.string.button_no, dialogClickListener)
-                        .show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setMessage(R.string.confirm_clear_favorites)
+                    .setPositiveButton(R.string.button_yes, dialogClickListener)
+                    .setNegativeButton(R.string.button_no, dialogClickListener)
+                    .show();
 
-                return true;
-            }
+            return true;
         });
     }
 

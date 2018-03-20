@@ -1,14 +1,13 @@
 package com.bogdanorzea.popularmovies.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bogdanorzea.popularmovies.R;
@@ -19,77 +18,74 @@ import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 import com.wang.avi.AVLoadingIndicatorView;
 
-import static com.bogdanorzea.popularmovies.utility.NetworkUtils.getYoutubeVideoUri;
+import java.util.ArrayList;
+import java.util.List;
 
 public class VideosTab extends Fragment {
-    private int mMovieId = -1;
+    private static final String SAVED_LIST = "saved_list";
     private AVLoadingIndicatorView mAvi;
     private TextView warningTextView;
-    private AsyncTaskUtils.RequestTaskListener<VideosResponse> mRequestTaskListener =
-            new AsyncTaskUtils.RequestTaskListener<VideosResponse>() {
-                @Override
-                public void onTaskStarting() {
-                    showProgress();
-                }
-
-                @Override
-                public void onTaskComplete(VideosResponse result) {
-                    hideProgress();
-                    displayVideos(result);
-                }
-            };
+    private VideosAdapter mAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.layout_list_view, container, false);
+        View view = inflater.inflate(R.layout.layout_recycler_view, container, false);
         mAvi = view.findViewById(R.id.avi);
         warningTextView = view.findViewById(R.id.warning);
 
-        if (getArguments() != null) {
-            mMovieId = getArguments().getInt("movie_id");
+        RecyclerView mRecyclerView = view.findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setHasFixedSize(true);
+        mAdapter = new VideosAdapter(getActivity());
+
+        mRecyclerView.setAdapter(mAdapter);
+
+        if (savedInstanceState != null) {
+            ArrayList<Video> videos = savedInstanceState.getParcelableArrayList(SAVED_LIST);
+
+            displayVideos(videos);
+        } else {
+            if (getArguments() != null) {
+                int movieId = getArguments().getInt("movie_id");
+
+                if (NetworkUtils.hasInternetConnection(getContext())) {
+                    AsyncTaskUtils.RequestTaskListener<VideosResponse> mRequestTaskListener =
+                            new AsyncTaskUtils.RequestTaskListener<VideosResponse>() {
+                                @Override
+                                public void onTaskStarting() {
+                                    showProgress();
+                                }
+
+                                @Override
+                                public void onTaskComplete(VideosResponse result) {
+                                    hideProgress();
+                                    displayVideos(result.results);
+                                }
+                            };
+
+                    new AsyncTaskUtils.RequestTask<>(mRequestTaskListener, VideosResponse.class)
+                            .execute(NetworkUtils.movieVideosUrl(movieId));
+                } else {
+                    displayWarning(getString(R.string.warning_no_internet));
+                }
+            }
         }
 
         return view;
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (mMovieId != -1) {
-            if (NetworkUtils.hasInternetConnection(getContext())) {
-                new AsyncTaskUtils.RequestTask<>(mRequestTaskListener, VideosResponse.class)
-                        .execute(NetworkUtils.movieVideosUrl(mMovieId));
-            } else {
-                displayWarning(getString(R.string.warning_no_internet));
-            }
-        }
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(SAVED_LIST, (ArrayList<Video>) mAdapter.getVideos());
     }
 
-    private void displayVideos(VideosResponse result) {
-        View view = getView();
-        if (view == null) {
-            return;
-        }
-
-        if (result.results.isEmpty()){
+    private void displayVideos(List<Video> list) {
+        if (list.isEmpty()) {
             displayWarning(getString(R.string.warning_no_data));
+        } else {
+            mAdapter.addVideos(list);
         }
-
-        ListView reviewsListView = view.findViewById(R.id.list);
-        ViewCompat.setNestedScrollingEnabled(reviewsListView, true);
-
-        VideosAdapter videosAdapter = new VideosAdapter(getActivity(), result.results);
-
-        reviewsListView.setAdapter(videosAdapter);
-
-        reviewsListView.setOnItemClickListener((adapterView, view1, position, id) -> {
-            Video video = (Video) adapterView.getItemAtPosition(position);
-
-            if (video.site.equalsIgnoreCase("YouTube")) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, getYoutubeVideoUri(video.key));
-                startActivity(intent);
-            }
-        });
     }
 
     private void showProgress() {
@@ -104,4 +100,5 @@ public class VideosTab extends Fragment {
         warningTextView.setVisibility(View.VISIBLE);
         warningTextView.setText(message);
     }
+
 }

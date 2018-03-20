@@ -11,7 +11,7 @@ import java.io.IOException;
 
 import okhttp3.HttpUrl;
 
-public class AsyncTaskUtils {
+public abstract class AsyncTaskUtils {
 
     /**
      * Interface separation between AsyncTask and Activities
