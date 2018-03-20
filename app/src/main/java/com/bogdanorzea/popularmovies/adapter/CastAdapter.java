@@ -23,7 +23,7 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.ViewHolder> {
 
     public CastAdapter(@NonNull Context context) {
         this.context = context;
-        mCast = new ArrayList<>();
+        this.mCast = new ArrayList<>();
     }
 
     public List<Cast> getCast() {
