@@ -3,11 +3,11 @@ package com.bogdanorzea.popularmovies.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bogdanorzea.popularmovies.R;
@@ -29,9 +29,16 @@ public class CastTab extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.layout_list_view, container, false);
+        View view = inflater.inflate(R.layout.layout_recycler_view, container, false);
         mAvi = view.findViewById(R.id.avi);
         warningTextView = view.findViewById(R.id.warning);
+
+        RecyclerView mRecyclerView = view.findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setHasFixedSize(true);
+        mCastAdapter = new CastAdapter(getActivity());
+
+        mRecyclerView.setAdapter(mCastAdapter);
 
         if (savedInstanceState != null) {
             ArrayList<Cast> castList = savedInstanceState.getParcelableArrayList("cast_list");
@@ -75,22 +82,12 @@ public class CastTab extends Fragment {
     }
 
     private void displayCredits(List<Cast> castList) {
-        View view = getView();
-        if (view == null) {
-            return;
-        }
-
-        ListView listView = view.findViewById(R.id.list);
-        ViewCompat.setNestedScrollingEnabled(listView, true);
-
         if (castList.isEmpty()) {
             displayWarning(getString(R.string.warning_no_data));
+        } else {
+            mCastAdapter.addCast(castList);
         }
 
-        mCastAdapter = new CastAdapter(getActivity(), castList);
-
-        listView.setAdapter(mCastAdapter);
-        mCastAdapter.notifyDataSetChanged();
     }
 
     private void showProgress() {
