@@ -41,9 +41,9 @@ public class VideosTab extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
 
         if (savedInstanceState != null) {
-            ArrayList<Video> videoList = savedInstanceState.getParcelableArrayList(SAVED_LIST);
+            ArrayList<Video> videos = savedInstanceState.getParcelableArrayList(SAVED_LIST);
 
-            displayVideos(videoList);
+            displayVideos(videos);
         } else {
             if (getArguments() != null) {
                 int movieId = getArguments().getInt("movie_id");
@@ -70,7 +70,6 @@ public class VideosTab extends Fragment {
                 }
             }
         }
-
 
         return view;
     }
@@ -101,4 +100,5 @@ public class VideosTab extends Fragment {
         warningTextView.setVisibility(View.VISIBLE);
         warningTextView.setText(message);
     }
+
 }

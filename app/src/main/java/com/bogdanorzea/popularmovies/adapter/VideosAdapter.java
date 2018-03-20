@@ -78,6 +78,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.ViewHolder
 
             title = view.findViewById(R.id.text);
             thumbnail = view.findViewById(R.id.image);
+
             view.setOnClickListener(this);
         }
 
