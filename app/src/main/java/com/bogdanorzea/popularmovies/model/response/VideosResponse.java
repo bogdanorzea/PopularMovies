@@ -1,6 +1,6 @@
 package com.bogdanorzea.popularmovies.model.response;
 
-import com.bogdanorzea.popularmovies.model.objects.Video;
+import com.bogdanorzea.popularmovies.model.object.Video;
 import com.squareup.moshi.Json;
 
 import java.util.List;

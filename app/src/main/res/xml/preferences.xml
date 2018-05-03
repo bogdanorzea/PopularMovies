@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="Display movies order">
+    <PreferenceCategory android:title="Favorite movies">
 
         <ListPreference
             android:defaultValue="@string/pref_sort_by_popularity"
@@ -9,12 +9,8 @@
             android:key="@string/pref_sort_by"
             android:title="@string/pref_sort_by_label" />
 
-        <ListPreference
-            android:defaultValue="@string/pref_sort_order_desc"
-            android:entries="@array/pref_sort_order_labels"
-            android:entryValues="@array/pref_sort_order"
-            android:key="@string/pref_sort_order"
-            android:title="@string/pref_sort_order_label" />
+        <Preference android:title="@string/pref_clear_favorites_label"
+            android:key="@string/pref_clear_favorites_key"/>
 
     </PreferenceCategory>
 

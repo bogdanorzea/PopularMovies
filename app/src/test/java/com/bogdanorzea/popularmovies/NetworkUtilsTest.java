@@ -1,6 +1,6 @@
 package com.bogdanorzea.popularmovies;
 
-import com.bogdanorzea.popularmovies.utils.NetworkUtils;
+import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 
 import junit.framework.Assert;
 
@@ -14,12 +14,33 @@ public class NetworkUtilsTest {
     }
 
     @Test
-    public void movieDiscoverUrl() throws Exception {
-        Assert.assertEquals(NetworkUtils.movieDiscoverUrl(1).toString(), "https://api.themoviedb.org/3/discover/movie?page=1&sort_by=popularity.desc&api_key=" + BuildConfig.TheMovieDBApiKey);
+    public void moviePopularUrl() throws Exception {
+        Assert.assertEquals(NetworkUtils.moviePopularUrl(1).toString(), "https://api.themoviedb.org/3/movie/popular?page=1&api_key=" + BuildConfig.TheMovieDBApiKey);
+    }
+
+    @Test
+    public void movieTopRatedUrl() throws Exception {
+        Assert.assertEquals(NetworkUtils.movieTopRatedUrl(1).toString(), "https://api.themoviedb.org/3/movie/top_rated?page=1&api_key=" + BuildConfig.TheMovieDBApiKey);
+    }
+
+    @Test
+    public void movieReviewsUrl() throws Exception {
+        Assert.assertEquals(NetworkUtils.movieReviewsUrl(550, 1).toString(), "https://api.themoviedb.org/3/movie/550/reviews?page=1&api_key=" + BuildConfig.TheMovieDBApiKey);
+    }
+
+    @Test
+    public void movieCreditsUrl() throws Exception {
+        Assert.assertEquals(NetworkUtils.movieCreditsUrl(550).toString(), "https://api.themoviedb.org/3/movie/550/credits?api_key=" + BuildConfig.TheMovieDBApiKey);
     }
 
     @Test
     public void movieVideosUrl() throws Exception {
         Assert.assertEquals(NetworkUtils.movieVideosUrl(550).toString(), "https://api.themoviedb.org/3/movie/550/videos?api_key=" + BuildConfig.TheMovieDBApiKey);
+    }
+
+    @Test
+    public void movieSearchUrl() throws Exception {
+        Assert.assertEquals(NetworkUtils.movieSearchUrl("Jack").toString(), "https://api.themoviedb.org/3/search/movie?query=Jack&api_key=" + BuildConfig.TheMovieDBApiKey);
+        Assert.assertEquals(NetworkUtils.movieSearchUrl("Jack Reacher").toString(), "https://api.themoviedb.org/3/search/movie?query=Jack%20Reacher&api_key=" + BuildConfig.TheMovieDBApiKey);
     }
 }

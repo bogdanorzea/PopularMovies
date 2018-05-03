@@ -1,12 +1,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.bogdanorzea.popularmovies.DetailsActivity">
+    tools:context="com.bogdanorzea.popularmovies.ui.DetailsActivity">
 
     <item
         android:id="@+id/action_favorite"
+        android:icon="@drawable/ic_favorite_border_white_24dp"
         android:orderInCategory="100"
         android:title="@string/action_favorite"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_homepage"
+        android:icon="@drawable/ic_public_white_24dp"
+        android:orderInCategory="300"
+        android:title="@string/action_homepage"
+        app:showAsAction="ifRoom" />
 
 </menu>
