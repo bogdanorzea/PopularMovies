@@ -31,6 +31,7 @@ public class FavoritesTab extends Fragment
     private static final String DESC = " DESC";
     private static final int LOADER_ID = 0;
     private RecyclerView mRecyclerView;
+    private PosterAdapter mAdapter;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -66,7 +67,7 @@ public class FavoritesTab extends Fragment
 
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-        PosterAdapter mAdapter = new PosterAdapter(getContext());
+        mAdapter = new PosterAdapter(getContext());
 
         List<Movie> moviesIds = new ArrayList<>();
         if (data != null) {
