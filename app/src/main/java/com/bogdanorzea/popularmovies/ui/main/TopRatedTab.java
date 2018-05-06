@@ -1,4 +1,4 @@
-package com.bogdanorzea.popularmovies.fragment;
+package com.bogdanorzea.popularmovies.ui.main;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.R;
-import com.bogdanorzea.popularmovies.adapter.PosterAdapter;
 import com.bogdanorzea.popularmovies.data.MoviesContract;
 import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.model.response.MoviesResponse;

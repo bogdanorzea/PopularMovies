@@ -1,4 +1,4 @@
-package com.bogdanorzea.popularmovies.fragment;
+package com.bogdanorzea.popularmovies.ui.details;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,9 +11,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bogdanorzea.popularmovies.R;
-import com.bogdanorzea.popularmovies.adapter.CastAdapter;
-import com.bogdanorzea.popularmovies.model.object.Cast;
-import com.bogdanorzea.popularmovies.model.response.CreditsResponse;
+import com.bogdanorzea.popularmovies.model.object.Review;
+import com.bogdanorzea.popularmovies.model.response.ReviewsResponse;
 import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -21,12 +20,11 @@ import com.wang.avi.AVLoadingIndicatorView;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class CastTab extends Fragment {
+public class ReviewsTab extends Fragment {
     private static final String SAVED_LIST = "saved_list";
     private AVLoadingIndicatorView mAvi;
     private TextView warningTextView;
-    private CastAdapter mAdapter;
+    private ReviewsAdapter mAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -37,41 +35,40 @@ public class CastTab extends Fragment {
         RecyclerView mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setHasFixedSize(true);
-        mAdapter = new CastAdapter(getActivity());
+        mAdapter = new ReviewsAdapter(getActivity());
 
         mRecyclerView.setAdapter(mAdapter);
 
         if (savedInstanceState != null) {
-            ArrayList<Cast> castList = savedInstanceState.getParcelableArrayList(SAVED_LIST);
+            ArrayList<Review> reviews = savedInstanceState.getParcelableArrayList(SAVED_LIST);
 
-            displayCredits(castList);
+            displayReviews(reviews);
         } else {
             if (getArguments() != null) {
                 int movieId = getArguments().getInt("movie_id");
 
                 if (NetworkUtils.hasInternetConnection(getContext())) {
-                    AsyncTaskUtils.RequestTaskListener<CreditsResponse> mRequestTaskListener =
-                            new AsyncTaskUtils.RequestTaskListener<CreditsResponse>() {
+                    AsyncTaskUtils.RequestTaskListener<ReviewsResponse> mRequestTaskListener =
+                            new AsyncTaskUtils.RequestTaskListener<ReviewsResponse>() {
                                 @Override
                                 public void onTaskStarting() {
                                     showProgress();
                                 }
 
                                 @Override
-                                public void onTaskComplete(CreditsResponse result) {
+                                public void onTaskComplete(ReviewsResponse result) {
                                     hideProgress();
-                                    displayCredits(result.cast);
+                                    displayReviews(result.results);
                                 }
                             };
 
-                    new AsyncTaskUtils.RequestTask<>(mRequestTaskListener, CreditsResponse.class)
-                            .execute(NetworkUtils.movieCreditsUrl(movieId));
+                    new AsyncTaskUtils.RequestTask<>(mRequestTaskListener, ReviewsResponse.class)
+                            .execute(NetworkUtils.movieReviewsUrl(movieId, 1));
                 } else {
                     displayWarning(getString(R.string.warning_no_internet));
                 }
             }
         }
-
 
         return view;
     }
@@ -79,14 +76,14 @@ public class CastTab extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(SAVED_LIST, (ArrayList<Cast>) mAdapter.getCast());
+        outState.putParcelableArrayList(SAVED_LIST, (ArrayList<Review>) mAdapter.getReviews());
     }
 
-    private void displayCredits(List<Cast> list) {
+    private void displayReviews(List<Review> list) {
         if (list.isEmpty()) {
             displayWarning(getString(R.string.warning_no_data));
         } else {
-            mAdapter.addCast(list);
+            mAdapter.addReviews(list);
         }
     }
 
@@ -102,4 +99,5 @@ public class CastTab extends Fragment {
         warningTextView.setVisibility(View.VISIBLE);
         warningTextView.setText(message);
     }
+
 }

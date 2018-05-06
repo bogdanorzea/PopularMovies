@@ -1,4 +1,4 @@
-package com.bogdanorzea.popularmovies.fragment;
+package com.bogdanorzea.popularmovies.ui.details;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bogdanorzea.popularmovies.R;
-import com.bogdanorzea.popularmovies.adapter.VideosAdapter;
 import com.bogdanorzea.popularmovies.model.object.Video;
 import com.bogdanorzea.popularmovies.model.response.VideosResponse;
 import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;

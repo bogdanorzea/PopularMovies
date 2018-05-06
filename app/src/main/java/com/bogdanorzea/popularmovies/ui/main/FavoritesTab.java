@@ -1,4 +1,4 @@
-package com.bogdanorzea.popularmovies.fragment;
+package com.bogdanorzea.popularmovies.ui.main;
 
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bogdanorzea.popularmovies.R;
-import com.bogdanorzea.popularmovies.adapter.PosterAdapter;
 import com.bogdanorzea.popularmovies.data.MovieMapper;
 import com.bogdanorzea.popularmovies.data.MoviesContract;
 import com.bogdanorzea.popularmovies.model.object.Movie;

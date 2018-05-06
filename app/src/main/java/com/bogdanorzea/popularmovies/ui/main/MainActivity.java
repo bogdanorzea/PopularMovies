@@ -1,4 +1,4 @@
-package com.bogdanorzea.popularmovies.ui;
+package com.bogdanorzea.popularmovies.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,10 +11,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.bogdanorzea.popularmovies.R;
-import com.bogdanorzea.popularmovies.adapter.PagerAdapter;
-import com.bogdanorzea.popularmovies.fragment.FavoritesTab;
-import com.bogdanorzea.popularmovies.fragment.PopularTab;
-import com.bogdanorzea.popularmovies.fragment.TopRatedTab;
+import com.bogdanorzea.popularmovies.ui.PagerAdapter;
+import com.bogdanorzea.popularmovies.ui.settings.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.bogdanorzea.popularmovies.ui;
+package com.bogdanorzea.popularmovies.ui.settings;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

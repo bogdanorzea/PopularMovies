@@ -1,4 +1,4 @@
-package com.bogdanorzea.popularmovies.fragment;
+package com.bogdanorzea.popularmovies.ui.details;
 
 import android.database.Cursor;
 import android.net.Uri;

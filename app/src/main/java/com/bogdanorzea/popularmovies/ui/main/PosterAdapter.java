@@ -1,4 +1,4 @@
-package com.bogdanorzea.popularmovies.adapter;
+package com.bogdanorzea.popularmovies.ui.main;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +11,7 @@ import android.widget.ImageView;
 
 import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.model.object.Movie;
-import com.bogdanorzea.popularmovies.ui.DetailsActivity;
+import com.bogdanorzea.popularmovies.ui.details.DetailsActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

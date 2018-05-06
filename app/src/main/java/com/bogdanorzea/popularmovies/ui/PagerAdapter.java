@@ -1,4 +1,4 @@
-package com.bogdanorzea.popularmovies.adapter;
+package com.bogdanorzea.popularmovies.ui;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

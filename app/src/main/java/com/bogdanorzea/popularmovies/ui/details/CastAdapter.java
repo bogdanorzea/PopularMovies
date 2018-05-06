@@ -1,4 +1,4 @@
-package com.bogdanorzea.popularmovies.adapter;
+package com.bogdanorzea.popularmovies.ui.details;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

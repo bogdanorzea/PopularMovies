@@ -1,4 +1,4 @@
-package com.bogdanorzea.popularmovies.fragment;
+package com.bogdanorzea.popularmovies.ui.settings;
 
 import android.content.ContentValues;
 import android.content.DialogInterface;

@@ -1,4 +1,4 @@
-package com.bogdanorzea.popularmovies.ui;
+package com.bogdanorzea.popularmovies.ui.details;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -26,14 +26,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.R;
-import com.bogdanorzea.popularmovies.adapter.PagerAdapter;
 import com.bogdanorzea.popularmovies.data.MovieMapper;
 import com.bogdanorzea.popularmovies.data.MoviesContract;
-import com.bogdanorzea.popularmovies.fragment.CastTab;
-import com.bogdanorzea.popularmovies.fragment.DescriptionTab;
-import com.bogdanorzea.popularmovies.fragment.ReviewsTab;
-import com.bogdanorzea.popularmovies.fragment.VideosTab;
 import com.bogdanorzea.popularmovies.model.object.Movie;
+import com.bogdanorzea.popularmovies.ui.PagerAdapter;
 import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
 import com.bogdanorzea.popularmovies.utility.FragmentUtils;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
