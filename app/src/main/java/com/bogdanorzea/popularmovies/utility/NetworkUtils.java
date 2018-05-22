@@ -175,7 +175,7 @@ public abstract class NetworkUtils {
         return (activeNetwork != null && activeNetwork.isConnectedOrConnecting());
     }
 
-    public static HttpUrl movieSearchUrl(String queryString) {
+    public static HttpUrl movieSearchUrl(String queryString, int pageNumber) {
         return new HttpUrl.Builder()
                 .scheme(HTTPS)
                 .host(HOST)
@@ -183,6 +183,7 @@ public abstract class NetworkUtils {
                 .addPathSegment(SEARCH)
                 .addPathSegment(MOVIE)
                 .addQueryParameter(QUERY, queryString)
+                .addQueryParameter(PAGE, String.valueOf(pageNumber))
                 .addQueryParameter(API_KEY, BuildConfig.TheMovieDBApiKey)
                 .build();
     }

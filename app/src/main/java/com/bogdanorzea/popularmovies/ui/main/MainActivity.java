@@ -1,10 +1,14 @@
 package com.bogdanorzea.popularmovies.ui.main;
 
+import android.app.SearchManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,6 +16,7 @@ import android.view.MenuItem;
 
 import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.ui.PagerAdapter;
+import com.bogdanorzea.popularmovies.ui.search.SearchActivity;
 import com.bogdanorzea.popularmovies.ui.settings.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,6 +46,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        ComponentName componentName = new ComponentName(this, SearchActivity.class);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName));
 
         return true;
     }
