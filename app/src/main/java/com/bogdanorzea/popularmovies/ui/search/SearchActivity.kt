@@ -37,22 +37,23 @@ class SearchActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        recyclerView = findViewById(R.id.recycler_view)
-        recyclerView.layoutManager = GridLayoutManager(this, 2)
-        recyclerView.setHasFixedSize(true)
-        recyclerView.adapter = posterAdapter
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-
-                if (!recyclerView.canScrollVertically(1) && !isLoading) {
-                    loadNextPage()
-                }
-            }
-        })
-
         avLoadingIndicatorView = findViewById(R.id.avi)
         warningTextView = findViewById(R.id.warning)
+        recyclerView = findViewById(R.id.recycler_view)
+        with(recyclerView) {
+            layoutManager = GridLayoutManager(this@SearchActivity, 2)
+            setHasFixedSize(true)
+            adapter = posterAdapter
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+
+                    if (!recyclerView.canScrollVertically(1) && !isLoading) {
+                        loadNextPage()
+                    }
+                }
+            })
+        }
 
         handleIntent(intent)
     }
@@ -65,7 +66,7 @@ class SearchActivity : AppCompatActivity() {
     private fun handleIntent(intent: Intent) {
         if (Intent.ACTION_SEARCH == intent.action) {
             query = intent.getStringExtra(SearchManager.QUERY)
-            Timber.d("I started because someone searched for: %s", query)
+            Timber.d("Search query is: %s", query)
 
             loadNextPage()
         }
