@@ -3,9 +3,9 @@ package com.bogdanorzea.popularmovies.utility;
 
 import android.os.AsyncTask;
 
-import com.serjltt.moshi.adapters.FallbackOnNull;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory;
 
 import java.io.IOException;
 
@@ -54,7 +54,7 @@ public abstract class AsyncTaskUtils {
             }
 
             Moshi moshi = new Moshi.Builder()
-                    .add(FallbackOnNull.ADAPTER_FACTORY)
+                    .add(new KotlinJsonAdapterFactory())
                     .build();
             JsonAdapter<T> jsonAdapter = moshi.adapter(classType);
 

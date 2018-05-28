@@ -58,7 +58,7 @@ public class ReviewsTab extends Fragment {
                                 @Override
                                 public void onTaskComplete(ReviewsResponse result) {
                                     hideProgress();
-                                    displayReviews(result.results);
+                                    displayReviews(result.getResults());
                                 }
                             };
 

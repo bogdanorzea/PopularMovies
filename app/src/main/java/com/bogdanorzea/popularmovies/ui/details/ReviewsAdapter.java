@@ -61,8 +61,8 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
 
         holder.itemView.setTag(currentReview);
 
-        holder.author.setText(currentReview.author);
-        holder.description.setText(currentReview.content);
+        holder.author.setText(currentReview.getAuthor());
+        holder.description.setText(currentReview.getContent());
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -85,10 +85,10 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
 
             Review review = (Review) itemView.getTag();
 
-            if (!TextUtils.isEmpty(review.url)) {
+            if (!TextUtils.isEmpty(review.getUrl())) {
                 CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
                 CustomTabsIntent customTabsIntent = builder.build();
-                customTabsIntent.launchUrl(context, Uri.parse(review.url));
+                customTabsIntent.launchUrl(context, Uri.parse(review.getUrl()));
             } else {
                 Toast.makeText(context, "Couldn't find the review url", Toast.LENGTH_SHORT).show();
             }

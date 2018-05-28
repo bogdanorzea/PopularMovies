@@ -67,27 +67,27 @@ public class DescriptionTab extends Fragment implements LoaderManager.LoaderCall
                     .setText(DataUtils.addParenthesis(movie.getYear()));
 
             // Title
-            ((TextView) view.findViewById(R.id.title)).setText(movie.title);
+            ((TextView) view.findViewById(R.id.title)).setText(movie.getTitle());
 
             // Tagline
             ((TextView) view.findViewById(R.id.tagline)).setText(
-                    DataUtils.quoteString(movie.tagline));
+                    DataUtils.quoteString(movie.getTagline()));
 
             // Overview
-            ((TextView) view.findViewById(R.id.overview)).setText(movie.overview);
+            ((TextView) view.findViewById(R.id.overview)).setText(movie.getOverview());
 
             // Score
             ((RatingBar) view.findViewById(R.id.score))
-                    .setRating((float) movie.voteAverage / 2);
+                    .setRating((float) movie.getVoteAverage() / 2);
 
             // Runtime
-            ((TextView) view.findViewById(R.id.runtime)).setText(formatDuration(movie.runtime));
+            ((TextView) view.findViewById(R.id.runtime)).setText(formatDuration(movie.getRuntime()));
 
             // Budget
-            ((TextView) view.findViewById(R.id.budget)).setText(formatMoney(movie.budget));
+            ((TextView) view.findViewById(R.id.budget)).setText(formatMoney(movie.getBudget()));
 
             // Revenue
-            ((TextView) view.findViewById(R.id.revenue)).setText(formatMoney(movie.revenue));
+            ((TextView) view.findViewById(R.id.revenue)).setText(formatMoney(movie.getRevenue()));
 
             // Genre
             ((TextView) view.findViewById(R.id.genre)).setText(movie.printGenres());

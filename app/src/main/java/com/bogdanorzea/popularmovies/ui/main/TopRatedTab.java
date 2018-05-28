@@ -95,9 +95,9 @@ public class TopRatedTab extends Fragment {
                         public void onTaskComplete(MoviesResponse moviesResponse) {
                             if (moviesResponse != null) {
 
-                                mAdapter.addMovies(moviesResponse.results);
+                                mAdapter.addMovies(moviesResponse.getResults());
 
-                                for (Movie movie : moviesResponse.results) {
+                                for (Movie movie : moviesResponse.getResults()) {
                                     getContext().getContentResolver().insert(MoviesContract.CONTENT_URI, toContentValues(movie));
                                 }
 

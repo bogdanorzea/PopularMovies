@@ -143,17 +143,17 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
     private void toggleMovieFavoriteStatus() {
         if (mMovie != null) {
-            Uri movieUri = Uri.withAppendedPath(MoviesContract.CONTENT_URI, String.valueOf(mMovie.id));
+            Uri movieUri = Uri.withAppendedPath(MoviesContract.CONTENT_URI, String.valueOf(mMovie.getId()));
             if (mMovie.isFavorite()) {
                 changeFavoriteMenuItemResource(mMenu, R.drawable.ic_favorite_border_white_24dp);
-                mMovie.favorite = 0;
+                mMovie.setFavorite(0);
             } else {
                 changeFavoriteMenuItemResource(mMenu, R.drawable.ic_favorite_white_24dp);
-                mMovie.favorite = 1;
+                mMovie.setFavorite(1);
             }
 
             ContentValues contentValues = new ContentValues();
-            contentValues.put(MoviesContract.MovieEntry.COLUMN_NAME_FAVORITE, mMovie.favorite);
+            contentValues.put(MoviesContract.MovieEntry.COLUMN_NAME_FAVORITE, mMovie.getFavorite());
 
             getContentResolver().update(movieUri, contentValues, null, null);
         }
@@ -175,7 +175,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                             int rows = getContentResolver().update(movieUri, contentValues, null, null);
 
                             if (rows > 0)
-                                Timber.d("Movie \"%s\" (%s) successfully updated", movie.title, movie.id);
+                                Timber.d("Movie \"%s\" (%s) successfully updated", movie.getTitle(), movie.getId());
                         }
                     };
 
@@ -194,10 +194,10 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     }
 
     private void openMovieHomepage() {
-        if (mMovie != null && !TextUtils.isEmpty(mMovie.homepage)) {
+        if (mMovie != null && !TextUtils.isEmpty(mMovie.getHomepage())) {
             CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
             CustomTabsIntent customTabsIntent = builder.build();
-            customTabsIntent.launchUrl(DetailsActivity.this, Uri.parse(mMovie.homepage));
+            customTabsIntent.launchUrl(DetailsActivity.this, Uri.parse(mMovie.getHomepage()));
         } else {
             Toast.makeText(DetailsActivity.this, "Couldn't launch the movie's homepage", Toast.LENGTH_SHORT).show();
         }

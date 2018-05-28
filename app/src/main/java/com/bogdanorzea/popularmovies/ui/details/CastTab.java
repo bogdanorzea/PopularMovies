@@ -59,7 +59,7 @@ public class CastTab extends Fragment {
                                 @Override
                                 public void onTaskComplete(CreditsResponse result) {
                                     hideProgress();
-                                    displayCredits(result.cast);
+                                    displayCredits(result.getCast());
                                 }
                             };
 

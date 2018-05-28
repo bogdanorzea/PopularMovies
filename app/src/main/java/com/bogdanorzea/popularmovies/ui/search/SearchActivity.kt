@@ -84,10 +84,12 @@ class SearchActivity : AppCompatActivity() {
 
                 override fun onTaskComplete(moviesResponse: MoviesResponse?) {
                     if (moviesResponse != null) {
-                        posterAdapter.addMovies(moviesResponse.results)
+                        moviesResponse.results?.let {
+                            posterAdapter.addMovies(it)
+                        }
 
-                        for (movie in moviesResponse.results) {
-                            contentResolver.insert(MoviesContract.CONTENT_URI, toContentValues(movie))
+                        moviesResponse.results?.forEach {
+                            contentResolver.insert(MoviesContract.CONTENT_URI, toContentValues(it))
                         }
 
                         isLoading = false

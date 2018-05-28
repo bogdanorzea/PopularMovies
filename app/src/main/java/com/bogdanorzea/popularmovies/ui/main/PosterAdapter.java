@@ -87,7 +87,7 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.ViewHolder
             Movie currentMovie = (Movie) itemView.getTag();
 
             Intent intent = new Intent(context, DetailsActivity.class);
-            intent.putExtra(DetailsActivity.MOVIE_ID, currentMovie.id);
+            intent.putExtra(DetailsActivity.MOVIE_ID, currentMovie.getId());
             context.startActivity(intent);
         }
     }

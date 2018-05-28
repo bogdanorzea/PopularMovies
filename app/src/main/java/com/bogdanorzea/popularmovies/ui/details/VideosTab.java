@@ -58,7 +58,7 @@ public class VideosTab extends Fragment {
                                 @Override
                                 public void onTaskComplete(VideosResponse result) {
                                     hideProgress();
-                                    displayVideos(result.results);
+                                    displayVideos(result.getResults());
                                 }
                             };
 

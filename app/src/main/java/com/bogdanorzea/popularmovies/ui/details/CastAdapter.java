@@ -53,8 +53,8 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Cast castMember = mCast.get(position);
 
-        holder.name.setText(castMember.name);
-        holder.description.setText(castMember.character);
+        holder.name.setText(castMember.getName());
+        holder.description.setText(castMember.getCharacter());
 
         Picasso.with(context)
                 .load(castMember.getProfileUrl())

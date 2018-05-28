@@ -27,6 +27,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    androidExtensions {
+        experimental = true
+    }
 }
 
 dependencies {
@@ -49,9 +52,9 @@ dependencies {
 
     // Libraries
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
-    implementation 'com.squareup.moshi:moshi:1.5.0'
-    implementation 'com.serjltt.moshi:moshi-lazy-adapters:2.1'
-    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.squareup.moshi:moshi:1.6.0'
+    implementation 'com.squareup.moshi:moshi-kotlin:1.6.0'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.jakewharton.timber:timber:4.6.1'
 
     // Animations

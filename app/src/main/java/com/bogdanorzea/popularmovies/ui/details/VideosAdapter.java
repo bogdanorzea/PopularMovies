@@ -60,7 +60,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.ViewHolder
     public void onBindViewHolder(@NonNull VideosAdapter.ViewHolder holder, int position) {
         Video video = mVideos.get(position);
 
-        holder.title.setText(video.name);
+        holder.title.setText(video.getName());
         holder.itemView.setTag(video);
 
         Picasso.with(context)
