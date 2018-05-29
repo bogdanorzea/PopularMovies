@@ -17,13 +17,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bogdanorzea.popularmovies.R;
-import com.bogdanorzea.popularmovies.data.MovieMapper;
 import com.bogdanorzea.popularmovies.data.MoviesContract;
 import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.utility.DataUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.bogdanorzea.popularmovies.data.MovieMapperKt.toMovie;
 
 public class FavoritesTab extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -74,7 +75,7 @@ public class FavoritesTab extends Fragment
             for (int i = 0, size = data.getCount(); i < size; i++) {
                 data.moveToPosition(i);
 
-                moviesIds.add(MovieMapper.fromCursor(data));
+                moviesIds.add(toMovie(data));
             }
         }
 

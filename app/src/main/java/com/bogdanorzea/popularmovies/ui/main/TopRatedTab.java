@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 import okhttp3.HttpUrl;
 
-import static com.bogdanorzea.popularmovies.data.MovieMapper.toContentValues;
+import static com.bogdanorzea.popularmovies.data.MovieMapperKt.toContentValues;
 
 public class TopRatedTab extends Fragment {
 

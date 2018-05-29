@@ -26,7 +26,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bogdanorzea.popularmovies.R;
-import com.bogdanorzea.popularmovies.data.MovieMapper;
 import com.bogdanorzea.popularmovies.data.MoviesContract;
 import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.ui.PagerAdapter;
@@ -36,6 +35,9 @@ import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import timber.log.Timber;
+
+import static com.bogdanorzea.popularmovies.data.MovieMapperKt.toContentValues;
+import static com.bogdanorzea.popularmovies.data.MovieMapperKt.toMovie;
 
 public class DetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -115,7 +117,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         if (data.moveToFirst()) {
-            mMovie = MovieMapper.fromCursor(data);
+            mMovie = toMovie(data);
 
             loadBackdropImage();
         }
@@ -171,7 +173,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                         public void onTaskComplete(Movie movie) {
                             Uri movieUri = Uri.withAppendedPath(MoviesContract.CONTENT_URI, String.valueOf(movieId));
 
-                            ContentValues contentValues = MovieMapper.toContentValues(movie);
+                            ContentValues contentValues = toContentValues(movie);
                             int rows = getContentResolver().update(movieUri, contentValues, null, null);
 
                             if (rows > 0)

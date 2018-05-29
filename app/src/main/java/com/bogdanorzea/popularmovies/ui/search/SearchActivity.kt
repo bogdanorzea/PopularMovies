@@ -10,8 +10,8 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import com.bogdanorzea.popularmovies.R
-import com.bogdanorzea.popularmovies.data.MovieMapper.toContentValues
 import com.bogdanorzea.popularmovies.data.MoviesContract
+import com.bogdanorzea.popularmovies.data.toContentValues
 import com.bogdanorzea.popularmovies.model.response.MoviesResponse
 import com.bogdanorzea.popularmovies.ui.main.PosterAdapter
 import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils
@@ -89,7 +89,7 @@ class SearchActivity : AppCompatActivity() {
                         }
 
                         moviesResponse.results?.forEach {
-                            contentResolver.insert(MoviesContract.CONTENT_URI, toContentValues(it))
+                            contentResolver.insert(MoviesContract.CONTENT_URI, it.toContentValues())
                         }
 
                         isLoading = false
