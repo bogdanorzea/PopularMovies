@@ -20,6 +20,8 @@ import com.wang.avi.AVLoadingIndicatorView;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bogdanorzea.popularmovies.utility.NetworkUtilsKt.hasInternetConnection;
+
 
 public class CastTab extends Fragment {
     private static final String SAVED_LIST = "saved_list";
@@ -48,7 +50,7 @@ public class CastTab extends Fragment {
             if (getArguments() != null) {
                 int movieId = getArguments().getInt("movie_id");
 
-                if (NetworkUtils.hasInternetConnection(getContext())) {
+                if (hasInternetConnection(getContext())) {
                     AsyncTaskUtils.RequestTaskListener<CreditsResponse> mRequestTaskListener =
                             new AsyncTaskUtils.RequestTaskListener<CreditsResponse>() {
                                 @Override

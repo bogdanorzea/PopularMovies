@@ -2,7 +2,9 @@ package com.bogdanorzea.popularmovies
 
 import com.bogdanorzea.popularmovies.model.`object`.Genre
 import com.bogdanorzea.popularmovies.model.`object`.Movie
-import com.bogdanorzea.popularmovies.utility.DataUtils
+import com.bogdanorzea.popularmovies.utility.addQuotes
+import com.bogdanorzea.popularmovies.utility.toMoneyString
+import com.bogdanorzea.popularmovies.utility.toTimeString
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -10,16 +12,16 @@ class ObjectUtilsTest {
     @Test
     @Throws(Exception::class)
     fun formatMoney() {
-        assertEquals("$100", DataUtils.formatMoney(100))
-        assertEquals("$1,000", DataUtils.formatMoney(1000))
-        assertEquals("$987,483,777", DataUtils.formatMoney(987483777))
+        assertEquals("$100", 100L.toMoneyString())
+        assertEquals("$1,000", 1000L.toMoneyString())
+        assertEquals("$987,483,777", 987483777L.toMoneyString())
     }
 
     @Test
     @Throws(Exception::class)
     fun formatDuration() {
-        assertEquals("40m", DataUtils.formatDuration(40))
-        assertEquals("1h 0m", DataUtils.formatDuration(60))
+        assertEquals("40m", 40.toTimeString())
+        assertEquals("1h 0m", 60.toTimeString())
     }
 
     @Test
@@ -46,7 +48,7 @@ class ObjectUtilsTest {
     @Test
     @Throws(Exception::class)
     fun quoteString() {
-        assertEquals("", DataUtils.quoteString(""))
-        assertEquals("\"a\"", DataUtils.quoteString("a"))
+        assertEquals("", "".addQuotes())
+        assertEquals("\"a\"", "a".addQuotes())
     }
 }

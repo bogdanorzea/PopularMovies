@@ -16,6 +16,7 @@ import com.bogdanorzea.popularmovies.model.response.MoviesResponse
 import com.bogdanorzea.popularmovies.ui.main.PosterAdapter
 import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils
 import com.bogdanorzea.popularmovies.utility.NetworkUtils
+import com.bogdanorzea.popularmovies.utility.hasInternetConnection
 import com.wang.avi.AVLoadingIndicatorView
 import kotlinx.android.synthetic.main.activity_search.*
 import timber.log.Timber
@@ -73,7 +74,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun loadNextPage() {
-        if (NetworkUtils.hasInternetConnection(this)) {
+        if (this.hasInternetConnection()) {
             val url = NetworkUtils.movieSearchUrl(query, pageNumber++)
 
             val listener = object : AsyncTaskUtils.RequestTaskListener<MoviesResponse> {

@@ -1,7 +1,9 @@
 package com.bogdanorzea.popularmovies.model.`object`
 
 import android.os.Parcelable
-import com.bogdanorzea.popularmovies.utility.NetworkUtils.*
+import com.bogdanorzea.popularmovies.utility.NetworkUtils.BACKDROP_SIZE
+import com.bogdanorzea.popularmovies.utility.NetworkUtils.IMAGE_BASE_URL
+import com.bogdanorzea.popularmovies.utility.NetworkUtils.POSTER_SIZE
 import com.squareup.moshi.Json
 import kotlinx.android.parcel.Parcelize
 

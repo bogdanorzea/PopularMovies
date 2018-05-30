@@ -21,12 +21,13 @@ import android.widget.TextView;
 import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.data.MoviesContract;
 import com.bogdanorzea.popularmovies.model.object.Movie;
-import com.bogdanorzea.popularmovies.utility.DataUtils;
 import com.squareup.picasso.Picasso;
 
 import static com.bogdanorzea.popularmovies.data.MovieMapperKt.toMovie;
-import static com.bogdanorzea.popularmovies.utility.DataUtils.formatDuration;
-import static com.bogdanorzea.popularmovies.utility.DataUtils.formatMoney;
+import static com.bogdanorzea.popularmovies.utility.DataUtilsKt.addParenthesis;
+import static com.bogdanorzea.popularmovies.utility.DataUtilsKt.addQuotes;
+import static com.bogdanorzea.popularmovies.utility.DataUtilsKt.toMoneyString;
+import static com.bogdanorzea.popularmovies.utility.DataUtilsKt.toTimeString;
 
 
 public class DescriptionTab extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -64,14 +65,14 @@ public class DescriptionTab extends Fragment implements LoaderManager.LoaderCall
 
             // Release date
             ((TextView) view.findViewById(R.id.release_date))
-                    .setText(DataUtils.addParenthesis(movie.getYear()));
+                    .setText(addParenthesis(movie.getYear()));
 
             // Title
             ((TextView) view.findViewById(R.id.title)).setText(movie.getTitle());
 
             // Tagline
             ((TextView) view.findViewById(R.id.tagline)).setText(
-                    DataUtils.quoteString(movie.getTagline()));
+                    addQuotes(movie.getTagline()));
 
             // Overview
             ((TextView) view.findViewById(R.id.overview)).setText(movie.getOverview());
@@ -81,13 +82,13 @@ public class DescriptionTab extends Fragment implements LoaderManager.LoaderCall
                     .setRating((float) movie.getVoteAverage() / 2);
 
             // Runtime
-            ((TextView) view.findViewById(R.id.runtime)).setText(formatDuration(movie.getRuntime()));
+            ((TextView) view.findViewById(R.id.runtime)).setText(toTimeString(movie.getRuntime()));
 
             // Budget
-            ((TextView) view.findViewById(R.id.budget)).setText(formatMoney(movie.getBudget()));
+            ((TextView) view.findViewById(R.id.budget)).setText(toMoneyString(movie.getBudget()));
 
             // Revenue
-            ((TextView) view.findViewById(R.id.revenue)).setText(formatMoney(movie.getRevenue()));
+            ((TextView) view.findViewById(R.id.revenue)).setText(toMoneyString(movie.getRevenue()));
 
             // Genre
             ((TextView) view.findViewById(R.id.genre)).setText(movie.printGenres());

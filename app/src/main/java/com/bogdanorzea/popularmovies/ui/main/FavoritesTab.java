@@ -19,12 +19,12 @@ import android.view.ViewGroup;
 import com.bogdanorzea.popularmovies.R;
 import com.bogdanorzea.popularmovies.data.MoviesContract;
 import com.bogdanorzea.popularmovies.model.object.Movie;
-import com.bogdanorzea.popularmovies.utility.DataUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.bogdanorzea.popularmovies.data.MovieMapperKt.toMovie;
+import static com.bogdanorzea.popularmovies.utility.DataUtilsKt.getPreferredSortRule;
 
 public class FavoritesTab extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -55,7 +55,7 @@ public class FavoritesTab extends Fragment
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        String preferredSortRule = DataUtils.getPreferredSortRule(getActivity());
+        String preferredSortRule = getPreferredSortRule(getActivity());
         String sortOrder = null;
         if (preferredSortRule.equals(getString(R.string.pref_sort_by_popularity))) {
             sortOrder = MoviesContract.MovieEntry.COLUMN_NAME_POPULARITY + DESC;

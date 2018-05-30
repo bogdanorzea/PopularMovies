@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import okhttp3.HttpUrl;
 
 import static com.bogdanorzea.popularmovies.data.MovieMapperKt.toContentValues;
+import static com.bogdanorzea.popularmovies.utility.NetworkUtilsKt.hasInternetConnection;
 
 public class TopRatedTab extends Fragment {
 
@@ -80,7 +81,7 @@ public class TopRatedTab extends Fragment {
     }
 
     private void loadNextPage() {
-        if (NetworkUtils.hasInternetConnection(getContext())) {
+        if (hasInternetConnection(getContext())) {
             HttpUrl url = NetworkUtils.movieTopRatedUrl(pageNumber++);
 
             AsyncTaskUtils.RequestTaskListener<MoviesResponse> listener =

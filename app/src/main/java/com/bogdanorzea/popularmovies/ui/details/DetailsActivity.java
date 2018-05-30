@@ -30,7 +30,6 @@ import com.bogdanorzea.popularmovies.data.MoviesContract;
 import com.bogdanorzea.popularmovies.model.object.Movie;
 import com.bogdanorzea.popularmovies.ui.PagerAdapter;
 import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils;
-import com.bogdanorzea.popularmovies.utility.FragmentUtils;
 import com.bogdanorzea.popularmovies.utility.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
@@ -38,6 +37,8 @@ import timber.log.Timber;
 
 import static com.bogdanorzea.popularmovies.data.MovieMapperKt.toContentValues;
 import static com.bogdanorzea.popularmovies.data.MovieMapperKt.toMovie;
+import static com.bogdanorzea.popularmovies.utility.FragmentUtilsKt.buildFragment;
+import static com.bogdanorzea.popularmovies.utility.NetworkUtilsKt.hasInternetConnection;
 
 public class DetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -132,10 +133,10 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         ViewPager viewPager = findViewById(R.id.tab_viewpager);
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
 
-        pagerAdapter.addFragment(FragmentUtils.buildFragment(movieId, DescriptionTab.class), getString(R.string.description_tab_name));
-        pagerAdapter.addFragment(FragmentUtils.buildFragment(movieId, VideosTab.class), getString(R.string.videos_tab_name));
-        pagerAdapter.addFragment(FragmentUtils.buildFragment(movieId, CastTab.class), getString(R.string.cast_tab_name));
-        pagerAdapter.addFragment(FragmentUtils.buildFragment(movieId, ReviewsTab.class), getString(R.string.reviews_tab_name));
+        pagerAdapter.addFragment(buildFragment(movieId, DescriptionTab.class), getString(R.string.description_tab_name));
+        pagerAdapter.addFragment(buildFragment(movieId, VideosTab.class), getString(R.string.videos_tab_name));
+        pagerAdapter.addFragment(buildFragment(movieId, CastTab.class), getString(R.string.cast_tab_name));
+        pagerAdapter.addFragment(buildFragment(movieId, ReviewsTab.class), getString(R.string.reviews_tab_name));
 
         viewPager.setAdapter(pagerAdapter);
 
@@ -162,7 +163,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     }
 
     private void refreshMovieInformation(int movieId) {
-        if (NetworkUtils.hasInternetConnection(this)) {
+        if (hasInternetConnection(this)) {
             AsyncTaskUtils.RequestTaskListener<Movie> mRequestTaskListener =
                     new AsyncTaskUtils.RequestTaskListener<Movie>() {
                         @Override
