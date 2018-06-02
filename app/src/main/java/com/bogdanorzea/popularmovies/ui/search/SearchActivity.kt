@@ -68,6 +68,7 @@ class SearchActivity : AppCompatActivity() {
         if (Intent.ACTION_SEARCH == intent.action) {
             query = intent.getStringExtra(SearchManager.QUERY)
             Timber.d("Search query is: %s", query)
+            title = query
 
             loadNextPage()
         }
