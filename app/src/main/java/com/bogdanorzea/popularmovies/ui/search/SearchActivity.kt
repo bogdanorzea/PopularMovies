@@ -38,9 +38,9 @@ class SearchActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        avLoadingIndicatorView = findViewById(R.id.avi)
-        warningTextView = findViewById(R.id.warning)
-        recyclerView = findViewById(R.id.recycler_view)
+        avLoadingIndicatorView = findViewById(R.id.avLoadingIndicator)
+        warningTextView = findViewById(R.id.warningTextView)
+        recyclerView = findViewById(R.id.recyclerView)
         with(recyclerView) {
             layoutManager = GridLayoutManager(this@SearchActivity, 2)
             setHasFixedSize(true)
@@ -101,7 +101,7 @@ class SearchActivity : AppCompatActivity() {
 
             AsyncTaskUtils.RequestTask(listener, MoviesResponse::class.java).execute(url)
         } else {
-            if (posterAdapter.isEmpty) {
+            if (posterAdapter.isEmpty()) {
                 displayWarning(getString(R.string.warning_no_internet))
             } else {
                 Toast.makeText(this, getString(R.string.warning_no_internet), Toast.LENGTH_SHORT).show()

@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/image"
+        android:id="@+id/videoThumbnail"
         android:layout_width="128dp"
         android:layout_height="96dp"
         android:layout_marginBottom="8dp"
@@ -24,15 +24,15 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:src="@drawable/ic_play_circle_outline_white_48dp"
         android:elevation="2dp"
-        app:layout_constraintBottom_toTopOf="@+id/image"
-        app:layout_constraintEnd_toStartOf="@+id/image"
-        app:layout_constraintStart_toEndOf="@+id/image"
-        app:layout_constraintTop_toBottomOf="@+id/image" />
+        android:src="@drawable/ic_play_circle_outline_white_48dp"
+        app:layout_constraintBottom_toTopOf="@+id/videoThumbnail"
+        app:layout_constraintEnd_toStartOf="@+id/videoThumbnail"
+        app:layout_constraintStart_toEndOf="@+id/videoThumbnail"
+        app:layout_constraintTop_toBottomOf="@+id/videoThumbnail" />
 
     <TextView
-        android:id="@+id/text"
+        android:id="@+id/videoName"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginEnd="16dp"
@@ -43,9 +43,9 @@
         android:ellipsize="end"
         android:lines="1"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintBottom_toTopOf="@+id/image"
+        app:layout_constraintBottom_toTopOf="@+id/videoThumbnail"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/image"
-        app:layout_constraintTop_toBottomOf="@+id/image"
+        app:layout_constraintStart_toEndOf="@+id/videoThumbnail"
+        app:layout_constraintTop_toBottomOf="@+id/videoThumbnail"
         tools:text="Trailer" />
 </android.support.constraint.ConstraintLayout>

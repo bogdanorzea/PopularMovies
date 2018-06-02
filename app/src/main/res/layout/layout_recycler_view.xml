@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <com.wang.avi.AVLoadingIndicatorView
-        android:id="@+id/avi"
+        android:id="@+id/avLoadingIndicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:elevation="2dp"
@@ -20,7 +20,7 @@
         tools:visibility="visible" />
 
     <TextView
-        android:id="@+id/warning"
+        android:id="@+id/warningTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -37,7 +37,7 @@
 
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
+        android:id="@+id/recyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
