@@ -9,10 +9,13 @@ import android.view.ViewGroup
 import com.bogdanorzea.popularmovies.R
 import com.bogdanorzea.popularmovies.model.`object`.Cast
 import com.bogdanorzea.popularmovies.model.response.CreditsResponse
-import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils
 import com.bogdanorzea.popularmovies.utility.NetworkUtils
 import com.bogdanorzea.popularmovies.utility.hasInternetConnection
 import kotlinx.android.synthetic.main.layout_recycler_view.*
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
 import java.util.*
 
 class CastTab : Fragment() {
@@ -43,21 +46,20 @@ class CastTab : Fragment() {
                 val movieId = arguments?.getInt("movie_id") ?: -1
 
                 if (context?.hasInternetConnection() == true) {
-                    val mRequestTaskListener = object : AsyncTaskUtils.RequestTaskListener<CreditsResponse> {
-                        override fun onTaskStarting() {
-                            showProgress()
-                        }
+                    launch(UI) {
+                        showProgress()
 
-                        override fun onTaskComplete(result: CreditsResponse?) {
-                            hideProgress()
-                            result?.cast?.let {
-                                displayCredits(it)
-                            }
+                        val creditsResponse: CreditsResponse? = async(CommonPool) {
+                            NetworkUtils.fetchResponse(
+                                    NetworkUtils.movieCreditsUrl(movieId),
+                                    CreditsResponse::class.java)
+                        }.await()
+
+                        hideProgress()
+                        creditsResponse?.cast?.let {
+                            displayCredits(it)
                         }
                     }
-
-                    AsyncTaskUtils.RequestTask(mRequestTaskListener, CreditsResponse::class.java)
-                            .execute(NetworkUtils.movieCreditsUrl(movieId))
                 } else {
                     displayWarning(getString(R.string.warning_no_internet))
                 }
@@ -79,11 +81,11 @@ class CastTab : Fragment() {
     }
 
     private fun showProgress() {
-        avLoadingIndicator.smoothToShow()
+        avLoadingIndicator?.smoothToShow()
     }
 
     private fun hideProgress() {
-        avLoadingIndicator.smoothToHide()
+        avLoadingIndicator?.smoothToHide()
     }
 
     private fun displayWarning(message: String) {

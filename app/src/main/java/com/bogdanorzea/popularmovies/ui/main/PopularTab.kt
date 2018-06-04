@@ -13,10 +13,13 @@ import com.bogdanorzea.popularmovies.data.MoviesContract
 import com.bogdanorzea.popularmovies.data.toContentValues
 import com.bogdanorzea.popularmovies.model.`object`.Movie
 import com.bogdanorzea.popularmovies.model.response.MoviesResponse
-import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils
 import com.bogdanorzea.popularmovies.utility.NetworkUtils
 import com.bogdanorzea.popularmovies.utility.hasInternetConnection
 import kotlinx.android.synthetic.main.layout_recycler_view.*
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
 import java.util.*
 
 class PopularTab : Fragment() {
@@ -63,30 +66,26 @@ class PopularTab : Fragment() {
 
     private fun loadNextPage() {
         if (context?.hasInternetConnection() == true) {
-            val url = NetworkUtils.moviePopularUrl(pageNumber++)
+            launch(UI) {
+                showProgress()
 
-            val listener = object : AsyncTaskUtils.RequestTaskListener<MoviesResponse> {
+                val response = async(CommonPool) {
+                    NetworkUtils.fetchResponse(
+                            NetworkUtils.moviePopularUrl(pageNumber++),
+                            MoviesResponse::class.java)
+                }.await()
 
-                override fun onTaskStarting() {
-                    showProgress()
-                }
+                response?.results?.let {
+                    adapter.addMovies(it)
 
-                override fun onTaskComplete(result: MoviesResponse?) {
-                    result?.results?.let {
-                        adapter.addMovies(it)
-
-                        it.forEach {
-                            context?.contentResolver?.insert(MoviesContract.CONTENT_URI, it.toContentValues())
-                        }
-
-                        isLoading = false
-                        hideProgress()
+                    it.forEach {
+                        this@PopularTab.context?.contentResolver?.insert(MoviesContract.CONTENT_URI, it.toContentValues())
                     }
                 }
 
+                isLoading = false
+                hideProgress()
             }
-
-            AsyncTaskUtils.RequestTask(listener, MoviesResponse::class.java).execute(url)
         } else {
             if (adapter.isEmpty()) {
                 displayWarning(getString(R.string.warning_no_internet))
@@ -98,13 +97,13 @@ class PopularTab : Fragment() {
 
     private fun showProgress() {
         isLoading = true
-        avLoadingIndicator.smoothToShow()
+        avLoadingIndicator?.smoothToShow()
         hideWarning()
     }
 
     private fun hideProgress() {
         isLoading = false
-        avLoadingIndicator.smoothToHide()
+        avLoadingIndicator?.smoothToHide()
     }
 
     private fun displayWarning(message: String) {

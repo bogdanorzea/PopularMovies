@@ -14,22 +14,22 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-
 import com.bogdanorzea.popularmovies.R
 import com.bogdanorzea.popularmovies.data.MoviesContract
-import com.bogdanorzea.popularmovies.model.`object`.Movie
-import com.bogdanorzea.popularmovies.ui.PagerAdapter
-import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils
-import com.bogdanorzea.popularmovies.utility.NetworkUtils
-import com.squareup.picasso.Picasso
-
-import timber.log.Timber
-
 import com.bogdanorzea.popularmovies.data.toContentValues
 import com.bogdanorzea.popularmovies.data.toMovie
+import com.bogdanorzea.popularmovies.model.`object`.Movie
+import com.bogdanorzea.popularmovies.ui.PagerAdapter
+import com.bogdanorzea.popularmovies.utility.NetworkUtils
 import com.bogdanorzea.popularmovies.utility.buildFragment
 import com.bogdanorzea.popularmovies.utility.hasInternetConnection
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_details.*
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
+import timber.log.Timber
 
 class DetailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cursor> {
     companion object {
@@ -140,25 +140,24 @@ class DetailsActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curso
     }
 
     private fun refreshMovieInformation(movieId: Int) {
-        if (this.hasInternetConnection()) {
-            val mRequestTaskListener = object : AsyncTaskUtils.RequestTaskListener<Movie> {
-                override fun onTaskStarting() {}
+        if (hasInternetConnection()) {
+            launch(UI) {
+                val response = async(CommonPool) {
+                    NetworkUtils.fetchResponse(
+                            NetworkUtils.movieDetailsUrl(movieId),
+                            Movie::class.java)
+                }.await()
 
-                override fun onTaskComplete(result: Movie?) {
-                    result?.let {
-                        val movieUri = Uri.withAppendedPath(MoviesContract.CONTENT_URI, movieId.toString())
+                response?.let {
+                    val movieUri = Uri.withAppendedPath(MoviesContract.CONTENT_URI, movieId.toString())
 
-                        val contentValues = result.toContentValues()
-                        val rows = contentResolver.update(movieUri, contentValues, null, null)
+                    val contentValues = it.toContentValues()
+                    val rows = contentResolver.update(movieUri, contentValues, null, null)
 
-                        if (rows > 0)
-                            Timber.d("Movie \"%s\" (%s) successfully updated", result.title, result.id)
-                    }
+                    if (rows > 0)
+                        Timber.d("Movie \"%s\" (%s) successfully updated", it.title, it.id)
                 }
             }
-
-            AsyncTaskUtils.RequestTask(mRequestTaskListener, Movie::class.java)
-                    .execute(NetworkUtils.movieDetailsUrl(movieId))
         } else {
             Toast.makeText(this, getString(R.string.offline_limitation_warning), Toast.LENGTH_SHORT).show()
         }

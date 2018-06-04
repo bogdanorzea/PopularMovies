@@ -9,10 +9,13 @@ import android.view.ViewGroup
 import com.bogdanorzea.popularmovies.R
 import com.bogdanorzea.popularmovies.model.`object`.Review
 import com.bogdanorzea.popularmovies.model.response.ReviewsResponse
-import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils
 import com.bogdanorzea.popularmovies.utility.NetworkUtils
 import com.bogdanorzea.popularmovies.utility.hasInternetConnection
 import kotlinx.android.synthetic.main.layout_recycler_view.*
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
 import java.util.*
 
 class ReviewsTab : Fragment() {
@@ -43,21 +46,20 @@ class ReviewsTab : Fragment() {
                 val movieId = arguments?.getInt("movie_id") ?: -1
 
                 if (context?.hasInternetConnection() == true) {
-                    val mRequestTaskListener = object : AsyncTaskUtils.RequestTaskListener<ReviewsResponse> {
-                        override fun onTaskStarting() {
-                            showProgress()
-                        }
+                    launch(UI) {
+                        showProgress()
 
-                        override fun onTaskComplete(result: ReviewsResponse?) {
-                            hideProgress()
-                            result?.results?.let {
-                                displayReviews(it)
-                            }
+                        val response = async(CommonPool) {
+                            NetworkUtils.fetchResponse(
+                                    NetworkUtils.movieReviewsUrl(movieId, 1),
+                                    ReviewsResponse::class.java)
+                        }.await()
+
+                        hideProgress()
+                        response?.results?.let {
+                            displayReviews(it)
                         }
                     }
-
-                    AsyncTaskUtils.RequestTask(mRequestTaskListener, ReviewsResponse::class.java)
-                            .execute(NetworkUtils.movieReviewsUrl(movieId, 1))
                 } else {
                     displayWarning(getString(R.string.warning_no_internet))
                 }
@@ -79,11 +81,11 @@ class ReviewsTab : Fragment() {
     }
 
     private fun showProgress() {
-        avLoadingIndicator.smoothToShow()
+        avLoadingIndicator?.smoothToShow()
     }
 
     private fun hideProgress() {
-        avLoadingIndicator.smoothToHide()
+        avLoadingIndicator?.smoothToHide()
     }
 
     private fun displayWarning(message: String) {

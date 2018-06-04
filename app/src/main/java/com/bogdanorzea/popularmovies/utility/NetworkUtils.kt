@@ -4,6 +4,8 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import com.bogdanorzea.popularmovies.BuildConfig
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -29,26 +31,32 @@ object NetworkUtils {
     private const val REVIEWS = "reviews"
     private const val CREDITS = "credits"
 
-
-    /**
-     * Returns the response string from the HttpUrl address
-     *
-     * @param url
-     * @return
-     * @throws IOException
-     */
     @JvmStatic
     @Throws(IOException::class)
-    fun fetch(url: HttpUrl): String {
+    fun <T> fetchResponse(url: HttpUrl, classType: Class<T>): T? {
         val client = OkHttpClient()
 
         val request: Request = Request.Builder()
                 .url(url)
                 .build()
 
-        client.newCall(request)
+        val stringResponse = client.newCall(request)
                 .execute()
-                .use { response -> return response.body()?.string() ?: "" }
+                .use { response -> response.body()?.string() ?: "" }
+
+        val moshi: Moshi = Moshi.Builder()
+                .add(KotlinJsonAdapterFactory())
+                .build()
+        val jsonAdapter = moshi.adapter(classType)
+
+        var moviesResponse: T? = null
+        try {
+            moviesResponse = jsonAdapter.fromJson(stringResponse)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        return moviesResponse
     }
 
     /**
@@ -184,8 +192,8 @@ object NetworkUtils {
  * Checks if there is an active internet connection
  */
 fun Context.hasInternetConnection(): Boolean {
-    val cm: ConnectivityManager = this.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val activeNetwork: NetworkInfo = cm.activeNetworkInfo
+    val cm: ConnectivityManager? = this.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val activeNetwork: NetworkInfo? = cm?.activeNetworkInfo
 
-    return activeNetwork.isConnectedOrConnecting
+    return activeNetwork?.isConnectedOrConnecting ?: false
 }

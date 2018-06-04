@@ -14,11 +14,14 @@ import com.bogdanorzea.popularmovies.data.MoviesContract
 import com.bogdanorzea.popularmovies.data.toContentValues
 import com.bogdanorzea.popularmovies.model.response.MoviesResponse
 import com.bogdanorzea.popularmovies.ui.main.PosterAdapter
-import com.bogdanorzea.popularmovies.utility.AsyncTaskUtils
 import com.bogdanorzea.popularmovies.utility.NetworkUtils
 import com.bogdanorzea.popularmovies.utility.hasInternetConnection
 import com.wang.avi.AVLoadingIndicatorView
 import kotlinx.android.synthetic.main.activity_search.*
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 
 class SearchActivity : AppCompatActivity() {
@@ -76,31 +79,25 @@ class SearchActivity : AppCompatActivity() {
 
     private fun loadNextPage() {
         if (this.hasInternetConnection()) {
-            val url = NetworkUtils.movieSearchUrl(query, pageNumber++)
+            launch(UI) {
+                showProgress()
 
-            val listener = object : AsyncTaskUtils.RequestTaskListener<MoviesResponse> {
+                val response = async(CommonPool) {
+                    NetworkUtils.fetchResponse(
+                            NetworkUtils.movieSearchUrl(query, pageNumber++),
+                            MoviesResponse::class.java)
+                }.await()
 
-                override fun onTaskStarting() {
-                    showProgress()
-                }
-
-                override fun onTaskComplete(moviesResponse: MoviesResponse?) {
-                    if (moviesResponse != null) {
-                        moviesResponse.results?.let {
-                            posterAdapter.addMovies(it)
-                        }
-
-                        moviesResponse.results?.forEach {
-                            contentResolver.insert(MoviesContract.CONTENT_URI, it.toContentValues())
-                        }
-
-                        isLoading = false
-                        hideProgress()
+                response?.results?.let {
+                    posterAdapter.addMovies(it)
+                    it.forEach {
+                        contentResolver.insert(MoviesContract.CONTENT_URI, it.toContentValues())
                     }
                 }
-            }
 
-            AsyncTaskUtils.RequestTask(listener, MoviesResponse::class.java).execute(url)
+                isLoading = false
+                hideProgress()
+            }
         } else {
             if (posterAdapter.isEmpty()) {
                 displayWarning(getString(R.string.warning_no_internet))
