@@ -23,26 +23,26 @@ fun Cursor.toMovie(): Movie {
     val backdropPathColumnIndex = getColumnIndex(MoviesContract.MovieEntry.COLUMN_NAME_BACKDROP_PATH)
     val posterPathColumnIndex = getColumnIndex(MoviesContract.MovieEntry.COLUMN_NAME_POSTER_PATH)
 
-    return Movie().apply {
-        id = getInt(idColumnIndex)
-        title = getString(titleColumnIndex)
-        favorite = getInt(favoriteColumnIndex)
-        releaseDate = getString(releaseDateColumnIndex)
-        tagline = getString(taglineColumnIndex)
-        overview = getString(overviewColumnIndex)
-        runtime = getInt(runtimeColumnIndex)
-        popularity = getDouble(popularityColumnIndex)
-        voteAverage = getDouble(voteAverageColumnIndex)
-        voteCount = getInt(voteCountColumnIndex)
-        budget = getInt(budgetColumnIndex)
-        revenue = getLong(revenueColumnIndex)
-        homepage = getString(homepageColumnIndex)
-        backdropPath = getString(backdropPathColumnIndex)
-        posterPath = getString(posterPathColumnIndex)
-        genres = getString(gendersColumnIndex)
-                .split(",".toRegex())
-                .map { Genre(it.trim()) }
-    }
+    return Movie(
+            id = getInt(idColumnIndex),
+            title = getString(titleColumnIndex),
+            favorite = getInt(favoriteColumnIndex),
+            releaseDate = getString(releaseDateColumnIndex),
+            tagline = getString(taglineColumnIndex),
+            overview = getString(overviewColumnIndex),
+            runtime = getInt(runtimeColumnIndex),
+            popularity = getDouble(popularityColumnIndex),
+            voteAverage = getDouble(voteAverageColumnIndex),
+            voteCount = getInt(voteCountColumnIndex),
+            budget = getInt(budgetColumnIndex),
+            revenue = getLong(revenueColumnIndex),
+            homepage = getString(homepageColumnIndex),
+            backdropPath = getString(backdropPathColumnIndex),
+            posterPath = getString(posterPathColumnIndex),
+            genres = getString(gendersColumnIndex)
+                    .split(",".toRegex())
+                    .map { Genre(0, it.trim()) }
+    )
 }
 
 fun Movie.toContentValues(): ContentValues {

@@ -7,11 +7,11 @@ import com.squareup.moshi.Json
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class Cast(@Json(name = "character") var character: String?,
+data class Cast(@Json(name = "character") var character: String,
                 @Json(name = "gender") var gender: Int?,
                 @Json(name = "id") var id: Int,
-                @Json(name = "name") var name: String?,
-                @Json(name = "profile_path") var profilePath: String? = null) : Parcelable {
+                @Json(name = "name") var name: String,
+                @Json(name = "profile_path") var profilePath: String?) : Parcelable {
 
     fun getProfileUrl() = IMAGE_BASE_URL + PROFILE_SIZE + profilePath
 

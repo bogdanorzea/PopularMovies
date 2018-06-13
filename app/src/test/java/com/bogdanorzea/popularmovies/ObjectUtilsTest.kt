@@ -27,7 +27,7 @@ class ObjectUtilsTest {
     @Test
     @Throws(Exception::class)
     fun formatYear() {
-        val movie = Movie()
+        val movie = emptyMovie()
         movie.releaseDate = "1999-10-12"
         assertEquals("1999", movie.getYear())
     }
@@ -35,12 +35,12 @@ class ObjectUtilsTest {
     @Test
     @Throws(Exception::class)
     fun printGenres() {
-        val movie = Movie()
+        val movie = emptyMovie()
         assertEquals("Unknown", movie.printGenres())
-        val g1 = Genre("First")
+        val g1 = Genre(0, "First")
         movie.genres = listOf(g1)
         assertEquals("First", movie.printGenres())
-        val g2 = Genre("Second")
+        val g2 = Genre(0, "Second")
         movie.genres = listOf(g1, g2)
         assertEquals("First, Second", movie.printGenres())
     }
@@ -52,3 +52,8 @@ class ObjectUtilsTest {
         assertEquals("\"a\"", "a".addQuotes())
     }
 }
+
+
+fun emptyMovie(): Movie = Movie(null, 0, null, null, -1,
+        null, 0.0, null, "", 0L, -1,
+        null, "", 0.0, 0, 0)

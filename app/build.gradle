@@ -48,7 +48,7 @@ dependencies {
     implementation "com.android.support:preference-v14:$support_version"
     implementation "com.android.support:cardview-v7:$support_version"
     implementation "com.android.support:customtabs:$support_version"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
 
     // Test Libraries
     testImplementation 'junit:junit:4.12'
